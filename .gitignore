@@ -7,6 +7,8 @@ build/
 target/
 pubspec.lock
 Cargo.lock
+# ...except the Rust core of an app: it is an application, so its dependency versions are part of what was built and tested.
+!apps/notes_rust/rust/Cargo.lock
 .flutter-plugins*
 .packages
 *.iml

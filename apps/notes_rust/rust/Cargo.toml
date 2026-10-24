@@ -1,0 +1,40 @@
+# notes_core: the Rust core of the notes_rust demo app, and the flutter_rust_bridge package the Flutter app links.
+# The logic is in src/*.rs and is tested alone with `cargo test` (no bridge needed); src/api/ is the thin bridge layer.
+# Layout is the Bozzetto UI's (cargokit + flutter_rust_bridge 2.12.0); see ../README.md.
+
+[package]
+name = "notes_core"
+version = "0.1.0"
+edition = "2021"
+publish = false
+license = "Apache-2.0"
+description = "Notes stored as content-addressed blocks (Storage Kit) in the app's slice of a shared Application Kit context"
+
+[lib]
+# cdylib/staticlib are what the Flutter build links (cargokit); rlib is added so `cargo test` and tests/*.rs can link the crate.
+crate-type = ["cdylib", "staticlib", "rlib"]
+
+[lints.rust]
+# `#[frb(...)]` expands using an internal `frb_expand` cfg that flutter_rust_bridge 2.12.0 does not declare.
+unexpected_cfgs = { level = "allow", check-cfg = ["cfg(frb_expand)"] }
+
+[dependencies]
+# Must exactly match the Dart-side flutter_rust_bridge version in ../pubspec.yaml.
+flutter_rust_bridge = "=2.12.0"
+
+# The two Kits. Path dependencies into the fetched Kits (`make setup KITS=all` puts them in .kits/).
+# The Application Kit's Rust crate: the adopt API (ContextSnapshot, AppContext::adopt). default-features = false drops the
+# optional Venue client; this app never opens a Venue session. NOTE: `adopt` is not in the Application Kit's pinned commit
+# yet; ../../../kits.override links .kits/application-kit to the branch that has it until it is merged and re-pinned.
+application-kit = { path = "../../../.kits/application-kit/rust", default-features = false }
+# The Storage Kit (private): PartitionStore, put/get, fragment trees. Its S3 and HTTP backends are always built (a Kit gap).
+storage-kit = { path = "../../../.kits/storage-kit" }
+
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]
+tempfile = "3"
+
+# Standalone on purpose: no parent workspace.
+[workspace]
