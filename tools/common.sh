@@ -65,6 +65,14 @@ cargo_dirs_in() {
   return 0
 }
 
+# override_for NAME: the checkout kits.override names for that Kit (made absolute), or nothing. See kits.override.
+override_for() {
+  [ -f "$ROOT/kits.override" ] || return 0
+  rel=$(grep -v '^[[:space:]]*#' "$ROOT/kits.override" | awk -v n="$1" '$1 == n { print $2; exit }')
+  [ -n "$rel" ] || return 0
+  case "$rel" in /*) printf '%s\n' "$rel" ;; *) printf '%s\n' "$ROOT/$rel" ;; esac
+}
+
 # Print "name dir" for every fetched Kit whose role is one of the given words.
 fetched_kits() {
   roles=" $* "

@@ -1,0 +1,11 @@
+# kits.override: TEMPORARY. Use a local checkout of a Kit instead of the pinned download.
+#
+# One line per Kit:   name   path-to-a-checkout   (relative to the repository root)
+# `make fetch` / `make setup` then link .kits/<name> to that folder instead of downloading the pin in kits.lock.
+# An empty file (or no file) means every Kit is downloaded at its pin.
+#
+# WHY THIS FILE HAS A LINE TODAY: apps/notes_rust needs the Application Kit's `adopt` API (a Rust core sharing the context the
+# Dart UI opened; AppContext.snapshot() in Dart, AppContext::adopt in Rust). It is on the Application Kit branch
+# feat/adopt-context and is not merged or pinned yet. When it is merged: move the application-kit pin in kits.lock to the
+# merge commit (make lock KIT=application-kit), delete the line below, and run make setup KITS=all.
+application-kit ../application-kit-adopt
