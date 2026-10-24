@@ -36,6 +36,25 @@
   - [Design Kit](30-kits/design-kit.md)
   <!-- catalog:end -->
 
+# Kit reference
+
+<!-- docs-pull:start -->
+- [Application Kit reference (provisional name)](30-kits/application-kit/index.md)
+  - [Overview](30-kits/application-kit/overview.md)
+  - [Getting started](30-kits/application-kit/getting-started.md)
+  - [Context guide](30-kits/application-kit/context-guide.md)
+  - [Venue guide](30-kits/application-kit/venue-guide.md)
+  - [Coordination guide: copies of one app talking to each other](30-kits/application-kit/coordination-guide.md)
+  - [Testing](30-kits/application-kit/testing.md)
+  - [Architecture](30-kits/application-kit/architecture.md)
+  - [Platforms](30-kits/application-kit/platforms.md)
+  - [Design decisions](30-kits/application-kit/design-decisions.md)
+  - [The app context spec](30-kits/application-kit/spec/app-context.md)
+  - [Example: dart_cli](30-kits/application-kit/examples/dart_cli.md)
+  - [Example: rust_cli](30-kits/application-kit/examples/rust_cli.md)
+  - [Example: flutter_hello](30-kits/application-kit/examples/flutter_hello.md)
+<!-- docs-pull:end -->
+
 # Reference
 
 - [Make targets](90-reference/make-targets.md)

@@ -31,7 +31,7 @@ Inference Kit is a cross-platform inference service for Hearth household cluster
 
 ## Reference docs
 
-This Kit's own reference documentation is meant to be pulled in here by `make docs-pull`. That target is not implemented yet; see [Make targets](../90-reference/make-targets.md#docs-pull).
+This Kit's own reference documentation has not been pulled into the book yet. `make docs-pull` pulls it once the Kit has a section in `tools/docs-pull.conf`; see [Make targets](../90-reference/make-targets.md#docs-pull).
 
 ---
 

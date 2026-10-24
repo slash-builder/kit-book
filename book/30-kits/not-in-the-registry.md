@@ -11,6 +11,23 @@ The catalog lists the Kits in the registry. Some things this book talks about ar
 
 The Application Kit is the root namespace for one running app: its identity, its folders for files and settings, test and scratch modes, a roster entry other apps can read, a session with a resource broker, and an opt-in way to find other copies of the app. The six demo apps in this book are built on it, and the [demo apps guide](../20-guides/demo-apps.md) measures what it saved and what it still leaves for an app to write. Its name is provisional, and it is a candidate for the registry rather than a member of it.
 
+Its own reference documentation is pulled into this book from the Kit, at the commit this book pins (`make docs-pull`), so you can read it without access to the Kit's repository. It is the only Kit pulled so far. Start at the reference index.
+
+* [Reference index](application-kit/index.md)
+* [Overview](application-kit/overview.md)
+* [Getting started](application-kit/getting-started.md)
+* [Context guide](application-kit/context-guide.md)
+* [Venue guide](application-kit/venue-guide.md)
+* [Coordination guide: copies of one app talking to each other](application-kit/coordination-guide.md)
+* [Testing](application-kit/testing.md)
+* [Architecture](application-kit/architecture.md)
+* [Platforms](application-kit/platforms.md)
+* [Design decisions](application-kit/design-decisions.md)
+* [The app context spec](application-kit/spec/app-context.md)
+* [Example: dart_cli](application-kit/examples/dart_cli.md)
+* [Example: rust_cli](application-kit/examples/rust_cli.md)
+* [Example: flutter_hello](application-kit/examples/flutter_hello.md)
+
 ## This book
 
 This repository, kit-book, is the book, not a Kit. It has no card, it is not in the registry, and nothing depends on it.
