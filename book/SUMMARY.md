@@ -58,4 +58,5 @@
 # Reference
 
 - [Make targets](90-reference/make-targets.md)
+- [Publishing the website](90-reference/publishing.md)
 - [Glossary](90-reference/glossary.md)

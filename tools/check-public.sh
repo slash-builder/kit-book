@@ -23,6 +23,21 @@ find . \( -name .git -o -name .kits -o -name build -o -name .dart_tool -o -name 
           -o -name ephemeral -o -name node_modules -o -name .idea -o -name .vscode \) -prune -o -type f -print |
   sed 's#^\./##' | grep -v -e '^tools/check-public\.sh$' -e '^tools/gen-catalog\.py$' -e '^tools/tests/test_gen_catalog\.py$' -e '\.DS_Store$' > "$FILES"
 
+# One exemption: the vendored mermaid bundle is third-party minified JavaScript (one multi-megabyte line, not our text), so a
+# pattern in it would be a false positive that no one here can edit. It is skipped ONLY while its sha256 equals the one
+# recorded in tools/site/vendor/README.md; any other content (a changed bundle, or a different file at that path) is
+# scanned like everything else, and any other file in tools/site/vendor/ (the README, the licence) is always scanned.
+VENDORED=tools/site/vendor/mermaid.min.js
+if [ -f "$VENDORED" ]; then
+  want=$(sed -n 's/^\([0-9a-f]\{64\}\)  mermaid\.min\.js$/\1/p' tools/site/vendor/README.md | head -n 1)
+  got=$(shasum -a 256 "$VENDORED" 2>/dev/null | awk '{print $1}')
+  if [ -n "$want" ] && [ "$want" = "$got" ]; then
+    grep -v -x -F "$VENDORED" "$FILES" > "$FILES.v" && mv "$FILES.v" "$FILES"
+  else
+    warn "check-public: $VENDORED does not match the sha256 recorded in tools/site/vendor/README.md, so it is scanned like any other file"
+  fi
+fi
+
 # scan LABEL EXTENDED-REGEX [-i]   (binary files are skipped by grep -I)
 scan() {
   label=$1; re=$2; flag=${3:--e}
@@ -57,6 +72,10 @@ scan "secret"              'AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{20,}|gho_[A-Za-z0-9
 # no repository names, so the repository is read from the Source line of that Kit's generated card; the catalog links
 # to those and to no others.
 PUBLIC=$(lock_lines | awk '$4=="public" {print $2}' | sed -e 's#^https://github\.com/##' -e 's#\.git$##')
+# This repository's own address is allowed: the website links to it (SITE_REPO_URL in the Makefile), and it is the repository
+# that is being made public.
+PUBLIC="$PUBLIC
+slash-builder/kit-book"
 if [ -f "$ROOT/tools/kit-visibility.tsv" ]; then
   for kitname in $(awk -F'\t' '$1 !~ /^#/ && $2 == "public" {gsub(/ /, "-", $1); print tolower($1)}' "$ROOT/tools/kit-visibility.tsv"); do
     card="$ROOT/book/30-kits/$kitname.md"

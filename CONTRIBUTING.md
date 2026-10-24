@@ -13,6 +13,8 @@ make test-fast     # every test (run make setup first; add KITS=all while some K
 make lint          # analyse the Dart code, then the two checks above
 ```
 
+Changes to the website tools also need `make test-tools` and, with mdBook installed, `make site site-check`.
+
 ## Maintainer notes: the Kit catalog
 
 `book/30-kits/` is **generated** from the Kit registry, which lives in a private repository, and the generated pages are committed so readers never need the registry. Do not edit those pages by hand: the next regeneration overwrites them. To change a card, change the registry entry and regenerate.
@@ -43,6 +45,25 @@ make test-tools         # the puller's own tests need nothing but Python 3
 * Links in pulled pages are rewritten (to the pulled copy, to plain text for a private Kit, to a GitHub address at the pinned commit for a public one); the rules are in [Make targets](book/90-reference/make-targets.md#docs-pull). The tool prints a warning for a link the Kit itself has wrong. Fix those in the Kit.
 * Pulled pages are public text, so they are scanned by `make check-public` like everything else. If they hit, the Kit's text is the problem; fix it there. Do not weaken the scan.
 * Pulled pages are not edited for the book's context. If a page says "this repository" and means the Kit's, or points at the demo apps in a way that reads oddly here, raise it with the Kit.
+
+## Maintainer notes: the website
+
+The book is also a website at <https://kits.slashbuilder.com>, built with mdBook (`brew install mdbook`, or set `MDBOOK=` to the program). The settings (`SITE_DOMAIN`, `SITE_REPO_URL`, `SITE_INDEXABLE` and the rest) are set once, in the Makefile; the page [Publishing the website](book/90-reference/publishing.md) explains them.
+
+```sh
+make site                      # build into build/site (and build/site-publish, what would be published)
+python3 -m http.server -d build/site 8000   # preview at http://localhost:8000/
+make site-check                # links and fragments, CNAME and .nojekyll, the noindex switch, the vendored diagram library
+make publish-site              # dry run: commits the site to a local gh-pages branch and says what it would push
+make publish-site PUBLISH=1    # pushes gh-pages, but only if the repository is public and the tree is clean, on main
+```
+
+* **Preview, not publish.** While the repository is private, preview locally. The links from the book into `apps/` and `labs/` point at GitHub and answer 404 for people without access until the repository is public.
+* **No workflows.** The site is published from the `gh-pages` branch, by hand, with `make publish-site`. The `CNAME` file in that branch holds the domain; the tool writes it.
+* **Indexing.** Every page is `noindex` by default. Publish with `SITE_INDEXABLE=1` when the site should be found.
+* **The vendored diagram library** in `tools/site/vendor/` is pinned with its version, licence and checksum. Upgrade it by following that folder's README; never fetch it at build time.
+* **Going public:** follow [the go-public checklist](book/90-reference/publishing.md#going-public-in-order). The order matters, and the DNS record is added last. Nothing in this repository does any of it for you.
+* `make docs` does not need mdBook. Run `make site-check` after any change to `tools/site*`, `tools/site/` or the Makefile's `SITE_` lines.
 
 ## Rules for what you write
 

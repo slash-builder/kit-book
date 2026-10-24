@@ -22,6 +22,20 @@ OFFLINE ?=
 PYTHON ?= python3
 export PYTHON
 
+# The website (make site, site-check, publish-site). These lines are the only place the values are written; the scripts in
+# tools/ read them from the environment and, when run without make, from these lines (tools/site-env.sh).
+# Values: see book/90-reference/publishing.md and the Variables table in book/90-reference/make-targets.md.
+SITE_DOMAIN ?= kits.slashbuilder.com
+SITE_TITLE ?= The Kit Book
+SITE_REPO_URL ?= https://github.com/slash-builder/kit-book
+SITE_REPO_BRANCH ?= main
+SITE_REWRITE_REPO_LINKS ?= 1
+SITE_INDEXABLE ?= 0
+export SITE_DOMAIN SITE_TITLE SITE_REPO_URL SITE_REPO_BRANCH SITE_REWRITE_REPO_LINKS SITE_INDEXABLE
+# publish-site pushes the gh-pages branch only when PUBLISH=1 and the repository is public; otherwise it is a dry run.
+PUBLISH ?=
+export PUBLISH
+
 # The host operating system decides which Flutter desktop target the apps are built for.
 UNAME := $(shell uname -s)
 ifeq ($(UNAME),Darwin)
@@ -33,7 +47,7 @@ endif
 APPS := $(notdir $(patsubst %/,%,$(wildcard apps/*/)))
 
 .PHONY: help all build lint fmt doctor setup fetch lock test test-fast test-integration apps app run \
-        docs docs-catalog docs-pull docs-pull-check test-tools site check-public clean clean-all
+        docs docs-catalog docs-pull docs-pull-check test-tools site site-check publish-site check-public clean clean-all
 
 help: ## Show this list (the default)
 	@echo "$(BOOK_NAME): make targets"
@@ -113,8 +127,17 @@ docs-pull-check: ## Maintainers: fail if the pulled reference pages differ from 
 test-tools: ## Run the unit tests of the maintainer tools in tools/ (the catalog tests skip without PyYAML)
 	@$(PYTHON) -m unittest discover -s tools/tests -v
 
-site: ## Build the book as an HTML website with mdBook, if installed (output in build/site)
+site: ## Build the book as a website with mdBook, if installed (output in build/site; SITE_INDEXABLE=1 at publish time)
 	@sh tools/site.sh
+
+site-check: ## Check the built website: links, CNAME and .nojekyll, noindex switch, vendored diagram script (run make site first)
+	@python3 tools/site-check.py
+
+publish-site: ## Maintainers: build and check the site, commit it to a local gh-pages branch; push only with PUBLISH=1 and a public repo
+	@rm -rf build/site build/site-publish
+	@sh tools/site.sh
+	@python3 tools/site-check.py
+	@sh tools/publish-site.sh
 
 check-public: ## Scan the whole tree for anything that must not be public (names, paths, ids, secrets)
 	@sh tools/check-public.sh

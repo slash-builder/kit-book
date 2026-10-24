@@ -2,7 +2,7 @@
 
 Everything is driven from the `Makefile` at the repository root. It works with the system `make` on macOS (3.81) and Linux and uses nothing newer. `make` on its own runs `make help`, which lists every target with one line. The Makefile follows the convention of the Kit repositories (`help`, `all`, `build`, `lint`, `test`, `fmt`) so the CI job and people use the same names.
 
-The scripts behind the targets are in [`tools/`](../../tools/). They are plain POSIX `sh` (and Python 3 for the link checker), so they run on the `/bin/sh` and `/bin/bash 3.2` that ship with macOS. The one exception is the catalog generator behind `docs-catalog`, a maintainer tool that also needs PyYAML; nothing a reader runs depends on it. `docs-pull` is also a maintainer tool, but it is Python 3 standard library only.
+The scripts behind the targets are in [`tools/`](../../tools/). They are plain POSIX `sh` (and Python 3 for the link checker and the website tools), so they run on the `/bin/sh` and `/bin/bash 3.2` that ship with macOS. The one exception is the catalog generator behind `docs-catalog`, a maintainer tool that also needs PyYAML; nothing a reader runs depends on it. `docs-pull` is also a maintainer tool, but it is Python 3 standard library only.
 
 ## Variables
 
@@ -21,6 +21,14 @@ The scripts behind the targets are in [`tools/`](../../tools/). They are plain P
 | `REGISTRY_COMMIT` | `docs-catalog` | The commit of the registry the catalog is generated from; the catalog index prints it as "Generated from registry commit abc1234" |
 | `OFFLINE` | `docs-catalog` | `1` does not ask GitHub who is public and reuses `tools/kit-visibility.tsv` as it is |
 | `PYTHON` | `docs-catalog`, `test-tools`, `test-fast` | The Python 3 to use for the catalog generator and the tool tests (default `python3`). For `docs-catalog` it must have PyYAML; `docs-pull` always uses plain `python3` |
+| `SITE_DOMAIN` | `site`, `site-check`, `publish-site` | The domain the website is served at (default `kits.slashbuilder.com`). It is written into the `CNAME` file of the published branch. Set in the Makefile, in one place |
+| `SITE_TITLE` | `site` | The title shown on every page of the website (default `The Kit Book`) |
+| `SITE_REPO_URL` | `site` | The repository address used for the "edit this page" links and for the rewritten links into `apps/` and `labs/` (default `https://github.com/slash-builder/kit-book`) |
+| `SITE_REPO_BRANCH` | `site`, `publish-site` | The branch those links point at (default `main`); `publish-site` only pushes from this branch |
+| `SITE_REWRITE_REPO_LINKS` | `site` | `1` (default) rewrites links from the book to files outside `book/` into GitHub addresses; `0` leaves them as relative links, which do not work on the website |
+| `SITE_INDEXABLE` | `site`, `site-check`, `publish-site` | `0` (default) puts `<meta name="robots" content="noindex">` on every page; `1` leaves it out so search engines may index the site. Set `1` only when the site is meant to be found |
+| `PUBLISH` | `publish-site` | `1` allows the push to the `gh-pages` branch, and only if the repository behind `origin` is public. Anything else is a dry run |
+| `MDBOOK` | `site` | The path of the `mdbook` program to use. Otherwise `mdbook` on the `PATH`, then `~/.cache/mdbook/mdbook` |
 | `NO_COLOR` | all | Turns off colours in the output |
 | `KITS_LOCK` | the scripts in `tools/` | Read a different lock file (used for testing the fetch script) |
 
@@ -164,17 +172,47 @@ It **refuses to run** if `.kits/<name>/.fetched` is not exactly the commit `kits
 **For maintainers.** Runs the unit tests of the tools in `tools/`:
 
 * the catalog generator, `tools/tests/test_gen_catalog.py`: sanitising, idempotence, the public/private link rule, the missing-repository note, status grouping, the rewrite of the `SUMMARY.md` block and the listing of pulled reference pages on the cards. They need PyYAML and skip themselves with a message when it is missing;
-* the reference-docs puller, `tools/tests/test_pull_docs.py`: each class of link rewrite, the banner, anchors, idempotence, the pin refusal and `--check`. They need nothing beyond Python 3.
+* the reference-docs puller, `tools/tests/test_pull_docs.py`: each class of link rewrite, the banner, anchors, idempotence, the pin refusal and `--check`. They need nothing beyond Python 3;
+* the website tools: `tools/tests/test_site_stage.py` (the link rewrite and the README rename), `tools/tests/test_site_check.py` (the checks of `site-check`) and `tools/tests/test_publish_site.py` (the dry run and the push guard, against a local bare repository and a stub `gh`; needs `git`). They need nothing beyond Python 3.
 
 Plain `python3 -m unittest` from the repository root runs the same tests.
 
 ### `site`
 
-Builds the book as an HTML website with [mdBook](https://rust-lang.github.io/mdBook/) into `build/site/`. If mdBook is not installed it prints how to install it and exits 0. Links from the guides into `apps/` and `labs/` do not work in the generated site because those folders are outside the book; they do on GitHub.
+Builds the book as a website with [mdBook](https://rust-lang.github.io/mdBook/) into `build/site/`, ready to be served at the root of `SITE_DOMAIN`. If mdBook is not installed it prints how to install it and exits 0. How the site is built and published is in [Publishing the website](publishing.md); the steps in order:
+
+1. **Stage the book.** `book/` is copied to `build/site-src/`, and in the copy every link to a path outside `book/` (the demo apps, the labs, `CONTRIBUTING.md` and so on) becomes a link to the file or folder on GitHub (`SITE_REPO_URL`, `SITE_REPO_BRANCH`). Links that stay inside the book are left alone. It prints how many links it rewrote. While the repository is private those addresses answer 404 for everyone without access, and `make site` says so. `SITE_REWRITE_REPO_LINKS=0` turns the rewrite off. The same step renames an in-book link to a folder's `README.md` to `index.md`, because mdBook publishes that page as `index.html`. `book/` itself is never changed.
+2. **Build with mdBook.** The configuration is generated into `build/mdbook/`, so there is no `book.toml` to keep in step. The site is served at `/`, search is on, every page has an "edit this page" link, and there is a `404.html`. The default favicon is kept.
+3. **Diagrams.** The `mermaid` code blocks of the pulled Kit pages are drawn in the browser by a pinned copy of mermaid that is committed in `tools/site/vendor/` and copied into the site; nothing is loaded from another host. The page's light or dark theme decides the diagram colours.
+4. **Robots.** Every page gets `<meta name="robots" content="noindex">` unless `SITE_INDEXABLE=1`.
+5. **Publish staging.** `build/site-publish/` is `build/site/` plus a `CNAME` file holding exactly `SITE_DOMAIN` and an empty `.nojekyll`. That folder is what `publish-site` commits.
+
+Preview it with `python3 -m http.server -d build/site 8000`. The first line of output says how many pages were built. `make docs` does not need mdBook and is unchanged.
+
+### `site-check`
+
+Checks the site that `make site` built (it stops with a message if there is none) and prints one line per check. It uses only Python 3.
+
+* **Links:** every internal link, script, stylesheet and image address in every generated page resolves to a file, and every `#fragment` is an id that exists in the page it points to. Addresses to other sites are counted but not fetched.
+* **Publish folder:** `build/site-publish/` has a `CNAME` that holds exactly `SITE_DOMAIN`, an empty `.nojekyll`, an `index.html`, and the same pages as `build/site/`.
+* **Robots:** with `SITE_INDEXABLE=0` every page carries the noindex tag; with `SITE_INDEXABLE=1` none does.
+* **Diagrams:** the vendored `tools/site/vendor/mermaid.min.js`, the copy in the site and the copy in the publish folder all match the sha256 recorded in `tools/site/vendor/README.md`, the licence file is there, and every page with a diagram loads the init script.
+
+Exits non-zero on any failure.
+
+### `publish-site`
+
+Maintainers only. Removes the old build, runs `make site` and `make site-check`, then commits the contents of `build/site-publish/` as **one orphan commit** (no parent) to a local branch `gh-pages`. The commit is built with a scratch index and no checkout, so `main`, your index and your working tree are never touched.
+
+* **By default it is a dry run:** it prints the commit, its file count, its `CNAME`, the repository's visibility, the push it would have made, and why it did not, and exits 0.
+* **It pushes only when all of these hold:** `PUBLISH=1`; `gh repo view` says the repository behind `origin` is `PUBLIC`; the working tree has no uncommitted changes; and the current branch is `SITE_REPO_BRANCH`. The push is `git push --force-with-lease=refs/heads/gh-pages:<what origin holds now> origin gh-pages:refs/heads/gh-pages`. It never pushes any other branch.
+* It does not turn GitHub Pages on, change any GitHub setting, or touch DNS. Those steps, and their order, are in [Publishing the website](publishing.md#going-public-in-order).
+
+Undo the local branch with `git branch -D gh-pages`.
 
 ### `check-public`
 
-Scans every file in the tree except `.kits/` and build output for anything that must not be public: internal hostnames, ticket ids, local paths that contain a user name (except the invented user name `ada` that the Kits' reference pages use in examples), notes-vault paths, references to agent instruction files, repository URLs that are not public Kits in `kits.lock` or on the card of a Kit that `tools/kit-visibility.tsv` marks public, people named in credits or licence text other than the author, and secret patterns. The generator `tools/gen-catalog.py` and its tests are not scanned, because they spell the patterns out; what they generate, including `tools/kit-visibility.tsv`, is. It prints `file:line` for every hit and exits non-zero on any. While `kits.lock` lists private Kits it also prints a note that each must become public (or stop being needed) before this repository is made public.
+Scans every file in the tree except `.kits/` and build output for anything that must not be public: internal hostnames, ticket ids, local paths that contain a user name (except the invented user name `ada` that the Kits' reference pages use in examples), notes-vault paths, references to agent instruction files, repository URLs that are not public Kits in `kits.lock` or on the card of a Kit that `tools/kit-visibility.tsv` marks public, people named in credits or licence text other than the author, and secret patterns. The generator `tools/gen-catalog.py` and its tests are not scanned, because they spell the patterns out; what they generate, including `tools/kit-visibility.tsv`, is. This repository's own address (`github.com/slash-builder/kit-book`, which the website links to) is allowed. One more file is skipped: the vendored `tools/site/vendor/mermaid.min.js`, third-party minified JavaScript that nobody here edits. It is skipped only while its sha256 equals the one recorded in `tools/site/vendor/README.md`; if the file changes it is scanned like everything else, and the README and licence next to it are always scanned. It prints `file:line` for every hit and exits non-zero on any. While `kits.lock` lists private Kits it also prints a note that each must become public (or stop being needed) before this repository is made public.
 
 ### `clean`
 
