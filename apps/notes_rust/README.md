@@ -10,7 +10,7 @@ A notes app whose core is Rust. The Flutter interface is a facade; the notes liv
 | Runners | macOS (built and run) and Linux (runner generated; **not built or run**) |
 | Tests | `cargo test` 29, `flutter test` 19 (no native library), `integration_test` 10 (the real library inside the app) |
 
-> **Two temporary things you will meet.** The Application Kit's `adopt` API is not merged or pinned yet, so [`kits.override`](../../kits.override) links `.kits/application-kit` to the branch that has it; `make fetch` says so. And the Storage Kit is private, so `make setup KITS=all`. Both are marked where they appear.
+> **One temporary thing you will meet.** The Storage Kit is private, so fetching it needs a GitHub login: `make setup KITS=all`. The Application Kit's `adopt` API is in the Kit's pinned release candidate (`kits.lock`); [`kits.override`](../../kits.override) is empty.
 
 ## Run and test
 

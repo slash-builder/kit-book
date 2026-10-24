@@ -282,7 +282,8 @@ sh apps/notes_rust/tool/smoke.sh      # launch the built macOS app for 10 s, che
 
 * **One Rust core, not a family.** Only `notes_rust` has a Rust crate and a `flutter_rust_bridge` dependency; the other six are Flutter on a Dart core. It was built and run on **macOS**; its Linux runner exists and was not built. The bridge was not tried with a Rust-to-Dart stream, hot reload, or a second Rust core in the same app.
 * **Two Kits used from Rust, the rest not.** `notes_rust` uses the Application Kit's Rust crate and the Storage Kit. Identity, messaging and transport Kits were probed in separate Rust packages in a private repository (the public-safe summary is [Fitting the Application Kit to other Kits](fitting-the-application-kit-to-other-kits.md)), and the other apps' own sync, conflict handling and large-note transfer are written in Dart. Even in `notes_rust` the transport is Dart: the peer layer has no Rust half.
-* **No real network.** Peers find each other through announcement files and loopback sockets on one machine.
+* **`notes_rust` needs a private Kit.** The Storage Kit is not public yet, so the app cannot be built from a public clone alone: it needs `make setup KITS=all` and a GitHub login with access. The Application Kit's Rust crate, which the app also uses, is part of the pinned release candidate.
+* **No real network.** Peers find each other through announcement files and loopback sockets on one machine. That holds for `notes_rust` too: nothing in it was run on a second machine.
 
 ## How much code the Kit saved
 

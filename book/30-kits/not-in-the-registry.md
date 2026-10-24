@@ -9,7 +9,7 @@ The catalog lists the Kits in the registry. Some things this book talks about ar
 * **Registered Kit:** no, so it is not in the catalog
 * **Source:** not public yet
 
-The Application Kit is the root namespace for one running app: its identity, its folders for files and settings, test and scratch modes, a roster entry other apps can read, a session with a resource broker, and an opt-in way to find other copies of the app. The six demo apps in this book are built on it, and the [demo apps guide](../20-guides/demo-apps.md) measures what it saved and what it still leaves for an app to write. Its name is provisional, and it is a candidate for the registry rather than a member of it.
+The Application Kit is the root namespace for one running app: its identity, its folders for files and settings, test and scratch modes, a roster entry other apps can read, a session with a resource broker, and an opt-in way to find other copies of the app. The seven demo apps in this book are built on it (six are Flutter on a Dart core; notes_rust is a Flutter UI over a Rust core that shares the UI's context through the Kit's adopt API), and the [demo apps guide](../20-guides/demo-apps.md) measures what it saved and what it still leaves for an app to write. Its name is provisional, and it is a candidate for the registry rather than a member of it.
 
 Its own reference documentation is pulled into this book from the Kit, at the commit this book pins (`make docs-pull`), so you can read it without access to the Kit's repository. It is the only Kit pulled so far. Start at the reference index.
 
