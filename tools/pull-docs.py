@@ -28,6 +28,8 @@ Link rewriting (Kit text is never edited in any other way)
   external (http:, https:, mailto:) and same-page #anchors     left as they are
   relative link to a pulled page (or to a folder whose README   becomes a relative link to the pulled copy; the
     is pulled, or to docs/README.md)                            #anchor is kept (headings are not changed)
+  relative link to the Kit's root README.md or CONTRIBUTING.md,  becomes a link to the Kit's catalog entry in the book
+    Kit is PRIVATE and the section sets `home`                  (so "Repository home" and "Contributing" go somewhere)
   relative link to anything not pulled, Kit is PRIVATE         becomes plain text (the link text stays)
   relative link to anything not pulled, Kit is PUBLIC          becomes a GitHub blob/tree URL at the pinned commit
   link that leaves the Kit, or points at nothing                plain text, and listed as a warning (fix it in the Kit)
@@ -113,8 +115,9 @@ def read_lock(path):
 
 
 class KitConf(object):
-    def __init__(self, name, dest, public, index, include, exclude, order, title, nav_title):
+    def __init__(self, name, dest, public, index, include, exclude, order, title, nav_title, home=None):
         self.name, self.dest, self.public, self.index = name, dest, public, index
+        self.home = home                      # book-relative target (with optional #anchor) for README/CONTRIBUTING links
         self.include, self.exclude, self.order = include, exclude, order       # order: list of (source path, label or None)
         self.title, self.nav_title = title, nav_title
 
@@ -137,7 +140,7 @@ def read_conf(path):
     kits = {}
     for name in cp.sections():
         sec = cp[name]
-        unknown = set(sec) - {"dest", "public", "index", "include", "exclude", "order", "title", "nav_title"}
+        unknown = set(sec) - {"dest", "public", "index", "include", "exclude", "order", "title", "nav_title", "home"}
         if unknown:
             raise PullError("%s: [%s] has unknown key(s): %s" % (path, name, ", ".join(sorted(unknown))))
         dest = sec.get("dest", "").strip().strip("/")
@@ -153,9 +156,12 @@ def read_conf(path):
         include = _lines(sec.get("include"))
         if not include:
             raise PullError("%s: [%s] include lists no source files" % (path, name))
+        home = sec.get("home", "").strip() or None
+        if home and (home.startswith("/") or ".." in home.split("#")[0].split("/") or not home.split("#")[0].endswith(".md")):
+            raise PullError("%s: [%s] home must be a Markdown page under book/, written relative to book/ (got %r)" % (path, name, home))
         kits[name] = KitConf(name, dest, public, sec.get("index", "").strip() or None, include,
                              _lines(sec.get("exclude")), order, sec.get("title", "").strip() or name,
-                             sec.get("nav_title", "").strip() or None)
+                             sec.get("nav_title", "").strip() or None, home)
     return kits
 
 
@@ -329,11 +335,14 @@ class Page(object):
 class Rewriter(object):
     """Rewrites the links of one Kit's pages. `pulled` maps a Kit-relative source path to its destination name."""
 
-    def __init__(self, kitdir, entry, public, pulled):
+    HOME_FILES = ("readme.md", "contributing.md")      # root files of a Kit that `home` stands in for
+
+    def __init__(self, kitdir, entry, public, pulled, home=None, dest=None):
         self.kitdir, self.entry, self.public, self.pulled = kitdir, entry, public, pulled
+        self.home, self.dest = home, dest      # home: book-relative target; dest: the Kit's folder (both set, or neither)
         self.assets = {}                      # destination name under assets/ -> bytes
         self.warnings = []
-        self.stats = {"to pulled page": 0, "plain text": 0, "github url": 0, "image copied": 0, "image dropped": 0}
+        self.stats = {"to pulled page": 0, "plain text": 0, "github url": 0, "to catalog entry": 0, "image copied": 0, "image dropped": 0}
         self.page = None
         self.page_dest = None
 
@@ -404,6 +413,12 @@ class Rewriter(object):
         if self.public:
             self.stats["github url"] += 1
             return self._source_url(norm, frag)
+        if self.home and self.dest and norm.lower() in self.HOME_FILES:
+            # a private Kit has no page to send "Repository home" or "Contributing" to; its card in the catalog is the nearest thing
+            here = posixpath.dirname(posixpath.join(self.dest, self.page_dest)) or "."
+            target, _, anchor = ("book/" + self.home).partition("#")
+            self.stats["to catalog entry"] += 1
+            return posixpath.relpath(target, here) + ("#" + anchor if anchor else "")
         self.stats["plain text"] += 1
         return None
 
@@ -578,7 +593,7 @@ def pull_kit(root, entry, conf, kits_dir):
     if index_src:
         pulled[index_src] = "index.md"
     labels = dict(conf.order)
-    rw = Rewriter(kitdir, entry, public, pulled)
+    rw = Rewriter(kitdir, entry, public, pulled, home=conf.home, dest=conf.dest)
 
     def make(src, dest):
         text = rw.rewrite(src, dest, read_text(os.path.join(kitdir, *src.split("/"))))
@@ -769,9 +784,10 @@ def run(root, lock_path, conf_path, kits_dir, check, out=print):
         out("pull-docs: %s at %s (%s): %d pages incl. index, %d asset(s) -> %s"
             % (r.entry.name, r.entry.short, "public" if r.public else "private", len(r.pages),
                sum(1 for f in r.files if "/%s/" % ASSETS in f), r.dest))
-        out("pull-docs:   links: %d to pulled pages, %d to GitHub, %d plain text; images: %d copied, %d dropped"
-            % (s.get("to pulled page", 0), s.get("github url", 0), s.get("plain text", 0), s.get("image copied", 0),
-               s.get("image dropped", 0)))
+        out("pull-docs:   links: %d to pulled pages, %d to GitHub, %d plain text%s; images: %d copied, %d dropped"
+            % (s.get("to pulled page", 0), s.get("github url", 0), s.get("plain text", 0),
+               (", %d to the catalog entry" % s["to catalog entry"]) if s.get("to catalog entry") else "",
+               s.get("image copied", 0), s.get("image dropped", 0)))
     if removed:
         out("pull-docs: removed %d stale page(s): %s" % (len(removed), ", ".join(removed)))
     return 0

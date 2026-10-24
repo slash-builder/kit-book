@@ -16,4 +16,4 @@
 # application-kit is private for now; it must be public (or this repository must stop needing it) before this repository is.
 # The pin is the scrubbed single-commit release candidate (branch public/release-prep), the exact tree that will become public. The earlier
 # private venue-kit pin is gone: the scrubbed Rust crate no longer depends on it.
-application-kit https://github.com/slash-builder/application-kit e70ded6f72b1b96eea063e47f23d1d4af1413810 private core
+application-kit https://github.com/slash-builder/application-kit 39418b9e624e27338666a154f728ad2def9e1850 private core

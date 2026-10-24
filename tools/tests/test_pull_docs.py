@@ -173,11 +173,12 @@ class KitCase(unittest.TestCase):
 class LinkRewriteTests(KitCase):
     """One test per class of link. The page under test is docs/GUIDE.md unless it says otherwise."""
 
-    def rewrite(self, text, page="docs/GUIDE.md", public=None, dest=None):
+    def rewrite(self, text, page="docs/GUIDE.md", public=None, dest=None, home=None):
         entry = self.mod.read_lock(os.path.join(self.root, "kits.lock"))["demo-kit"]
         pulled = {"docs/GUIDE.md": "guide.md", "docs/README.md": "index.md", "spec/SPEC.md": "spec/spec.md",
                   "docs/examples/cli/README.md": "examples/cli.md"}
-        rw = self.mod.Rewriter(self.kit, entry, (self.visibility == "public") if public is None else public, pulled)
+        rw = self.mod.Rewriter(self.kit, entry, (self.visibility == "public") if public is None else public, pulled,
+                               home=home, dest=self.DEST if home else None)
         return rw.rewrite(page, dest or pulled[page], text), rw
 
     def test_external_links_and_same_page_anchors_are_left_alone(self):
@@ -204,6 +205,37 @@ class LinkRewriteTests(KitCase):
         self.assertEqual(out, "see the code, `../README.md` and `x`\n")
         self.assertEqual(rw.warnings, [])
         self.assertNotIn("github.com", out)
+
+    HOME = "30-kits/not-in-the-registry.md#demo-kit"
+
+    def test_readme_and_contributing_of_a_private_kit_go_to_the_catalog_entry_when_home_is_set(self):
+        self.kit_write("CONTRIBUTING.md", "# Contributing\n")
+        out, rw = self.rewrite("[Contributing](../CONTRIBUTING.md) · [Repository home](../README.md#top) · [again][r]\n\n[r]: ../README.md\n",
+                               home=self.HOME)
+        want = "../../not-in-the-registry.md#demo-kit"        # from book/30-kits/demo-kit/reference/ to book/30-kits/
+        self.assertEqual(out, "[Contributing](%s) · [Repository home](%s) · [again][r]\n\n[r]: %s\n" % (want, want, want))
+        self.assertEqual(rw.stats["to catalog entry"], 3)
+        self.assertEqual(rw.warnings, [])
+
+    def test_the_catalog_entry_link_is_relative_to_the_folder_the_page_lands_in(self):
+        out, _ = self.rewrite("[home](../../../README.md)\n", page="docs/examples/cli/README.md", home=self.HOME)
+        self.assertEqual(out, "[home](../../../not-in-the-registry.md#demo-kit)\n")
+        out, _ = self.rewrite("[home](../README.md)\n", page="spec/SPEC.md", home=self.HOME)
+        self.assertEqual(out, "[home](../../../not-in-the-registry.md#demo-kit)\n")
+        out, _ = self.rewrite("[home](../README.md)\n", page="docs/README.md", home=self.HOME)
+        self.assertEqual(out, "[home](../../not-in-the-registry.md#demo-kit)\n")
+
+    def test_home_changes_nothing_else_other_links_stay_plain_text_and_a_public_kit_still_gets_github(self):
+        self.kit_write("LICENSE", "x\n")
+        out, rw = self.rewrite("[code](examples/cli/bin/main.dart) [licence](../LICENSE) `[x](../README.md)`\n", home=self.HOME)
+        self.assertEqual(out, "code licence `[x](../README.md)`\n")
+        self.assertEqual(rw.stats["to catalog entry"], 0)
+        out, _ = self.rewrite("[home](../README.md)\n", public=True, home=self.HOME)
+        self.assertEqual(out, "[home](https://github.com/example-org/demo-kit/blob/%s/README.md)\n" % COMMIT)
+
+    def test_without_home_the_readme_link_is_still_plain_text(self):
+        out, _ = self.rewrite("[home](../README.md)\n")
+        self.assertEqual(out, "home\n")
 
     def test_not_pulled_target_in_a_public_kit_becomes_a_github_url_at_the_pinned_commit(self):
         out, _ = self.rewrite("[code](examples/cli/bin/main.dart#L1) [dir](examples/cli/bin) [home](../README.md)\n", public=True)
@@ -410,6 +442,21 @@ class RunTests(KitCase):
         rc, _, err = self.pull()
         self.assertEqual(rc, 2)
         self.assertIn("unknown key", err)
+
+    def test_a_full_pull_with_home_turns_the_index_navigation_into_links(self):
+        self.write("book/30-kits/not-in-the-registry.md", "# Not in the registry\n\n## Demo kit\n")
+        self.write("tools/docs-pull.conf", CONF.replace("index = ", "home = 30-kits/not-in-the-registry.md#demo-kit\nindex = "))
+        self.assertEqual(self.pull()[0], 0)
+        self.assertIn("· [Home](../../not-in-the-registry.md#demo-kit)", self.read(self.DEST + "/index.md"))
+        rc, out, _ = self.pull("--check")
+        self.assertEqual(rc, 0)
+
+    def test_home_must_be_a_markdown_page_under_book(self):
+        for bad in ("../README.md", "/etc/x.md", "30-kits/page.txt"):
+            self.write("tools/docs-pull.conf", CONF.replace("index = ", "home = %s\nindex = " % bad))
+            rc, _, err = self.pull()
+            self.assertEqual(rc, 2, bad)
+            self.assertIn("home must be", err)
 
     def test_visibility_comes_from_kits_lock_unless_the_configuration_says_otherwise(self):
         self.kit_write("docs/GUIDE.md", GUIDE + "\n[code](../README.md)\n")

@@ -143,6 +143,7 @@ Every pulled page starts with a banner comment and carries the visible line "Ref
 |---|---|
 | a web address, a mail address, or a heading on the same page | itself, unchanged |
 | a pulled page, or a folder whose `README.md` is pulled, or the Kit's `docs/README.md` | a relative link to the pulled copy, with its `#anchor` kept (the headings are not changed, so the anchors still exist) |
+| the Kit's root `README.md` or `CONTRIBUTING.md`, when the Kit is **private** and its section sets `home` | a link to the Kit's entry in the catalog (the page named by `home`), so "Repository home" and "Contributing" lead somewhere |
 | anything else in the Kit (code, other folders), when the Kit is **private** | plain text: the link text stays, the link goes |
 | anything else in the Kit, when the Kit is **public** | a GitHub address at the pinned commit (`blob` for a file, `tree` for a folder), with any `#anchor` or `#L10` kept |
 | a place outside the Kit, or a file the Kit does not have | plain text, and a warning naming the page, so it can be fixed in the Kit |
