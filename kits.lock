@@ -14,5 +14,6 @@
 #
 # To move a pin: `make lock` (see book/90-reference/make-targets.md).
 # application-kit is private for now; it must be public (or this repository must stop needing it) before this repository is.
-application-kit https://github.com/slash-builder/application-kit 97ebae7d055013f37e00681d3651c517b7dd0ce5 private core
-venue-kit https://github.com/slash-builder/venue-kit 1a3fd3bb12aea0168d3cfae395084a8b9fdfa392 private app-dep
+# The pin is the scrubbed single-commit release candidate (branch public/release-prep), the exact tree that will become public. The earlier
+# private venue-kit pin is gone: the scrubbed Rust crate no longer depends on it.
+application-kit https://github.com/slash-builder/application-kit 2dab4db8a873b12107b97c22c60903ee576b4203 private core
