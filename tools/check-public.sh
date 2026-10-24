@@ -18,10 +18,11 @@ HITS=$(mktemp)
 FILES=$(mktemp)
 trap 'rm -f "$HITS" "$FILES"' EXIT INT TERM
 
-# The files to scan: everything on disk that is not fetched, built or generated.
+# The files to scan: everything on disk that is not fetched, built or generated (a Flutter app with plugins gets a git-ignored
+# .flutter-plugins-dependencies that holds absolute paths of the machine it was made on).
 find . \( -name .git -o -name .kits -o -name build -o -name .dart_tool -o -name target -o -name Pods \
           -o -name ephemeral -o -name node_modules -o -name .idea -o -name .vscode \) -prune -o -type f -print |
-  sed 's#^\./##' | grep -v -e '^tools/check-public\.sh$' -e '^tools/gen-catalog\.py$' -e '^tools/tests/test_gen_catalog\.py$' -e '\.DS_Store$' > "$FILES"
+  sed 's#^\./##' | grep -v -e '^tools/check-public\.sh$' -e '^tools/gen-catalog\.py$' -e '^tools/tests/test_gen_catalog\.py$' -e '\.DS_Store$' -e '/\.flutter-plugins-dependencies$' > "$FILES"
 
 # One exemption: the vendored mermaid bundle is third-party minified JavaScript (one multi-megabyte line, not our text), so a
 # pattern in it would be a false positive that no one here can edit. It is skipped ONLY while its sha256 equals the one

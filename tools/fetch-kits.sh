@@ -9,6 +9,7 @@
 # Private Kits need `gh` (logged in with `gh auth login`) or a GITHUB_TOKEN environment variable.
 # Prints one line per Kit: fetched, up to date, or skipped (with the reason).
 # Exits non-zero only when a Kit it tried to fetch could not be fetched.
+# kits.override (when it has a line for a Kit) replaces the download with a link to a local checkout.
 set -eu
 . "$(dirname "$0")/common.sh"
 
@@ -53,6 +54,19 @@ lock_lines | while read -r name url commit vis role _rest; do
     *) report "$name" "FAILED: commit '$commit' in kits.lock is not a commit id"; echo x >> "$TMP/failed"; continue ;;
   esac
   [ "${#commit}" -eq 40 ] || { report "$name" "FAILED: kits.lock needs the full 40-character commit id"; echo x >> "$TMP/failed"; continue; }
+
+  # kits.override: a Kit that is a link to a local checkout is not downloaded (the file explains why it is there).
+  over=$(override_for "$name")
+  if [ -n "$over" ]; then
+    if [ -d "$over" ]; then
+      rm -rf "$dest"
+      ln -s "$(cd "$over" && pwd -P)" "$dest"
+      report "$name" "OVERRIDDEN by kits.override: linked to a local checkout (the pin $short in kits.lock is NOT what you are building against)"
+    else
+      report "$name" "FAILED: kits.override names $over, which is not a folder"; echo x >> "$TMP/failed"
+    fi
+    continue
+  fi
 
   if [ "$vis" = private ] && [ "$WHICH" != all ]; then
     if [ -f "$dest/.fetched" ]; then report "$name" "kept (private Kit, fetched earlier at $(cut -c1-7 "$dest/.fetched"); not refreshed without KITS=all)"

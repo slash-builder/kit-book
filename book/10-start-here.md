@@ -34,14 +34,14 @@ Without a login, private Kits are skipped with a one-line explanation, and the d
 make test-fast
 ```
 
-This runs every fetched Kit's own tests, the components in `labs/`, and the tests of all six demo apps, then prints a table: suite, passed, failed, skipped and seconds. It finishes with `OK` or `FAILED`. `make test` additionally runs the suites that need Docker, Redis or a running daemon, and skips them with a message when the tool is absent.
+This runs every fetched Kit's own tests, the components in `labs/`, and the tests of all seven demo apps (the Rust core of `notes_rust` is tested with `cargo test`), then prints a table: suite, passed, failed, skipped and seconds. It finishes with `OK` or `FAILED`. `make test` additionally runs the suites that need Docker, Redis or a running daemon, and skips them with a message when the tool is absent.
 
 ## 4. Build and run an app
 
 ```sh
 make app APP=calculator    # a debug build for this computer
 make run APP=calculator    # run it (macOS or Linux desktop)
-make apps                  # build all six
+make apps                  # build all seven
 ```
 
 The apps are Flutter desktop apps. On macOS this needs the full Xcode app, not only the command line tools; on Linux it needs a few packages (`make doctor` lists them). Windows is not covered.

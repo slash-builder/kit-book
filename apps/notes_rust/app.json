@@ -1,0 +1,7 @@
+{
+  "id": "dev.demo.notes-rust",
+  "name": "Notes (Rust core)",
+  "version": "0.1.0",
+  "kits": ["peers"],
+  "venue": { "mode": "off" }
+}

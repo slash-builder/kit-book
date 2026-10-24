@@ -7,7 +7,8 @@
 #
 # Fast suites: every fetched "core" Kit's own tests (its Makefile's test target if it has one, else the native
 # command: dart test, flutter test, cargo test), then labs/interface_candidates, then each demo app (flutter test).
-# Integration suites are skipped with a message when their tool is absent. Skipping is not a failure.
+# Integration suites (Docker containers, a broker daemon, and an app's integration_test/ run inside the built app) are skipped
+# with a message when what they need is absent. Skipping is not a failure.
 # Exit status is non-zero when a suite that ran has failures.
 set -u
 . "$(dirname "$0")/common.sh"
@@ -111,13 +112,18 @@ fast_suites() {
   run_suite "labs/interface_candidates: flutter test" dart "$ROOT/labs/interface_candidates" flutter test -r expanded
   for a in "$ROOT"/apps/*/; do
     a=${a%/}
+    # An app with a Rust core: its own `cargo test` first (no Flutter, no native library needed), when the Kits it builds against are here.
+    if [ -f "$a/rust/Cargo.toml" ]; then
+      if (cd "$a/rust" && cargo metadata --format-version 1 >/dev/null 2>&1); then run_suite "apps/$(basename "$a")/rust: cargo test" cargo "$a/rust" cargo test
+      else skip_suite "apps/$(basename "$a")/rust: cargo test" "cargo cannot resolve the crate; a Kit it depends on is not fetched (make setup KITS=all)"; fi
+    fi
     if [ -d "$KITS_DIR/application-kit" ]; then run_suite "apps/$(basename "$a"): flutter test" dart "$a" flutter test -r expanded
     else skip_suite "apps/$(basename "$a"): flutter test" "application-kit is not fetched"; fi
   done
 }
 
 integration_suites() {
-  say "Integration (needs Docker, Redis or a running daemon):"
+  say "Integration (needs Docker, Redis, a running daemon, or a desktop to run an app on):"
   # 1. Linux containers: a Kit that ships tools/linux-test.sh runs its Dart and Rust cores in throwaway containers.
   ran=0
   for dir in "$KITS_DIR"/*/; do
@@ -129,6 +135,20 @@ integration_suites() {
     else run_suite "$name: Linux containers (docker)" other "$dir" sh tools/linux-test.sh; fi
   done
   [ "$ran" = 1 ] || skip_suite "Linux containers" "no fetched Kit ships a container test script"
+  # 1b. An app that ships integration_test/ runs inside the built app (the real native library): needs a desktop to run on.
+  for a in "$ROOT"/apps/*/; do
+    a=${a%/}
+    [ -d "$a/integration_test" ] || continue
+    label="apps/$(basename "$a"): flutter test integration_test (the built app)"
+    if [ ! -d "$KITS_DIR/application-kit" ]; then skip_suite "$label" "application-kit is not fetched"
+    elif [ -f "$a/rust/Cargo.toml" ] && [ ! -d "$KITS_DIR/storage-kit" ]; then skip_suite "$label" "storage-kit is not fetched (make setup KITS=all)"
+    elif [ "$(os_family)" = linux ] && [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then skip_suite "$label" "no display (on Linux run it under xvfb-run)"
+    elif [ "$(os_family)" = other ]; then skip_suite "$label" "no desktop target on this system"
+    else
+      dev=macos; [ "$(os_family)" = linux ] && dev=linux
+      run_suite "$label" dart "$a" flutter test integration_test -d "$dev" -r expanded
+    fi
+  done
   # 2. A resource-broker daemon: the render-queue and Rust tests run for real when VENUE_TOKEN_FILE names a token.
   if [ -z "${VENUE_TOKEN_FILE:-}" ]; then
     skip_suite "resource-broker daemon tests" "VENUE_TOKEN_FILE is not set (the fast suites skip these tests themselves)"

@@ -10,7 +10,7 @@ The scripts behind the targets are in [`tools/`](../../tools/). They are plain P
 |---|---|---|
 | `KITS` | `setup`, `fetch` | `public` (default) fetches only public Kits. `all` also fetches private Kits and needs a GitHub login |
 | `SETUP_INSTALL` | `setup` | `1` prints the install commands for missing required tools and runs them after a y/N question. Default: never installs |
-| `APP` | `app`, `run` | An app folder name under `apps/`: `calculator`, `minesweeper`, `notepad`, `stopwatch`, `render-queue`, `launcher` |
+| `APP` | `app`, `run` | An app folder name under `apps/`: `calculator`, `minesweeper`, `notepad`, `stopwatch`, `render-queue`, `launcher`, `notes_rust` |
 | `KIT` | `lock` | A Kit name from `kits.lock`. Empty means every Kit |
 | `LOCK_YES` | `lock` | `1` skips the y/N question before `kits.lock` is rewritten (the difference is still printed) |
 | `GITHUB_TOKEN` | `fetch`, `lock` | A token that can read private Kits, used when the GitHub CLI is not logged in |
@@ -46,17 +46,17 @@ What CI runs: `lint`, then `test-fast`, then `build`.
 
 Checks the toolchain and prints a table: tool, whether it is required, status, the version found and the version wanted. For each missing or too-old tool it prints the install command for your system (Homebrew on macOS, `apt` on Debian and Ubuntu). It installs **nothing** and exits non-zero only when a **required** tool is missing or too old.
 
-* **Required:** Flutter and Dart (the minimum Dart is read from the apps' `pubspec.yaml` files), Rust and Cargo (the minimum is read from the Rust crate), `curl`, `tar`, Python 3, and on macOS the Xcode command line tools.
-* **For apps:** needed only to build and run the demo apps. On macOS, the full Xcode app. On Linux, `clang`, `cmake`, `ninja`, `pkg-config` and the GTK 3 development files. `make apps` requires them; `make test-fast` does not.
-* **Optional:** Docker (for the Linux container checks), `redis-server`, `protoc`, `flutter_rust_bridge_codegen`, the GitHub CLI (`gh`, for private Kits) and `mdbook` (for `make site`).
+* **Required:** Flutter and Dart (the minimum Dart is read from the apps' `pubspec.yaml` files), Rust and Cargo (the minimum is the highest `rust-version` among the Kits' crates and the apps' Rust cores), `curl`, `tar`, Python 3, and on macOS the Xcode command line tools. **`flutter_rust_bridge_codegen` is required while an app with a Rust core (`apps/notes_rust`) is in the tree**, at exactly the version that app pins in its `pubspec.yaml` (`flutter_rust_bridge: 2.12.0` today); it is looked for on `PATH` and in `~/.cargo/bin`, where `cargo install` puts it.
+* **For apps:** needed only to build and run the demo apps. On macOS, the full Xcode app, and CocoaPods when an app has a native plugin (the Rust core's build glue is one). On Linux, `clang`, `cmake`, `ninja`, `pkg-config` and the GTK 3 development files. `make apps` requires them; `make test-fast` does not.
+* **Optional:** Docker (for the Linux container checks), `redis-server`, `protoc`, `flutter_rust_bridge_codegen` (optional only when no app in the tree needs it), the GitHub CLI (`gh`, for private Kits) and `mdbook` (for `make site`).
 
 ### `setup`
 
-Runs `doctor`, then `fetch`, then `flutter pub get` or `dart pub get` for every app and package, then `cargo fetch` for each Rust crate. Safe to run again. `KITS=all` also fetches private Kits. `SETUP_INSTALL=1` offers to run the install commands for missing required tools; the default never installs.
+Runs `doctor`, then `fetch`, then `flutter pub get` or `dart pub get` for every app and package, then `cargo fetch` for each Kit's Rust crate and for each app's own Rust core. Safe to run again. `KITS=all` also fetches private Kits. `SETUP_INSTALL=1` offers to run the install commands for missing required tools; the default never installs.
 
 ### `fetch`
 
-Reads [`kits.lock`](#kitslock) and, for each Kit, downloads the archive at the pinned commit into `.kits/<name>/`. Public Kits come from a plain `curl` download. Private Kits come from the GitHub CLI (`gh api`) when it is logged in, else from `GITHUB_TOKEN`; with neither, the Kit is skipped with a one-line explanation. After unpacking it writes `.kits/<name>/.fetched` containing the commit, and skips the Kit next time when that matches. It checks that the archive really is the commit asked for. No git and no submodules are involved. One line per Kit: `fetched`, `up to date`, or `skipped (why)`.
+Reads [`kits.lock`](#kitslock) and, for each Kit (unless [`kits.override`](#kitsoverride) names a local checkout for it), downloads the archive at the pinned commit into `.kits/<name>/`. Public Kits come from a plain `curl` download. Private Kits come from the GitHub CLI (`gh api`) when it is logged in, else from `GITHUB_TOKEN`; with neither, the Kit is skipped with a one-line explanation. After unpacking it writes `.kits/<name>/.fetched` containing the commit, and skips the Kit next time when that matches. It checks that the archive really is the commit asked for. No git and no submodules are involved. One line per Kit: `fetched`, `up to date`, or `skipped (why)`.
 
 ### `lock`
 
@@ -64,7 +64,7 @@ Shows how the pins would move: for each Kit it asks GitHub for the newest commit
 
 ### `test`
 
-Runs every fetched Kit's own test suite, then `labs/interface_candidates`, then every demo app, then the integration suites that can run on this computer. A Kit with a `Makefile` is tested with its own `make test-fast` (or `make test`); a Kit without one is tested with its native commands (`dart test`, `flutter test`, `cargo test`). Prints a table with each suite's passed, failed and skipped counts and its seconds; logs are in `build/test-logs/`. Exits non-zero when any suite that ran has a failure.
+Runs every fetched Kit's own test suite, then `labs/interface_candidates`, then every demo app (an app with a Rust core runs its `cargo test` first and then `flutter test`, which uses an in-memory stand-in for the core, so it needs no native build), then the integration suites that can run on this computer. A Kit with a `Makefile` is tested with its own `make test-fast` (or `make test`); a Kit without one is tested with its native commands (`dart test`, `flutter test`, `cargo test`). Prints a table with each suite's passed, failed and skipped counts and its seconds; logs are in `build/test-logs/`. Exits non-zero when any suite that ran has a failure.
 
 ### `test-fast`
 
@@ -78,6 +78,7 @@ Only the suites that need Docker, Redis or a daemon. Each one skips with a clear
 |---|---|---|
 | Linux containers | The Docker daemon running | Runs a Kit's Dart and Rust cores in throwaway Linux containers, if the Kit ships a script for it (the Application Kit does) |
 | Resource-broker daemon tests | `VENUE_TOKEN_FILE` set to a token for a running broker | Runs the render-queue tests that otherwise skip themselves |
+| App integration tests | A desktop to run an app on (macOS, or Linux with a display) and the Kits the app builds against | Runs an app's `integration_test/` inside the built app with `flutter test integration_test -d macos`, so a Rust core is the real native library. `apps/notes_rust` has one |
 | Message-hub probes | Redis | These run in a private repository; nothing here runs yet |
 
 ### `apps`
@@ -91,6 +92,10 @@ Builds one app: `make app APP=notepad`.
 ### `run`
 
 Runs one app on this computer: `make run APP=notepad`.
+
+### `frb`
+
+Regenerates the Flutter-to-Rust bridge (`flutter_rust_bridge_codegen generate`) for every app that has a `flutter_rust_bridge.yaml`, which is `apps/notes_rust` today. Run it after changing the bridge layer (`rust/src/api/*.rs`) and commit the result: the generated files are committed so that `make app` works without this tool. It refuses to run with a codegen whose version differs from the one the app pins.
 
 ### `build`
 
@@ -216,7 +221,7 @@ Scans every file in the tree except `.kits/` and build output for anything that 
 
 ### `clean`
 
-Removes build output: `build/`, each app's and lab's `build/` and `.dart_tool/`, and Rust `target/` folders inside `.kits/`. Keeps the fetched Kits.
+Removes build output: `build/`, each app's and lab's `build/` and `.dart_tool/`, an app's Rust core `target/` folder, and Rust `target/` folders inside `.kits/`. Keeps the fetched Kits.
 
 ### `clean-all`
 
@@ -237,3 +242,7 @@ name  repo-url  commit  visibility  role
 | `commit` | The full 40-character commit id. A branch name is not accepted, so a pin never moves by itself |
 | `visibility` | `public` (plain download, no account) or `private` (needs a GitHub login and `KITS=all`) |
 | `role` | `core` (documented here, tests run by `make test`), `app-dep` (another Kit needs it to build; fetched, not tested) or `reference` (documented here, not needed to build the apps) |
+
+## `kits.override`
+
+Optional. One line per Kit, `name  path`, with the path relative to the repository root; lines starting with `#` are comments. For a Kit named here, `make fetch` and `make setup` link `.kits/<name>/` to that local checkout instead of downloading the pin in `kits.lock`, and say so in their output, because the pin is then not what you are building against. The file exists for a Kit change that is not merged yet. It is not meant to stay: the steps for removing a line are in the file's own header comment.

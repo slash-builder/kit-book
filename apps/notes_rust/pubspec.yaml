@@ -1,0 +1,37 @@
+name: notes_rust
+description: "A notes app: a Flutter UI over a Rust core (notes_core) that uses the Storage Kit and shares one Application Kit context with the UI. Demo."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+  application_kit:
+    path: ../../.kits/application-kit/dart/application_kit
+  application_kit_flutter:
+    path: ../../.kits/application-kit/dart/application_kit_flutter
+  interface_candidates:
+    path: ../../labs/interface_candidates
+  # The bridge. This version and the Rust side's `flutter_rust_bridge = "=2.12.0"` (rust/Cargo.toml) must match exactly, and
+  # so must the flutter_rust_bridge_codegen binary that generated lib/src/rust (make doctor checks it).
+  flutter_rust_bridge: 2.12.0
+  # Glue only: cargokit builds ../rust (the crate notes_core) and links it into the app.
+  notes_core:
+    path: rust_builder
+  # Used by the in-memory fake core to hash blocks (the real core hashes with the Storage Kit's BLAKE3).
+  crypto: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - app.json

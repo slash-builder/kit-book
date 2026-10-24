@@ -5,7 +5,7 @@ Developer documentation and composed demos for every SlashBuilder Kit.
 This repository is the place to start when you want to use SlashBuilder's Kits. It holds three things:
 
 * **A book** (in [`book/`](book/README.md)): narrative guides and reference pages for the Kits.
-* **Demo apps** (in [`apps/`](apps/)): six small Flutter desktop apps that compose Kits, each chosen because it asks something different of them.
+* **Demo apps** (in [`apps/`](apps/)): seven small Flutter desktop apps that compose Kits, each chosen because it asks something different of them. One of them, `notes_rust`, has a Rust core.
 * **A Makefile** that sets up the build environment, runs the tests and builds the apps, so you do not have to learn each Kit's toolchain first.
 
 > **Status: being set up.** Some of the Kits the demos use are not public yet, and the names *Application Kit* and *Venue* (a resource broker) are provisional. The book is a skeleton: the introduction, a quick start, two guides, a reference and the Kit catalog (a status card for every Kit in the registry, including those that are not public) are written; the Application Kit's own reference pages are pulled in from the Kit, and no other Kit has reference pages yet. This repository is the book, not a Kit.
@@ -28,7 +28,7 @@ make run APP=calculator
 | Folder | What it is |
 |---|---|
 | [`book/`](book/README.md) | The book. Open [`book/README.md`](book/README.md) for the table of contents |
-| [`apps/`](apps/) | Six demo apps: [calculator](apps/calculator/README.md), [minesweeper](apps/minesweeper/README.md), [notepad](apps/notepad/README.md), [stopwatch](apps/stopwatch/README.md), [render-queue](apps/render-queue/README.md), [launcher](apps/launcher/README.md) |
+| [`apps/`](apps/) | Seven demo apps: [calculator](apps/calculator/README.md), [minesweeper](apps/minesweeper/README.md), [notepad](apps/notepad/README.md), [stopwatch](apps/stopwatch/README.md), [render-queue](apps/render-queue/README.md), [launcher](apps/launcher/README.md), [notes_rust](apps/notes_rust/README.md) |
 | [`labs/interface_candidates`](labs/interface_candidates/README.md) | Components proposed for the shared UI Kit, built from what the demo apps duplicate. Plain Material |
 | [`tools/`](tools/) | The scripts behind the Makefile (POSIX `sh` and Python 3 only; the maintainer-only catalog generator also needs PyYAML) |
 | [`kits.lock`](kits.lock) | Which Kits the apps use, each pinned to one commit. `make setup` downloads them into `.kits/` |
@@ -37,9 +37,9 @@ The Kits are not copied into this repository and are not git submodules. A scrip
 
 ## The demo apps
 
-A calculator, minesweeper, a notepad, a stopwatch, a render queue and a launcher. The calculator is the floor: it barely needs the Application Kit and says so. The notepad is the ceiling: it syncs notes between copies of itself and resolves conflicts. [The demo apps guide](book/20-guides/demo-apps.md) has the measurements and the walkthroughs.
+A calculator, minesweeper, a notepad, a stopwatch, a render queue, a launcher and notes_rust, the one with a Rust core. The calculator is the floor: it barely needs the Application Kit and says so. The notepad is the ceiling: it syncs notes between copies of itself and resolves conflicts. [The demo apps guide](book/20-guides/demo-apps.md) has the measurements and the walkthroughs.
 
-What the demos do not cover is said plainly there: **no demo app has a Rust core yet.** All six are Flutter on a Dart core, so the intended shape (a Flutter interface over a Rust core that uses several Kits) has not been exercised end to end.
+What the demos do not cover is said plainly there: **only `notes_rust` has a Rust core**, built and run on macOS only, and its transport is still Dart. The other six are Flutter on a Dart core.
 
 ## About the book
 

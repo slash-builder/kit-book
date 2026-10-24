@@ -1,0 +1,4 @@
+# Rust objects default to the newest macOS the SDK knows (26.0 here), while the CocoaPods glue links at 11.0: without this the macOS
+# build prints one "was built for newer 'macOS' version" linker warning per object file (391 of them). Same value as the podspec.
+[env]
+MACOSX_DEPLOYMENT_TARGET = { value = "11.0", force = false }
