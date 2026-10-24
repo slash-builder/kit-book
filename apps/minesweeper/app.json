@@ -1,0 +1,8 @@
+{
+  "id": "dev.demo.minesweeper",
+  "name": "Minesweeper",
+  "version": "0.1.0",
+  "kits": ["peers"],
+  "envPrefix": "MINES",
+  "venue": { "mode": "off" }
+}

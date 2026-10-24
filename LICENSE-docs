@@ -1,0 +1,33 @@
+Documentation licence: Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+This licence covers the documentation in this repository: everything in book/,
+README.md, CONTRIBUTING.md, and every README.md inside apps/ and labs/.
+Code and tooling (the Makefile, tools/, apps/, labs/) is under the Apache
+License 2.0; see the file LICENSE.
+
+Attribution: SlashBuilder / Douglas Lockamy
+
+Full legal text: https://creativecommons.org/licenses/by/4.0/legalcode
+Human-readable summary: https://creativecommons.org/licenses/by/4.0/
+
+Summary of what the licence says (a convenience, not the licence itself; the
+legal text at the link above is what applies):
+
+You are free to
+  * Share: copy and redistribute the material in any medium or format, and
+  * Adapt: remix, transform, and build upon the material,
+for any purpose, even commercially.
+
+Under these terms
+  * Attribution: you must give appropriate credit (the attribution line above
+    is the credit to give), provide a link to the licence, and indicate if
+    changes were made. You may do so in any reasonable manner, but not in any
+    way that suggests the licensor endorses you or your use.
+  * No additional restrictions: you may not apply legal terms or technological
+    measures that legally restrict others from doing anything the licence
+    permits.
+
+The licensor cannot revoke these freedoms as long as you follow the licence
+terms. The licence does not cover material that is in the public domain, or
+uses allowed by an exception or limitation such as fair use, and it does not
+grant any rights in names, logos or trademarks.

@@ -1,0 +1,7 @@
+{
+  "id": "dev.demo.notepad",
+  "name": "Notepad",
+  "version": "0.1.0",
+  "kits": ["peers"],
+  "venue": { "mode": "off" }
+}

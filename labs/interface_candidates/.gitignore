@@ -1,0 +1,9 @@
+# Platform runners are generated on demand to run the catalog (see README) and
+# are never part of this package.
+/android/
+/ios/
+/linux/
+/macos/
+/web/
+/windows/
+*.iml

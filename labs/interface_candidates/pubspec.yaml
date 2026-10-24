@@ -1,0 +1,25 @@
+name: interface_candidates
+description: >-
+  CANDIDATE Interface Kit components, derived from what six Application Kit
+  demo apps and a larger SlashBuilder app actually duplicate. Plain Material, themed only from
+  Theme.of(context). Not the Interface Kit; its maintainers decide what gets promoted.
+version: 0.0.1
+publish_to: none
+
+# Floor matches the real Interface Kit's (Flutter >=3.27, Dart >=3.6) so a
+# promoted file compiles there unchanged.
+environment:
+  sdk: ^3.6.0
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

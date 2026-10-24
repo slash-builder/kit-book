@@ -1,0 +1,8 @@
+{
+  "id": "dev.demo.render-queue",
+  "name": "Render Queue",
+  "version": "0.1.0",
+  "kits": ["venue"],
+  "envPrefix": "RENDER_QUEUE",
+  "venue": { "mode": "auto", "consumer": "render-queue" }
+}

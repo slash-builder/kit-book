@@ -1,0 +1,8 @@
+{
+  "id": "dev.demo.calc",
+  "name": "Calculator",
+  "version": "0.1.0",
+  "kits": [],
+  "envPrefix": "CALC",
+  "venue": { "mode": "off" }
+}

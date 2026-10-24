@@ -1,0 +1,17 @@
+# Kits fetched by `make setup` (see kits.lock)
+.kits/
+
+# Build output and tool caches
+build/
+.dart_tool/
+target/
+pubspec.lock
+Cargo.lock
+.flutter-plugins*
+.packages
+*.iml
+
+# macOS / editors
+.DS_Store
+.idea/
+.vscode/

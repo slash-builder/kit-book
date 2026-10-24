@@ -1,0 +1,8 @@
+{
+  "id": "dev.demo.launcher",
+  "name": "Launcher",
+  "version": "0.1.0",
+  "kits": ["venue"],
+  "envPrefix": "LAUNCHER",
+  "venue": { "mode": "auto", "consumer": "launcher" }
+}

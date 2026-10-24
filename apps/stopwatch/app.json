@@ -1,0 +1,8 @@
+{
+  "id": "dev.demo.stopwatch",
+  "name": "Stopwatch",
+  "version": "0.1.0",
+  "kits": ["venue", "peers"],
+  "envPrefix": "STOPWATCH",
+  "venue": { "mode": "off", "consumer": "stopwatch" }
+}

@@ -1,0 +1,18 @@
+# kits.lock: the Kits this repository uses, each pinned to one commit.
+#
+# One line per Kit, five fields separated by spaces:
+#   name   repo-url   commit   visibility   role
+#
+#   name        the folder it is fetched into: .kits/<name>/
+#   repo-url    https://github.com/<org>/<repo>
+#   commit      the full 40-character commit id (not a branch: pins do not move by themselves)
+#   visibility  public  = downloaded with plain curl, no account needed
+#               private = needs a GitHub login (`gh auth login`) or a GITHUB_TOKEN, and `make setup KITS=all`
+#   role        core       a Kit this book documents; its own tests run in `make test`
+#               app-dep    a Kit another Kit needs in order to build; fetched, not tested here
+#               reference  a Kit documented in the book but not needed to build the apps
+#
+# To move a pin: `make lock` (see book/90-reference/make-targets.md).
+# application-kit is private for now; it must be public (or this repository must stop needing it) before this repository is.
+application-kit https://github.com/slash-builder/application-kit 97ebae7d055013f37e00681d3651c517b7dd0ce5 private core
+venue-kit https://github.com/slash-builder/venue-kit 1a3fd3bb12aea0168d3cfae395084a8b9fdfa392 private app-dep
