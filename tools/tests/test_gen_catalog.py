@@ -180,7 +180,9 @@ class GeneratorTestCase(unittest.TestCase):
             return fh.read()
 
     def write_tsv(self, visibility):
-        rows = [{"name": repo.split("/")[1], "repo": repo, "visibility": v, "date": "2026-01-01", "docs": d}
+        names = {"slash-builder/application-kit": "Application Kit"}
+        rows = [{"name": names.get(repo) or repo.split("/")[1].replace("-", " ").title(), "visibility": v,
+                 "date": "2026-01-01", "docs": "unknown" if d == "-" else d}
                 for repo, (v, d) in visibility.items()]
         self.gen.write_visibility(os.path.join(self.root, "tools", "kit-visibility.tsv"), rows)
 
@@ -427,9 +429,9 @@ class VisibilityTests(GeneratorTestCase):
             "repos/o/odd": (1, "", "gh: HTTP 502 Bad Gateway"),
         })
         self.assertEqual(self.gen.query_visibility("o/pub", runner=runner), ("public", "yes"))
-        self.assertEqual(self.gen.query_visibility("o/priv", runner=runner), ("private", "-"))
-        self.assertEqual(self.gen.query_visibility("o/gone", runner=runner), ("missing", "-"))
-        self.assertEqual(self.gen.query_visibility("o/odd", runner=runner), ("unknown", "-"))
+        self.assertEqual(self.gen.query_visibility("o/priv", runner=runner), ("private", "unknown"))
+        self.assertEqual(self.gen.query_visibility("o/gone", runner=runner), ("missing", "unknown"))
+        self.assertEqual(self.gen.query_visibility("o/odd", runner=runner), ("unknown", "unknown"))
 
     def test_public_repo_without_readme_or_docs_has_no_docs(self):
         runner, _ = self.fake({"repos/o/pub": (0, "false", ""), "repos/o/pub/contents": (0, "src\nLICENSE\n", "")})
@@ -446,18 +448,46 @@ class VisibilityTests(GeneratorTestCase):
         runner, _ = self.fake(answers)
         vis, rows, _ = self.gen.resolve_visibility(kits, tsv, False, "gh", "2026-12-31", runner=runner)
         self.assertEqual(vis["slash-builder/alpha-kit"], ("public", "yes"))
-        self.assertEqual(vis["slash-builder/pending-kit"], ("missing", "-"))
+        self.assertEqual(vis["slash-builder/pending-kit"], ("missing", "unknown"))
         self.assertEqual(set(r["date"] for r in rows), {"2026-01-01"})        # unchanged answers keep their date
         answers["repos/slash-builder/delta-kit"] = (0, "false", "")
         answers["repos/slash-builder/delta-kit/contents"] = (0, "README.md", "")
         _, rows, _ = self.gen.resolve_visibility(kits, tsv, False, "gh", "2026-12-31", runner=self.fake(answers)[0])
         changed = [r for r in rows if r["date"] == "2026-12-31"]
-        self.assertEqual([r["repo"] for r in changed], ["slash-builder/delta-kit"])
+        self.assertEqual([r["name"] for r in changed], ["Delta Kit"])
 
     def test_offline_never_calls_gh_and_never_rewrites_the_file(self):
         before = self.read("tools", "kit-visibility.tsv")
         self.run_gen()
         self.assertEqual(before, self.read("tools", "kit-visibility.tsv"))
+
+    def test_the_visibility_file_never_records_where_a_kit_lives(self):
+        """The file will be public. It holds Kit names, never a repository slug or an org name."""
+        kits = self.gen.load_kits(self.registry)
+        answers = {}
+        for repo, (v, _) in VISIBILITY.items():
+            answers["repos/" + repo] = (0, "false" if v == "public" else "true", "") if v != "missing" else (1, "", "HTTP 404")
+        answers["repos/slash-builder/alpha-kit/contents"] = (0, "README.md", "")
+        answers["repos/slash-builder/gamma-kit/contents"] = (0, "src", "")
+        tsv = os.path.join(self.root, "tools", "kit-visibility.tsv")
+        _, rows, _ = self.gen.resolve_visibility(kits, tsv, False, "gh", "2026-12-31", runner=self.fake(answers)[0])
+        self.gen.write_visibility(tsv, rows)
+        text = self.read("tools", "kit-visibility.tsv")
+        for repo in list(VISIBILITY) + ["lockamy-studios", "slash-builder", "github.com", "http"]:
+            for part in repo.split("/"):
+                if part.endswith("-kit") or "-" in part and part != "slash-builder":
+                    self.assertNotIn(part, text, "the file names " + part)
+        self.assertNotIn("/", text.split("name\tvisibility", 1)[1])
+        self.assertNotIn("slash-builder", text)
+        self.assertNotIn("lockamy-studios", text)
+        self.assertEqual(text.splitlines()[-len(rows) - 1], "name\tvisibility\tdocs\tchecked")
+        # and a registry that uses the old org name does not put it in the file either
+        self.write(self.registry, REGISTRY.replace("slash-builder/gamma-kit", "lockamy-studios/gamma-kit"))
+        kits = self.gen.load_kits(self.registry)
+        answers["repos/lockamy-studios/gamma-kit"] = (0, "true", "")
+        _, rows, _ = self.gen.resolve_visibility(kits, tsv, False, "gh", "2026-12-31", runner=self.fake(answers)[0])
+        self.gen.write_visibility(tsv, rows)
+        self.assertNotIn("lockamy-studios", self.read("tools", "kit-visibility.tsv"))
 
     def test_registry_option_is_required(self):
         saved = os.environ.pop("KITS_REGISTRY", None)

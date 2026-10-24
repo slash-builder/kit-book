@@ -16,7 +16,8 @@ What it writes (all under book/30-kits/ unless said otherwise)
   status-vocabulary.md    what each status means
   not-in-the-registry.md  candidates that are NOT registered Kits (so not in the catalog), and this book
   ../SUMMARY.md           only the block between <!-- catalog:start --> and <!-- catalog:end --> (added if missing)
-  ../../tools/kit-visibility.tsv   who is public, as `gh` answered on the day (so --offline can reproduce the output)
+  ../../tools/kit-visibility.tsv   who is public, as `gh` answered on the day (so --offline can reproduce the output);
+                          keyed by Kit name, it never records a repository slug or an org name
 
 Public safety. The book is meant to become public, and the registry is full of internal context. Nothing is copied
 across unchanged. Prose goes through sanitise_text(): parentheticals and whole sentences that mention people, roles,
@@ -331,10 +332,13 @@ class Kit(object):
         if own:
             self.repos.append(own)
         self.members = []
+        self.member_repos = []      # [(name of the member, org/repo)]; the name labels the repository in the visibility file
         for m in entry.get("member_repos") or []:
             slug = parse_repo(m.get("repo"))
             if slug and slug not in self.repos:
                 self.repos.append(slug)
+            if slug:
+                self.member_repos.append((str(m.get("was") or self.name).strip(), slug))
             self.members.append((str(m.get("was") or "").strip(), str(m.get("module") or "").strip()))
         self.notes = str(entry.get("notes") or "")
         self.provisional = bool(re.search(r"NAME IS PROVISIONAL|name is provisional", self.notes))
@@ -412,7 +416,7 @@ def run_gh(gh, args):
 
 
 def query_visibility(slug, gh="gh", runner=None):
-    """Ask GitHub: -> (public|private|missing|unknown, docs yes|no|unknown|-)."""
+    """Ask GitHub: -> (public|private|missing|unknown, docs yes|no|unknown)."""
     runner = runner or run_gh
     rc, out, err = runner(gh, ["api", "repos/%s" % slug, "--jq", ".private"])
     if rc == 0:
@@ -420,7 +424,7 @@ def query_visibility(slug, gh="gh", runner=None):
         vis = {"false": "public", "true": "private"}.get(answer, "unknown")
     else:
         vis = "missing" if re.search(r"HTTP 404|Not Found", out + err) else "unknown"
-    docs = "-"
+    docs = "unknown"
     if vis == "public":
         rc, out, err = runner(gh, ["api", "repos/%s/contents" % slug, "--jq", ".[].name"])
         if rc == 0:
@@ -432,6 +436,7 @@ def query_visibility(slug, gh="gh", runner=None):
 
 
 def read_visibility(path):
+    """{name: row}. The file is keyed by Kit name and holds no repository slug and no org name."""
     rows = {}
     if not os.path.isfile(path):
         return rows
@@ -443,35 +448,43 @@ def read_visibility(path):
             f = line.split("\t")
             if len(f) < 4:
                 continue
-            rows[f[1]] = {"name": f[0], "repo": f[1], "visibility": f[2], "date": f[3], "docs": f[4] if len(f) > 4 else "-"}
+            rows[f[0]] = {"name": f[0], "visibility": f[1], "docs": f[2], "date": f[3]}
     return rows
 
 
 def write_visibility(path, rows):
     lines = [
-        "# Written by tools/gen-catalog.py. One row per repository the catalog mentions; the registry's repository",
-        "# column is checked with `gh api repos/<org>/<repo> --jq .private` as the logged-in account.",
-        "# visibility: public | private | missing (HTTP 404) | unknown (gh could not tell). Only `public` ever gets a link.",
-        "# date: the day this answer was recorded or last changed. docs: yes | no | unknown | - (only asked for public).",
-        "name\trepo\tvisibility\tdate\tdocs",
+        "# Written by tools/gen-catalog.py. One row per repository the catalog mentions, named by the Kit it belongs to.",
+        "# This file never records where a Kit lives: the repository is looked up in the registry when the catalog is generated.",
+        "# visibility: public | private | missing (the repository does not exist) | unknown (could not tell).",
+        "# Only `public` ever gets a link. docs: yes | no | unknown (README or docs/ in a public repository; unknown otherwise).",
+        "# checked: the day this answer was recorded or last changed.",
+        "name\tvisibility\tdocs\tchecked",
     ]
     for r in rows:
-        lines.append("\t".join([r["name"], r["repo"], r["visibility"], r["date"], r["docs"]]))
+        lines.append("\t".join([r["name"], r["visibility"], r["docs"], r["date"]]))
     with open(path, "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines) + "\n")
 
 
 def repos_to_check(kits):
-    """[(name, repo)] in registry order, one per repository."""
-    out, seen = [], set()
+    """[(label, repo)] in registry order, one per repository. The label is a Kit name, unique per repository."""
+    out, seen, labels = [], set(), set()
+    entries = []
     for k in kits:
-        for repo in k.repos:
-            if repo not in seen:
-                seen.add(repo)
-                out.append((k.name, repo))
-    name, repo = APPLICATION_KIT
-    if repo not in seen:
-        out.append((name, repo))
+        own = parse_repo(k.repo_url)
+        if own:
+            entries.append((k.name, own))
+        entries.extend(k.member_repos)
+    entries.append(APPLICATION_KIT)
+    for label, repo in entries:
+        if repo in seen:
+            continue
+        if label in labels:
+            raise SystemExit("error: two different repositories would both be recorded under the name '%s'." % label)
+        seen.add(repo)
+        labels.add(label)
+        out.append((label, repo))
     return out
 
 
@@ -483,11 +496,11 @@ def resolve_visibility(kits, tsv_path, offline, gh, today, runner=None):
     result, rows = {}, []
     if offline:
         for name, repo in wanted:
-            if repo in old:
-                result[repo] = (old[repo]["visibility"], old[repo]["docs"])
+            if name in old:
+                result[repo] = (old[name]["visibility"], old[name]["docs"])
             else:
-                result[repo] = ("unknown", "-")
-                warnings.append("%s (%s) is not in %s; treated as not public. Run without --offline." % (name, repo, os.path.basename(tsv_path)))
+                result[repo] = ("unknown", "unknown")
+                warnings.append("%s is not in %s; treated as not public. Run without --offline." % (name, os.path.basename(tsv_path)))
         return result, None, warnings
     if runner is None and subprocess.call("command -v %s >/dev/null 2>&1" % gh, shell=True) != 0:
         raise SystemExit("error: the GitHub CLI (%s) is not installed. Install it and run `gh auth login`, or use --offline "
@@ -495,12 +508,12 @@ def resolve_visibility(kits, tsv_path, offline, gh, today, runner=None):
     for name, repo in wanted:
         vis, docs = query_visibility(repo, gh, runner)
         date = today
-        if repo in old and old[repo]["visibility"] == vis and old[repo]["docs"] == docs:
-            date = old[repo]["date"]
+        if name in old and old[name]["visibility"] == vis and old[name]["docs"] == docs:
+            date = old[name]["date"]
         if vis == "unknown":
-            warnings.append("%s (%s): gh could not tell; treated as not public." % (name, repo))
+            warnings.append("%s: gh could not tell; treated as not public." % name)
         result[repo] = (vis, docs)
-        rows.append({"name": name, "repo": repo, "visibility": vis, "date": date, "docs": docs})
+        rows.append({"name": name, "visibility": vis, "docs": docs, "date": date})
     return result, rows, warnings
 
 
@@ -515,7 +528,7 @@ def github_link(repo):
 
 def source_text(kit, vis):
     """The 'Source' value for a card: links only for public repositories, nothing else about where the rest live."""
-    states = [(r, vis.get(r, ("unknown", "-"))[0]) for r in kit.repos]
+    states = [(r, vis.get(r, ("unknown", "unknown"))[0]) for r in kit.repos]
     if not states:
         return "Repository not created yet"
     public = [r for r, v in states if v == "public"]
@@ -535,13 +548,13 @@ def source_cell(kit, vis):
 
 
 def has_public_docs(kit, vis):
-    return any(vis.get(r, ("unknown", "-")) == ("public", "yes") for r in kit.repos)
+    return any(vis.get(r, ("unknown", "unknown")) == ("public", "yes") for r in kit.repos)
 
 
 def code_marker(kit, vis):
     if not kit.has_real_code:
         return "No"
-    states = [vis.get(r, ("unknown", "-"))[0] for r in kit.repos]
+    states = [vis.get(r, ("unknown", "unknown"))[0] for r in kit.repos]
     if states and all(v == "missing" for v in states):
         return "Yes (not published)"
     return "Yes"
@@ -619,7 +632,7 @@ def render_index(kits, kits_by_name, vis, registry_commit):
     if registry_commit:
         out += ["Generated from registry commit %s." % registry_commit, ""]
     counts = ", ".join("%d %s" % (len(m), s) for s, m in grouped(kits))
-    public = sum(1 for k in kits if any(vis.get(r, ("unknown", "-"))[0] == "public" for r in k.repos))
+    public = sum(1 for k in kits if any(vis.get(r, ("unknown", "unknown"))[0] == "public" for r in k.repos))
     out += ["%d Kits: %s. %s." % (len(kits), counts, "None has a public repository today" if public == 0 else
             "%d of them %s a public repository today" % (public, "has" if public == 1 else "have")), ""]
     out += [
@@ -670,7 +683,7 @@ def render_vocabulary(kits):
 
 def render_not_in_registry(vis):
     name, repo = APPLICATION_KIT
-    state = vis.get(repo, ("unknown", "-"))[0]
+    state = vis.get(repo, ("unknown", "unknown"))[0]
     if state == "public":
         source = github_link(repo)
     elif state == "missing":

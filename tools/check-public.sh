@@ -5,7 +5,7 @@
 # What it looks for:
 #   internal hostnames, ticket ids, local absolute paths with a user name, notes-vault paths,
 #   references to agent instruction files, studio repository URLs that are not public Kits in kits.lock or in
-#   tools/kit-visibility.tsv,
+#   tools/kit-visibility.tsv (as the Source line of that Kit's card),
 #   people named in credits or licence text other than the author, and secret patterns.
 #
 # This file, tools/gen-catalog.py (its sanitiser lists the same patterns) and the generator's tests (which feed it
@@ -40,12 +40,17 @@ scan "secret"              'AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{20,}|gho_[A-Za-z0-9
 
 # Studio repository URLs: only public Kits listed in kits.lock may be linked. kits.lock itself is the list, so it is
 # not scanned for this rule (its private lines are reported separately below).
-# A repository is also public when tools/kit-visibility.tsv (written by tools/gen-catalog.py from `gh`) says so: the
-# generated Kit catalog links to those and to no others.
+# A Kit is also public when tools/kit-visibility.tsv (written by tools/gen-catalog.py from `gh`) says so. That file holds
+# no repository names, so the repository is read from the Source line of that Kit's generated card; the catalog links
+# to those and to no others.
 PUBLIC=$(lock_lines | awk '$4=="public" {print $2}' | sed -e 's#^https://github\.com/##' -e 's#\.git$##')
 if [ -f "$ROOT/tools/kit-visibility.tsv" ]; then
-  PUBLIC="$PUBLIC
-$(awk -F'\t' '$1 !~ /^#/ && $3 == "public" {print $2}' "$ROOT/tools/kit-visibility.tsv")"
+  for kitname in $(awk -F'\t' '$1 !~ /^#/ && $2 == "public" {gsub(/ /, "-", $1); print tolower($1)}' "$ROOT/tools/kit-visibility.tsv"); do
+    card="$ROOT/book/30-kits/$kitname.md"
+    [ -f "$card" ] || continue
+    PUBLIC="$PUBLIC
+$(grep '^\* \*\*Source:\*\*' "$card" | grep -o 'github\.com/[A-Za-z0-9._-]*/[A-Za-z0-9._-]*' | sed 's#^github\.com/##')"
+  done
 fi
 grep -v '^kits\.lock$' "$FILES" | tr '\n' '\0' |
   xargs -0 grep -nIoE 'github\.com[/:](slash-builder|lockamy-studios|lockamystudios|softsurve)/[A-Za-z0-9._-]+' 2>/dev/null |

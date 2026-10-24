@@ -116,7 +116,7 @@ With neither `REGISTRY` nor `KITS_REGISTRY` set it stops and says so. It runs `t
 * one status card per Kit in the registry (`book/30-kits/<name>.md`), for **every** Kit: public, private, banked and archived; this repository is the book, not a Kit, and is never listed;
 * the catalog index (`book/30-kits/README.md`), the [status vocabulary](../30-kits/status-vocabulary.md) and the page for [things that are not in the registry](../30-kits/not-in-the-registry.md);
 * the block of `book/SUMMARY.md` between `<!-- catalog:start -->` and `<!-- catalog:end -->` (the markers are added if missing; nothing else in that file is touched);
-* `tools/kit-visibility.tsv`: for each repository, `public`, `private`, `missing` (it does not exist) or `unknown`, the day that was recorded, and whether a public repository has a README or `docs/`. A repository link appears on a card only for `public`.
+* `tools/kit-visibility.tsv`: for each Kit (by name), `public`, `private`, `missing` (the repository does not exist) or `unknown`, whether a public repository has a README or `docs/`, and the day that was checked. It never records where a Kit lives: no repository name and no organisation, so it is safe in a public repository. A repository link appears on a card only for `public`, and the repository is read from the registry each time.
 
 Running it twice gives identical files: nothing in the output carries a time. Prose from the registry passes through a sanitiser that drops, rather than rewords, any sentence or parenthetical that names people, roles, agents, tickets, hostnames, local paths, notes-vault paths, Jira or dates, and `check-public` scans the result again. A card that comes out thin is thin because the registry entry behind it is.
 
@@ -134,7 +134,7 @@ Builds the book as an HTML website with [mdBook](https://rust-lang.github.io/mdB
 
 ### `check-public`
 
-Scans every file in the tree except `.kits/` and build output for anything that must not be public: internal hostnames, ticket ids, local paths that contain a user name, notes-vault paths, references to agent instruction files, repository URLs that are not public Kits in `kits.lock` or in `tools/kit-visibility.tsv`, people named in credits or licence text other than the author, and secret patterns. The generator `tools/gen-catalog.py` and its tests are not scanned, because they spell the patterns out; what they generate is. It prints `file:line` for every hit and exits non-zero on any. While `kits.lock` lists private Kits it also prints a note that each must become public (or stop being needed) before this repository is made public.
+Scans every file in the tree except `.kits/` and build output for anything that must not be public: internal hostnames, ticket ids, local paths that contain a user name, notes-vault paths, references to agent instruction files, repository URLs that are not public Kits in `kits.lock` or on the card of a Kit that `tools/kit-visibility.tsv` marks public, people named in credits or licence text other than the author, and secret patterns. The generator `tools/gen-catalog.py` and its tests are not scanned, because they spell the patterns out; what they generate, including `tools/kit-visibility.tsv`, is. It prints `file:line` for every hit and exits non-zero on any. While `kits.lock` lists private Kits it also prints a note that each must become public (or stop being needed) before this repository is made public.
 
 ### `clean`
 

@@ -1,24 +1,25 @@
-# Written by tools/gen-catalog.py. One row per repository the catalog mentions; the registry's repository
-# column is checked with `gh api repos/<org>/<repo> --jq .private` as the logged-in account.
-# visibility: public | private | missing (HTTP 404) | unknown (gh could not tell). Only `public` ever gets a link.
-# date: the day this answer was recorded or last changed. docs: yes | no | unknown | - (only asked for public).
-name	repo	visibility	date	docs
-Inference Kit	slash-builder/inference-kit	public	2026-10-24	yes
-Manifest Kit	slash-builder/manifest-kit	private	2026-10-24	-
-Spec Kit	slash-builder/spec-kit	private	2026-10-24	-
-Identity Kit	slash-builder/identity-kit	private	2026-10-24	-
-Service Kit	slash-builder/service-kit	private	2026-10-24	-
-Design Kit	lockamy-studios/design-kit	private	2026-10-24	-
-Fabric Kit	slash-builder/fabric-kit	private	2026-10-24	-
-Storage Kit	slash-builder/storage-kit	private	2026-10-24	-
-Message Kit	slash-builder/message-kit	private	2026-10-24	-
-Substrate Kit	slash-builder/substrate-kit	private	2026-10-24	-
-Thunderhead Kit	slash-builder/platform-kit	private	2026-10-24	-
-Thunderhead Kit	slash-builder/device-kit	private	2026-10-24	-
-Thunderhead Kit	slash-builder/score-kit	private	2026-10-24	-
-Thunderhead Kit	slash-builder/appstore-kit	private	2026-10-24	-
-Interface Kit	slash-builder/interfacekit	private	2026-10-24	-
-Interface Kit	slash-builder/mold-kit	private	2026-10-24	-
-Venue Kit	slash-builder/venue-kit	private	2026-10-24	-
-Stash Kit	slash-builder/stash-kit	missing	2026-10-24	-
-Application Kit	slash-builder/application-kit	private	2026-10-24	-
+# Written by tools/gen-catalog.py. One row per repository the catalog mentions, named by the Kit it belongs to.
+# This file never records where a Kit lives: the repository is looked up in the registry when the catalog is generated.
+# visibility: public | private | missing (the repository does not exist) | unknown (could not tell).
+# Only `public` ever gets a link. docs: yes | no | unknown (README or docs/ in a public repository; unknown otherwise).
+# checked: the day this answer was recorded or last changed.
+name	visibility	docs	checked
+Inference Kit	public	yes	2026-10-24
+Manifest Kit	private	unknown	2026-10-24
+Spec Kit	private	unknown	2026-10-24
+Identity Kit	private	unknown	2026-10-24
+Service Kit	private	unknown	2026-10-24
+Design Kit	private	unknown	2026-10-24
+Fabric Kit	private	unknown	2026-10-24
+Storage Kit	private	unknown	2026-10-24
+Message Kit	private	unknown	2026-10-24
+Substrate Kit	private	unknown	2026-10-24
+Thunderhead Kit	private	unknown	2026-10-24
+Device Kit	private	unknown	2026-10-24
+Score Kit	private	unknown	2026-10-24
+App Store Kit	private	unknown	2026-10-24
+Interface Kit	private	unknown	2026-10-24
+Mold Kit	private	unknown	2026-10-24
+Venue Kit	private	unknown	2026-10-24
+Stash Kit	missing	unknown	2026-10-24
+Application Kit	private	unknown	2026-10-24
