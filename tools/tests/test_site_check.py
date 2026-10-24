@@ -146,6 +146,11 @@ class NoindexTests(Site):
         self.page("a/b.html", "x", head=NOINDEX)
         self.assertEqual(len(sc.check_noindex(self.site, indexable=True)[2]), 1)
 
+    def test_print_and_toc_may_keep_mdbooks_own_noindex_when_indexable(self):
+        self.page("print.html", "x", head=NOINDEX)
+        self.page("toc.html", "x", head=NOINDEX)
+        self.assertEqual(sc.check_noindex(self.site, indexable=True)[2], [])
+
     def test_a_different_robots_value_is_not_noindex(self):
         self.page("index.html", "x", head='<meta name="robots" content="all">')
         self.assertEqual(len(sc.check_noindex(self.site, indexable=False)[2]), 2)

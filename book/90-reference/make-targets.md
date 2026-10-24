@@ -26,7 +26,7 @@ The scripts behind the targets are in [`tools/`](../../tools/). They are plain P
 | `SITE_REPO_URL` | `site` | The repository address used for the "edit this page" links and for the rewritten links into `apps/` and `labs/` (default `https://github.com/slash-builder/kit-book`) |
 | `SITE_REPO_BRANCH` | `site`, `publish-site` | The branch those links point at (default `main`); `publish-site` only pushes from this branch |
 | `SITE_REWRITE_REPO_LINKS` | `site` | `1` (default) rewrites links from the book to files outside `book/` into GitHub addresses; `0` leaves them as relative links, which do not work on the website |
-| `SITE_INDEXABLE` | `site`, `site-check`, `publish-site` | `0` (default) puts `<meta name="robots" content="noindex">` on every page; `1` leaves it out so search engines may index the site. Set `1` only when the site is meant to be found |
+| `SITE_INDEXABLE` | `site`, `site-check`, `publish-site` | `0` (default) puts `<meta name="robots" content="noindex">` on every page; `1` leaves it out so search engines may index the site (mdBook keeps noindex on its own `print.html` and `toc.html`). Set `1` only when the site is meant to be found |
 | `PUBLISH` | `publish-site` | `1` allows the push to the `gh-pages` branch, and only if the repository behind `origin` is public. Anything else is a dry run |
 | `MDBOOK` | `site` | The path of the `mdbook` program to use. Otherwise `mdbook` on the `PATH`, then `~/.cache/mdbook/mdbook` |
 | `NO_COLOR` | all | Turns off colours in the output |
@@ -195,7 +195,7 @@ Checks the site that `make site` built (it stops with a message if there is none
 
 * **Links:** every internal link, script, stylesheet and image address in every generated page resolves to a file, and every `#fragment` is an id that exists in the page it points to. Addresses to other sites are counted but not fetched.
 * **Publish folder:** `build/site-publish/` has a `CNAME` that holds exactly `SITE_DOMAIN`, an empty `.nojekyll`, an `index.html`, and the same pages as `build/site/`.
-* **Robots:** with `SITE_INDEXABLE=0` every page carries the noindex tag; with `SITE_INDEXABLE=1` none does.
+* **Robots:** with `SITE_INDEXABLE=0` every page carries the noindex tag; with `SITE_INDEXABLE=1` none does, except `print.html` and `toc.html`, which mdBook always marks noindex itself.
 * **Diagrams:** the vendored `tools/site/vendor/mermaid.min.js`, the copy in the site and the copy in the publish folder all match the sha256 recorded in `tools/site/vendor/README.md`, the licence file is there, and every page with a diagram loads the init script.
 
 Exits non-zero on any failure.

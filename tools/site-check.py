@@ -9,7 +9,7 @@
   2. Publish staging folder: it has a CNAME file that holds exactly the domain, an empty .nojekyll, an index.html and the
      same pages as the site.
   3. Robots: with SITE_INDEXABLE=0 (the default) every page carries <meta name="robots" content="noindex">; with
-     SITE_INDEXABLE=1 no page carries it.
+     SITE_INDEXABLE=1 no page carries it, except print.html and toc.html, which mdBook always marks noindex itself.
   4. Diagrams: the vendored mermaid file in tools/site/vendor/, the copy in the site and the copy in the publish folder
      all match the sha256 recorded in tools/site/vendor/README.md, the licence file is there, and every page with a
      mermaid code block loads the init script.
@@ -160,6 +160,11 @@ def check_publish(publish, site, domain):
     return problems
 
 
+# mdBook writes noindex into these two pages itself (the whole book on one page, and the table of contents), whatever
+# the setting, and that is right: they duplicate the real pages. They are checked for the tag only in the default mode.
+ALWAYS_NOINDEX = ("print.html", "toc.html")
+
+
 def check_noindex(site, indexable):
     problems = []
     pages = html_files(site)
@@ -168,7 +173,7 @@ def check_noindex(site, indexable):
         with open(page, encoding="utf-8") as fh:
             has = bool(NOINDEX_RE.search(fh.read()))
         with_tag += has
-        if indexable and has:
+        if indexable and has and os.path.relpath(page, site) not in ALWAYS_NOINDEX:
             problems.append("%s has a noindex robots tag but SITE_INDEXABLE=1" % os.path.relpath(page, site))
         if not indexable and not has:
             problems.append("%s has no noindex robots tag (SITE_INDEXABLE=0)" % os.path.relpath(page, site))
@@ -253,7 +258,7 @@ def main(argv):
            "CNAME is exactly %s, .nojekyll is empty, same pages as the site" % domain)
     tagged, total, problems = check_noindex(args.site, indexable)
     report("robots", problems, ("%d of %d pages carry noindex (SITE_INDEXABLE=0)" % (tagged, total)) if not indexable
-           else "none of %d pages carries noindex (SITE_INDEXABLE=1)" % total)
+           else "no page of %d carries noindex (SITE_INDEXABLE=1), except mdBook's own print.html and toc.html" % total)
     pages, blocks, problems = check_diagrams(args.site, args.publish, args.vendor)
     report("diagrams", problems, "vendored mermaid matches the recorded sha256 in all three places; %d mermaid blocks on %d pages load the init script"
            % (blocks, pages))
