@@ -47,11 +47,17 @@ pub fn conflicts_file_name(partition: &PartitionId) -> String {
 
 /// `^[a-z0-9]{4,40}$` (the notepad demo's note id pattern).
 pub fn is_note_id(s: &str) -> bool {
-    (4..=40).contains(&s.len()) && s.bytes().all(|b| b.is_ascii_lowercase() || b.is_ascii_digit())
+    (4..=40).contains(&s.len())
+        && s.bytes()
+            .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit())
 }
 
 pub fn parse_hash(hex: &str) -> Result<Hash> {
-    if hex.len() != 64 || !hex.bytes().all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b)) {
+    if hex.len() != 64
+        || !hex
+            .bytes()
+            .all(|b| b.is_ascii_digit() || (b'a'..=b'f').contains(&b))
+    {
         return Err(Error::Invalid(format!("not a block hash: {hex:?}")));
     }
     Ok(Hash::from_hex(hex)?)
@@ -95,7 +101,10 @@ impl Manifest {
         if check_label("device", &self.by).is_err() {
             return bad("bad device name");
         }
-        if parse_hash(&self.root).is_err() || self.parents.len() > 2 || self.parents.iter().any(|p| parse_hash(p).is_err()) {
+        if parse_hash(&self.root).is_err()
+            || self.parents.len() > 2
+            || self.parents.iter().any(|p| parse_hash(p).is_err())
+        {
             return bad("bad hash");
         }
         if self.depth > MAX_DEPTH || (self.depth == 0) != (self.root_type == RootType::Leaf) {
@@ -109,7 +118,10 @@ impl Manifest {
     }
 
     pub fn parent_hashes(&self) -> Vec<Hash> {
-        self.parents.iter().map(|p| Hash::from_hex(p).expect("checked")).collect()
+        self.parents
+            .iter()
+            .map(|p| Hash::from_hex(p).expect("checked"))
+            .collect()
     }
 }
 
@@ -124,7 +136,12 @@ pub(crate) struct Body {
 
 impl Body {
     pub(crate) fn of(m: &Manifest) -> Body {
-        Body { root: m.root_hash(), root_type: m.root_type, depth: m.depth, len: m.len }
+        Body {
+            root: m.root_hash(),
+            root_type: m.root_type,
+            depth: m.depth,
+            len: m.len,
+        }
     }
 }
 
@@ -139,7 +156,7 @@ struct IndexFile {
 /// Child hashes of a list node body (`hash(32) | len(8)` per child). The Storage Kit has no public helper for this, and
 /// `walk_hashes` needs every block present, which a half-synced tree is not.
 pub(crate) fn list_children(body: &[u8]) -> Result<Vec<Hash>> {
-    if body.len() % CHILD_REF_LEN != 0 {
+    if !body.len().is_multiple_of(CHILD_REF_LEN) {
         return Err(Error::Corrupt("list node length".into()));
     }
     Ok(body
@@ -147,6 +164,9 @@ pub(crate) fn list_children(body: &[u8]) -> Result<Vec<Hash>> {
         .map(|rec| Hash::from_bytes(rec[..32].try_into().expect("32 bytes")))
         .collect())
 }
+
+/// Milliseconds since the Unix epoch; replaceable so tests do not race the wall clock.
+pub type Clock = Box<dyn Fn() -> i64 + Send>;
 
 pub struct NotesStore {
     pub(crate) store: PartitionStore,
@@ -157,7 +177,7 @@ pub struct NotesStore {
     pub(crate) conflicts: BTreeMap<String, Hash>,
     profile: ChunkingProfile,
     device: String,
-    clock: Box<dyn Fn() -> i64 + Send>,
+    clock: Clock,
 }
 
 fn now_ms() -> i64 {
@@ -190,7 +210,10 @@ fn load_index(path: &Path) -> Result<BTreeMap<String, Hash>> {
     let mut out = BTreeMap::new();
     for (k, v) in file.heads {
         if !is_note_id(&k) {
-            return Err(Error::Corrupt(format!("{}: bad note id {k:?}", path.display())));
+            return Err(Error::Corrupt(format!(
+                "{}: bad note id {k:?}",
+                path.display()
+            )));
         }
         out.insert(k, parse_hash(&v)?);
     }
@@ -223,7 +246,7 @@ impl NotesStore {
     }
 
     /// Replace the clock (tests, so "the later edit" is not a race).
-    pub fn set_clock(&mut self, clock: Box<dyn Fn() -> i64 + Send>) {
+    pub fn set_clock(&mut self, clock: Clock) {
         self.clock = clock;
     }
 
@@ -283,7 +306,9 @@ impl NotesStore {
         let mut hash = m.root_hash();
         for _ in 0..m.depth {
             let children = list_children(&self.store.get(&hash)?)?;
-            hash = *children.first().ok_or_else(|| Error::Corrupt("empty list node".into()))?;
+            hash = *children
+                .first()
+                .ok_or_else(|| Error::Corrupt("empty list node".into()))?;
         }
         let mut bytes = self.store.get(&hash)?;
         bytes.truncate(max);
@@ -345,7 +370,11 @@ impl NotesStore {
 
     /// Every manifest reachable from `start` through present manifests (including `start`).
     pub fn ancestors(&self, start: Hash) -> Result<HashSet<Hash>> {
-        Ok(self.walk_history(start, &HashSet::new())?.0.into_iter().collect())
+        Ok(self
+            .walk_history(start, &HashSet::new())?
+            .0
+            .into_iter()
+            .collect())
     }
 
     /// The first version reachable from `remote` (breadth first) that is also an ancestor of `local`.
@@ -368,6 +397,8 @@ impl NotesStore {
     // ---- writing -------------------------------------------------------------------------------------------
 
     /// Fragment `body` into the store and write a manifest block following `parents`. Does NOT move any head.
+    // A manifest has this many independent parts; a struct for them would only move the list.
+    #[allow(clippy::too_many_arguments)]
     pub(crate) fn write_manifest(
         &mut self,
         id: &str,
@@ -385,6 +416,7 @@ impl NotesStore {
         self.write_manifest_for_tree(id, title, deleted, &tree, parents, at, by)
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub(crate) fn write_manifest_for_tree(
         &mut self,
         id: &str,
@@ -396,10 +428,16 @@ impl NotesStore {
         by: &str,
     ) -> Result<Hash> {
         // `tree.root` is an `Address`, which the Storage Kit holds outside its freeze; `.hash` is the part it promises.
-        let body = Body { root: tree.root.hash, root_type: tree.root_type, depth: tree.depth, len: tree.uncompressed_len };
+        let body = Body {
+            root: tree.root.hash,
+            root_type: tree.root_type,
+            depth: tree.depth,
+            len: tree.uncompressed_len,
+        };
         self.write_manifest_for_body(id, title, deleted, body, parents, at, by)
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub(crate) fn write_manifest_for_body(
         &mut self,
         id: &str,
@@ -432,7 +470,12 @@ impl NotesStore {
     /// no-op on a `File`), so without this a power cut could keep a head that names blocks the disk never received.
     /// A process kill does not need it. Best effort on the file the Kit documents: `<partition>/active/active.pack`.
     fn sync_blocks(&self) {
-        if let Ok(f) = File::open(self.store.partition_root().join("active").join("active.pack")) {
+        if let Ok(f) = File::open(
+            self.store
+                .partition_root()
+                .join("active")
+                .join("active.pack"),
+        ) {
             let _ = f.sync_all();
         }
     }
@@ -462,7 +505,10 @@ impl NotesStore {
     /// returns the current head and writes nothing.
     pub fn save(&mut self, id: &str, title: &str, body: &[u8], limit: u64) -> Result<Hash> {
         if body.len() as u64 > limit {
-            return Err(Error::TooLarge { len: body.len() as u64, limit });
+            return Err(Error::TooLarge {
+                len: body.len() as u64,
+                limit,
+            });
         }
         let head = self.head(id);
         let tree = build_fragment_tree(body, &self.profile, &mut self.store)?;
@@ -478,14 +524,24 @@ impl NotesStore {
         }
         let at = self.now();
         let by = self.device.clone();
-        let addr = self.write_manifest_for_tree(id, title, false, &tree, head.into_iter().collect(), at, &by)?;
+        let addr = self.write_manifest_for_tree(
+            id,
+            title,
+            false,
+            &tree,
+            head.into_iter().collect(),
+            at,
+            &by,
+        )?;
         self.set_head(id, addr)?;
         Ok(addr)
     }
 
     /// Delete = a tombstone version (history stays; the note disappears from the list).
     pub fn delete(&mut self, id: &str) -> Result<Hash> {
-        let head = self.head(id).ok_or_else(|| Error::NoSuchNote(id.to_string()))?;
+        let head = self
+            .head(id)
+            .ok_or_else(|| Error::NoSuchNote(id.to_string()))?;
         let cur = self.manifest(&head)?;
         if cur.deleted {
             return Ok(head);
@@ -500,7 +556,9 @@ impl NotesStore {
     /// Make version `version` of `id` the current one by writing a new manifest that reuses its body blocks.
     /// Writes no body block. Fails with `VersionUnavailable` when the body is not fully on this copy.
     pub fn restore(&mut self, id: &str, version: &Hash) -> Result<Hash> {
-        let head = self.head(id).ok_or_else(|| Error::NoSuchNote(id.to_string()))?;
+        let head = self
+            .head(id)
+            .ok_or_else(|| Error::NoSuchNote(id.to_string()))?;
         if !self.store.has(version) {
             return Err(Error::NoSuchVersion(version.to_hex()));
         }
@@ -517,7 +575,15 @@ impl NotesStore {
         }
         let at = self.now();
         let by = self.device.clone();
-        let addr = self.write_manifest_for_body(id, &old.title, old.deleted, Body::of(&old), vec![head], at, &by)?;
+        let addr = self.write_manifest_for_body(
+            id,
+            &old.title,
+            old.deleted,
+            Body::of(&old),
+            vec![head],
+            at,
+            &by,
+        )?;
         self.set_head(id, addr)?;
         Ok(addr)
     }

@@ -72,13 +72,27 @@ mod tests {
         let a = Namespace::new("home", "dev.demo.notes-rust").unwrap();
         assert_eq!(
             a.partition(),
-            Namespace::new("home", "dev.demo.notes-rust").unwrap().partition()
+            Namespace::new("home", "dev.demo.notes-rust")
+                .unwrap()
+                .partition()
         );
-        assert_ne!(a.partition(), Namespace::new("work", "dev.demo.notes-rust").unwrap().partition());
-        assert_ne!(a.partition(), Namespace::new("home", "dev.demo.notepad").unwrap().partition());
+        assert_ne!(
+            a.partition(),
+            Namespace::new("work", "dev.demo.notes-rust")
+                .unwrap()
+                .partition()
+        );
+        assert_ne!(
+            a.partition(),
+            Namespace::new("home", "dev.demo.notepad")
+                .unwrap()
+                .partition()
+        );
         // a prefix of an id is another app, not a sub-namespace
         assert_ne!(
-            Namespace::new("home", "dev.demo.notes").unwrap().partition(),
+            Namespace::new("home", "dev.demo.notes")
+                .unwrap()
+                .partition(),
             a.partition()
         );
     }

@@ -15,14 +15,21 @@ const CHILD_ENV: &str = "NOTES_CORE_KILL_CHILD";
 /// The child: runs only when the parent set the variable; otherwise a no-op.
 #[test]
 fn child_writer() {
-    let Ok(root) = std::env::var(CHILD_ENV) else { return };
+    let Ok(root) = std::env::var(CHILD_ENV) else {
+        return;
+    };
     let root = PathBuf::from(root);
-    let engine = notes_core::Engine::open(&snapshot_json(&root, "dddddddd"), "home", "victim").unwrap();
+    let engine =
+        notes_core::Engine::open(&snapshot_json(&root, "dddddddd"), "home", "victim").unwrap();
     let mut i = 0u64;
     loop {
-        let n = engine.create_note(&format!("note {i}"), &text(150_000, i)).unwrap();
+        let n = engine
+            .create_note(&format!("note {i}"), &text(150_000, i))
+            .unwrap();
         for k in 0..3 {
-            engine.save_note(&n.id, &format!("note {i}"), &text(150_000, i * 10 + k + 1)).unwrap();
+            engine
+                .save_note(&n.id, &format!("note {i}"), &text(150_000, i * 10 + k + 1))
+                .unwrap();
         }
         i += 1;
         std::fs::write(root.join("progress"), i.to_string()).unwrap();
@@ -47,18 +54,31 @@ fn a_killed_writer_leaves_a_store_that_opens_and_reads() {
         child.kill().unwrap(); // SIGKILL on Unix: no destructors, no flush
         child.wait().unwrap();
 
-        let engine = notes_core::Engine::open(&snapshot_json(root.path(), "dddddddd"), "home", "after-the-kill")
-            .unwrap_or_else(|e| panic!("round {round}: reopening after kill -9 failed: {e}"));
+        let engine = notes_core::Engine::open(
+            &snapshot_json(root.path(), "dddddddd"),
+            "home",
+            "after-the-kill",
+        )
+        .unwrap_or_else(|e| panic!("round {round}: reopening after kill -9 failed: {e}"));
         let notes = engine.list_notes().unwrap();
         for n in &notes {
-            let full = engine.get_note(&n.id).unwrap_or_else(|e| panic!("round {round}: note {} unreadable: {e}", n.id));
+            let full = engine
+                .get_note(&n.id)
+                .unwrap_or_else(|e| panic!("round {round}: note {} unreadable: {e}", n.id));
             assert_eq!(full.body.len(), 150_000);
             for v in engine.list_versions(&n.id, 50).unwrap() {
-                assert!(v.available, "round {round}: a version whose blocks are missing");
+                assert!(
+                    v.available,
+                    "round {round}: a version whose blocks are missing"
+                );
             }
         }
         // and the store takes new writes
         engine.create_note("after", "the kill").unwrap();
-        println!("round {round}: killed after {delay_ms} ms, {} notes intact, {} blocks", notes.len(), engine.stats().block_count);
+        println!(
+            "round {round}: killed after {delay_ms} ms, {} notes intact, {} blocks",
+            notes.len(),
+            engine.stats().block_count
+        );
     }
 }

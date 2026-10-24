@@ -13,7 +13,6 @@ import 'package:notes_rust/core/frb_notes_core.dart';
 import 'package:notes_rust/core/notes_core.dart';
 import 'package:notes_rust/src/rust/frb_generated.dart';
 import 'package:notes_rust/ui/notes_app.dart';
-import 'package:notes_rust/ui/notes_controller.dart';
 import 'package:notes_rust/ui/notes_screen.dart';
 
 import '../test/support/contract.dart';

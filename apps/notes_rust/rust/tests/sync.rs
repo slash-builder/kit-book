@@ -7,7 +7,10 @@ use notes_core::types::{Resolution, Side};
 use notes_core::Error;
 
 fn two() -> (Copy, Copy) {
-    (open_copy("laptop", "aaaaaaa1"), open_copy("desktop", "bbbbbbb2"))
+    (
+        open_copy("laptop", "aaaaaaa1"),
+        open_copy("desktop", "bbbbbbb2"),
+    )
 }
 
 #[test]
@@ -20,7 +23,10 @@ fn a_new_copy_catches_up_and_both_end_with_the_same_digest() {
     let (wire, report) = pull(&b.engine, &a.engine, None).unwrap();
     assert_eq!(report.fast_forwarded.len(), 2);
     assert!(report.conflicts.is_empty() && report.incomplete.is_empty());
-    assert!(wire.rounds >= 2, "manifest, then list node, then chunks: {wire:?}");
+    assert!(
+        wire.rounds >= 2,
+        "manifest, then list node, then chunks: {wire:?}"
+    );
     assert_eq!(b.engine.get_note(&n1.id).unwrap().body, "first");
     assert_eq!(b.engine.get_note(&n2.id).unwrap().body.len(), 150_000);
     assert_eq!(a.engine.heads_digest(), b.engine.heads_digest());
@@ -38,12 +44,19 @@ fn a_one_byte_edit_of_a_10_mib_note_moves_a_small_fraction_of_the_body() {
     let n = a.engine.create_note("Big", &body).unwrap();
 
     let (cold, _) = pull(&b.engine, &a.engine, None).unwrap();
-    assert!(cold.bytes > body.len() * 9 / 10, "a cold sync carries the body: {cold:?}");
+    assert!(
+        cold.bytes > body.len() * 9 / 10,
+        "a cold sync carries the body: {cold:?}"
+    );
     assert_eq!(b.engine.get_note(&n.id).unwrap().body.len(), body.len());
 
     // change ONE byte in the middle
     let mut bytes = body.clone().into_bytes();
-    bytes[5 * 1024 * 1024] = if bytes[5 * 1024 * 1024] == b'q' { b'z' } else { b'q' };
+    bytes[5 * 1024 * 1024] = if bytes[5 * 1024 * 1024] == b'q' {
+        b'z'
+    } else {
+        b'q'
+    };
     let edited = String::from_utf8(bytes).unwrap();
     a.engine.save_note(&n.id, "Big", &edited).unwrap();
 
@@ -52,8 +65,16 @@ fn a_one_byte_edit_of_a_10_mib_note_moves_a_small_fraction_of_the_body() {
     assert_eq!(b.engine.get_note(&n.id).unwrap().body, edited);
     // manifest + the root list node (544 children x 40 bytes) + the one or two chunks the byte fell in
     assert!(warm.blocks <= 5, "{warm:?}");
-    assert!(warm.bytes < 200 * 1024, "one byte moved {} bytes of a {} byte body", warm.bytes, body.len());
-    println!("cold sync: {} bytes in {} blocks; one-byte edit: {} bytes in {} blocks ({} rounds)", cold.bytes, cold.blocks, warm.bytes, warm.blocks, warm.rounds);
+    assert!(
+        warm.bytes < 200 * 1024,
+        "one byte moved {} bytes of a {} byte body",
+        warm.bytes,
+        body.len()
+    );
+    println!(
+        "cold sync: {} bytes in {} blocks; one-byte edit: {} bytes in {} blocks ({} rounds)",
+        cold.bytes, cold.blocks, warm.bytes, warm.blocks, warm.rounds
+    );
 }
 
 #[test]
@@ -71,8 +92,16 @@ fn a_tampered_block_is_refused_and_nothing_changes() {
     let err = pull(&b.engine, &a.engine, Some(&flip)).unwrap_err();
     assert!(matches!(err, Error::BadBlock { .. }), "{err}");
     assert_eq!(err.code(), "bad_block");
-    assert_eq!(b.engine.heads_digest(), digest_before, "the head did not move");
-    assert_eq!(b.engine.stats().block_count, blocks_before, "nothing was stored");
+    assert_eq!(
+        b.engine.heads_digest(),
+        digest_before,
+        "the head did not move"
+    );
+    assert_eq!(
+        b.engine.stats().block_count,
+        blocks_before,
+        "nothing was stored"
+    );
     assert!(b.engine.list_notes().unwrap().is_empty());
 
     // an honest retry works
@@ -90,9 +119,13 @@ fn one_bad_block_in_an_export_stores_none_of_the_others() {
     let theirs = a.engine.heads();
     // first round: manifest
     let first = c.engine.missing_blocks(&theirs, 512).unwrap();
-    c.engine.import_blocks(&a.engine.export_blocks(&first).unwrap()).unwrap();
+    c.engine
+        .import_blocks(&a.engine.export_blocks(&first).unwrap())
+        .unwrap();
     let second = c.engine.missing_blocks(&theirs, 512).unwrap();
-    c.engine.import_blocks(&a.engine.export_blocks(&second).unwrap()).unwrap();
+    c.engine
+        .import_blocks(&a.engine.export_blocks(&second).unwrap())
+        .unwrap();
     let chunks = c.engine.missing_blocks(&theirs, 512).unwrap();
     assert!(chunks.len() > 3);
     let mut export = a.engine.export_blocks(&chunks).unwrap();
@@ -100,7 +133,11 @@ fn one_bad_block_in_an_export_stores_none_of_the_others() {
     let last = export.len() - 1;
     export[last] ^= 0xff; // damage only the LAST block
     assert!(c.engine.import_blocks(&export).is_err());
-    assert_eq!(c.engine.stats().block_count, before, "the earlier, honest blocks of the same export were not stored either");
+    assert_eq!(
+        c.engine.stats().block_count,
+        before,
+        "the earlier, honest blocks of the same export were not stored either"
+    );
 }
 
 #[test]
@@ -115,7 +152,13 @@ fn malformed_exports_are_refused_before_anything_is_stored() {
     let truncated = good[..good.len() - 3].to_vec();
     let mut huge = good.clone();
     huge[4 + 32..4 + 36].copy_from_slice(&u32::MAX.to_le_bytes());
-    for (name, bytes) in [("magic", bad_magic), ("truncated", truncated), ("huge length", huge), ("empty", vec![]), ("header only", good[..8].to_vec())] {
+    for (name, bytes) in [
+        ("magic", bad_magic),
+        ("truncated", truncated),
+        ("huge length", huge),
+        ("empty", vec![]),
+        ("header only", good[..8].to_vec()),
+    ] {
         let err = b.engine.import_blocks(&bytes).unwrap_err();
         assert_eq!(err.code(), "bad_export", "{name}: {err}");
     }
@@ -140,7 +183,10 @@ fn a_peer_head_that_is_not_a_version_of_that_note_is_rejected() {
     let n2 = a.engine.create_note("two", "2").unwrap();
     pull(&b.engine, &a.engine, None).unwrap();
     // claim note 1's head for note 2's id
-    let lie = vec![notes_core::types::HeadEntry { id: n2.id.clone(), head: n1.head.clone() }];
+    let lie = vec![notes_core::types::HeadEntry {
+        id: n2.id.clone(),
+        head: n1.head.clone(),
+    }];
     assert!(b.engine.missing_blocks(&lie, 10).is_err());
     let report = b.engine.apply_heads(&lie).unwrap();
     assert_eq!(report.rejected, vec![n2.id.clone()]);
@@ -166,18 +212,31 @@ fn two_edits_of_one_note_are_a_conflict_with_both_versions_and_the_core_does_not
     b.engine.set_clock(Box::new(|| 2_000));
     let n = a.engine.create_note("Plan", "base\n").unwrap();
     pull(&b.engine, &a.engine, None).unwrap();
-    a.engine.save_note(&n.id, "Plan", "base\nfrom laptop\n").unwrap();
-    b.engine.save_note(&n.id, "Plan", "base\nfrom desktop\n").unwrap();
+    a.engine
+        .save_note(&n.id, "Plan", "base\nfrom laptop\n")
+        .unwrap();
+    b.engine
+        .save_note(&n.id, "Plan", "base\nfrom desktop\n")
+        .unwrap();
 
     let (_, report) = pull(&a.engine, &b.engine, None).unwrap();
     assert_eq!(report.conflicts.len(), 1);
     let c = &report.conflicts[0];
     assert_eq!(c.note_id, n.id);
-    assert_eq!((c.local.body.as_str(), c.local.by.as_str()), ("base\nfrom laptop\n", "laptop"));
-    assert_eq!((c.remote.body.as_str(), c.remote.by.as_str()), ("base\nfrom desktop\n", "desktop"));
+    assert_eq!(
+        (c.local.body.as_str(), c.local.by.as_str()),
+        ("base\nfrom laptop\n", "laptop")
+    );
+    assert_eq!(
+        (c.remote.body.as_str(), c.remote.by.as_str()),
+        ("base\nfrom desktop\n", "desktop")
+    );
     assert_eq!(c.base.as_ref().unwrap().body, "base\n");
     // nothing moved
-    assert_eq!(a.engine.get_note(&n.id).unwrap().body, "base\nfrom laptop\n");
+    assert_eq!(
+        a.engine.get_note(&n.id).unwrap().body,
+        "base\nfrom laptop\n"
+    );
     assert_eq!(a.engine.pending_conflicts().unwrap().len(), 1);
     assert_eq!(a.engine.stats().pending_conflicts, 1);
 }
@@ -204,7 +263,14 @@ fn the_apps_choice_is_applied_and_the_other_copy_fast_forwards() {
     for (name, how, want) in [
         ("keep local", Resolution::KeepLocal, "A\n"),
         ("take remote", Resolution::TakeRemote, "B\n"),
-        ("merged", Resolution::Merged { title: "Plan".into(), body: "A and B\n".into() }, "A and B\n"),
+        (
+            "merged",
+            Resolution::Merged {
+                title: "Plan".into(),
+                body: "A and B\n".into(),
+            },
+            "A and B\n",
+        ),
     ] {
         let (a, b, id) = diverge();
         let r = remote_of(&a.engine);
@@ -225,10 +291,30 @@ fn keep_both_converges_with_no_conversation() {
     let (a, b, id) = diverge();
     // Each copy applies the SAME deterministic policy on its own: the later edit (desktop, t=2000) wins.
     let (ra, rb) = (remote_of(&a.engine), remote_of(&b.engine));
-    a.engine.resolve_conflict(&id, &ra, &Resolution::KeepBoth { winner: Side::Remote }).unwrap();
-    b.engine.resolve_conflict(&id, &rb, &Resolution::KeepBoth { winner: Side::Local }).unwrap();
+    a.engine
+        .resolve_conflict(
+            &id,
+            &ra,
+            &Resolution::KeepBoth {
+                winner: Side::Remote,
+            },
+        )
+        .unwrap();
+    b.engine
+        .resolve_conflict(
+            &id,
+            &rb,
+            &Resolution::KeepBoth {
+                winner: Side::Local,
+            },
+        )
+        .unwrap();
 
-    assert_eq!(a.engine.heads_digest(), b.engine.heads_digest(), "same heads on both copies, nothing sent");
+    assert_eq!(
+        a.engine.heads_digest(),
+        b.engine.heads_digest(),
+        "same heads on both copies, nothing sent"
+    );
     assert_eq!(a.engine.get_note(&id).unwrap().body, "B\n");
     let notes = a.engine.list_notes().unwrap();
     assert_eq!(notes.len(), 2);
@@ -241,7 +327,10 @@ fn keep_both_converges_with_no_conversation() {
     assert_eq!(wire.bytes, 0);
     assert!(report.conflicts.is_empty());
     // resolving twice is refused: the conflict is gone
-    assert!(matches!(a.engine.resolve_conflict(&id, &ra, &Resolution::KeepLocal), Err(Error::NoConflict(_))));
+    assert!(matches!(
+        a.engine.resolve_conflict(&id, &ra, &Resolution::KeepLocal),
+        Err(Error::NoConflict(_))
+    ));
 }
 
 #[test]
@@ -258,7 +347,9 @@ fn an_edit_and_a_delete_are_a_conflict_too() {
     assert!(report.conflicts[0].remote.deleted && !report.conflicts[0].local.deleted);
     // the edit wins ("edit beats delete" is the app's rule, applied through the same call)
     let r = remote_of(&a.engine);
-    a.engine.resolve_conflict(&n.id, &r, &Resolution::KeepLocal).unwrap();
+    a.engine
+        .resolve_conflict(&n.id, &r, &Resolution::KeepLocal)
+        .unwrap();
     pull(&b.engine, &a.engine, None).unwrap();
     assert_eq!(b.engine.get_note(&n.id).unwrap().body, "text, edited");
 }
@@ -288,10 +379,15 @@ fn old_history_arrives_as_unavailable_until_its_blocks_do() {
     assert_eq!(versions.len(), 2);
     assert!(versions[0].available);
     assert!(!versions[1].available, "the old body was not pulled");
-    let err = b.engine.restore_version(&n.id, &versions[1].manifest).unwrap_err();
+    let err = b
+        .engine
+        .restore_version(&n.id, &versions[1].manifest)
+        .unwrap_err();
     assert_eq!(err.code(), "version_unavailable");
     // and it can be fetched on purpose: the old version's blocks are ordinary blocks
-    let a_old = a.engine.list_versions(&n.id, 10).unwrap()[1].manifest.clone();
+    let a_old = a.engine.list_versions(&n.id, 10).unwrap()[1]
+        .manifest
+        .clone();
     assert_eq!(a_old, versions[1].manifest);
 }
 

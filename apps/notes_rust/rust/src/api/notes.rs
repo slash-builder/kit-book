@@ -4,8 +4,7 @@
 //! This file only adapts. The logic is `crate::engine::Engine`, which `cargo test` covers without the bridge.
 
 pub use crate::types::{
-    ApplyReport, Conflict, CoreStats, HeadEntry, ImportReport, NoteSummary, NoteView,
-    VersionInfo,
+    ApplyReport, Conflict, CoreStats, HeadEntry, ImportReport, NoteSummary, NoteView, VersionInfo,
 };
 use crate::types::{Resolution, Side};
 
@@ -22,7 +21,10 @@ pub struct CoreError {
 
 impl From<crate::Error> for CoreError {
     fn from(e: crate::Error) -> Self {
-        CoreError { code: e.code().to_string(), message: e.to_string() }
+        CoreError {
+            code: e.code().to_string(),
+            message: e.to_string(),
+        }
     }
 }
 
@@ -33,7 +35,6 @@ impl std::fmt::Display for CoreError {
 }
 
 impl std::error::Error for CoreError {}
-
 
 /// How the app answers a conflict (see `Resolution` in `types.rs`). flutter_rust_bridge turns a Rust enum that carries data
 /// into a `freezed` class, which needs `freezed` and a build_runner step in the Dart project; this flat form avoids that.
@@ -59,9 +60,16 @@ impl From<ResolutionChoice> for Resolution {
         match c.kind {
             ResolutionKind::KeepLocal => Resolution::KeepLocal,
             ResolutionKind::TakeRemote => Resolution::TakeRemote,
-            ResolutionKind::Merged => Resolution::Merged { title: c.title, body: c.body },
-            ResolutionKind::KeepBothLocalWins => Resolution::KeepBoth { winner: Side::Local },
-            ResolutionKind::KeepBothRemoteWins => Resolution::KeepBoth { winner: Side::Remote },
+            ResolutionKind::Merged => Resolution::Merged {
+                title: c.title,
+                body: c.body,
+            },
+            ResolutionKind::KeepBothLocalWins => Resolution::KeepBoth {
+                winner: Side::Local,
+            },
+            ResolutionKind::KeepBothRemoteWins => Resolution::KeepBoth {
+                winner: Side::Remote,
+            },
         }
     }
 }
@@ -73,8 +81,14 @@ pub struct NotesEngine {
 
 impl NotesEngine {
     /// `snapshot_json` is `jsonEncode(ctx.snapshot())`. `account` is `ctx.peerAccount`; `device` is `ctx.peerDevice`.
-    pub fn open(snapshot_json: String, account: String, device: String) -> Result<NotesEngine, CoreError> {
-        Ok(NotesEngine { inner: Engine::open(&snapshot_json, &account, &device)? })
+    pub fn open(
+        snapshot_json: String,
+        account: String,
+        device: String,
+    ) -> Result<NotesEngine, CoreError> {
+        Ok(NotesEngine {
+            inner: Engine::open(&snapshot_json, &account, &device)?,
+        })
     }
 
     pub fn list_notes(&self) -> Result<Vec<NoteSummary>, CoreError> {
@@ -86,7 +100,12 @@ impl NotesEngine {
     pub fn create_note(&self, title: String, body: String) -> Result<NoteView, CoreError> {
         Ok(self.inner.create_note(&title, &body)?)
     }
-    pub fn save_note(&self, id: String, title: String, body: String) -> Result<NoteView, CoreError> {
+    pub fn save_note(
+        &self,
+        id: String,
+        title: String,
+        body: String,
+    ) -> Result<NoteView, CoreError> {
         Ok(self.inner.save_note(&id, &title, &body)?)
     }
     pub fn delete_note(&self, id: String) -> Result<(), CoreError> {
@@ -109,7 +128,11 @@ impl NotesEngine {
     pub fn heads_digest(&self) -> String {
         self.inner.heads_digest()
     }
-    pub fn missing_blocks(&self, theirs: Vec<HeadEntry>, limit: u32) -> Result<Vec<String>, CoreError> {
+    pub fn missing_blocks(
+        &self,
+        theirs: Vec<HeadEntry>,
+        limit: u32,
+    ) -> Result<Vec<String>, CoreError> {
         Ok(self.inner.missing_blocks(&theirs, limit as usize)?)
     }
     pub fn export_blocks(&self, hashes: Vec<String>) -> Result<Vec<u8>, CoreError> {
@@ -124,8 +147,15 @@ impl NotesEngine {
     pub fn pending_conflicts(&self) -> Result<Vec<Conflict>, CoreError> {
         Ok(self.inner.pending_conflicts()?)
     }
-    pub fn resolve_conflict(&self, note_id: String, remote: String, how: ResolutionChoice) -> Result<(), CoreError> {
-        Ok(self.inner.resolve_conflict(&note_id, &remote, &how.into())?)
+    pub fn resolve_conflict(
+        &self,
+        note_id: String,
+        remote: String,
+        how: ResolutionChoice,
+    ) -> Result<(), CoreError> {
+        Ok(self
+            .inner
+            .resolve_conflict(&note_id, &remote, &how.into())?)
     }
 
     pub fn stats(&self) -> CoreStats {

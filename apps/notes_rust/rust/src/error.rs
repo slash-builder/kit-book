@@ -17,7 +17,10 @@ pub enum Error {
     /// A file or block this app wrote itself no longer parses, or a manifest is not shaped as the schema says.
     Corrupt(String),
     /// Bytes that do not hash to the address they were sent under. Nothing was stored.
-    BadBlock { claimed: String, actual: String },
+    BadBlock {
+        claimed: String,
+        actual: String,
+    },
     /// A malformed export (bad magic, a record that runs past the end, a block over the size limit).
     BadExport(String),
     NoSuchNote(String),
@@ -26,7 +29,10 @@ pub enum Error {
     VersionUnavailable(String),
     NoConflict(String),
     /// A note body over the limit (`maxNoteBytes` in the settings the owner writes, default 32 MiB).
-    TooLarge { len: u64, limit: u64 },
+    TooLarge {
+        len: u64,
+        limit: u64,
+    },
     /// An argument that cannot be right (an id that is not a note id, a hash that is not hex, a blank device name).
     Invalid(String),
 }
@@ -69,10 +75,15 @@ impl fmt::Display for Error {
             Error::NoSuchNote(n) => write!(f, "no such note: {n}"),
             Error::NoSuchVersion(v) => write!(f, "no such version: {v}"),
             Error::VersionUnavailable(v) => {
-                write!(f, "version {v} is not on this copy (its blocks were never synced here)")
+                write!(
+                    f,
+                    "version {v} is not on this copy (its blocks were never synced here)"
+                )
             }
             Error::NoConflict(n) => write!(f, "note {n} has no pending conflict with that version"),
-            Error::TooLarge { len, limit } => write!(f, "note is {len} bytes; the limit is {limit}"),
+            Error::TooLarge { len, limit } => {
+                write!(f, "note is {len} bytes; the limit is {limit}")
+            }
             Error::Invalid(m) => write!(f, "invalid argument: {m}"),
         }
     }

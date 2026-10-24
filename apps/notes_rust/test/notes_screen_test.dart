@@ -64,6 +64,28 @@ void main() {
     await kit.quit();
   });
 
+  testWidgets('NOTES_RUST_SEED writes sample notes into an empty store only', (t) async {
+    core = FakeNotesCore(device: 'laptop', clock: () => clock += 1000);
+    kit = await pumpKitApp(t,
+        manifest: manifestText,
+        env: {'NOTES_RUST_SEED': '3'},
+        app: (_) => NotesApp(openCore: (_) async => core, peers: false));
+    await settle(t);
+    expect((await t.runAsync(core.listNotes))!.map((n) => n.title).toSet(), {'Sample note 1', 'Sample note 2', 'Sample note 3'});
+    await kit.quit();
+
+    // a store that already has a note is left alone
+    core = FakeNotesCore(device: 'laptop', clock: () => clock += 1000);
+    await core.createNote('Mine', 'already here');
+    kit = await pumpKitApp(t,
+        manifest: manifestText,
+        env: {'NOTES_RUST_SEED': '3'},
+        app: (_) => NotesApp(openCore: (_) async => core, peers: false));
+    await settle(t);
+    expect((await t.runAsync(core.listNotes))!.map((n) => n.title), ['Mine']);
+    await kit.quit();
+  });
+
   testWidgets('create a note, type, and it is saved by the core after the pause', (t) async {
     final c = await boot(t);
     await t.tap(find.byKey(const ValueKey('new-note')));

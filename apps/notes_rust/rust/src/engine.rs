@@ -38,7 +38,9 @@ struct Inner {
 impl Inner {
     fn max_note_bytes(&self) -> u64 {
         // Read the owner's settings fresh each time: a change in the Dart UI shows up without a restart.
-        self.ctx.settings().get_or("maxNoteBytes", DEFAULT_MAX_NOTE_BYTES)
+        self.ctx
+            .settings()
+            .get_or("maxNoteBytes", DEFAULT_MAX_NOTE_BYTES)
     }
 }
 
@@ -59,12 +61,18 @@ impl Engine {
         Engine::open_snapshot(&snapshot, account, device)
     }
 
-    pub fn open_snapshot(snapshot: &ContextSnapshot, account: &str, device: &str) -> Result<Engine> {
+    pub fn open_snapshot(
+        snapshot: &ContextSnapshot,
+        account: &str,
+        device: &str,
+    ) -> Result<Engine> {
         check_label("device", device)?;
         let ctx = AppContext::adopt(snapshot);
         let ns = Namespace::new(account, ctx.app_id())?;
         let store = NotesStore::open(&ctx, ns, device)?;
-        Ok(Engine { inner: Mutex::new(Inner { ctx, store }) })
+        Ok(Engine {
+            inner: Mutex::new(Inner { ctx, store }),
+        })
     }
 
     fn lock(&self) -> MutexGuard<'_, Inner> {
@@ -85,7 +93,9 @@ impl Engine {
         for (id, head) in g.store.heads() {
             // A head whose manifest cannot be read (blocks lost to a torn write) hides one note, not the whole list;
             // `stats().unreadable_notes` counts them.
-            let Ok(m) = g.store.manifest(head) else { continue };
+            let Ok(m) = g.store.manifest(head) else {
+                continue;
+            };
             if m.deleted {
                 continue;
             }
@@ -121,7 +131,10 @@ impl Engine {
 
     pub fn get_note(&self, id: &str) -> Result<NoteView> {
         let g = self.lock();
-        let head = g.store.head(id).ok_or_else(|| Error::NoSuchNote(id.to_string()))?;
+        let head = g
+            .store
+            .head(id)
+            .ok_or_else(|| Error::NoSuchNote(id.to_string()))?;
         if g.store.manifest(&head)?.deleted {
             return Err(Error::NoSuchNote(id.to_string()));
         }
@@ -159,14 +172,21 @@ impl Engine {
 
     pub fn list_versions(&self, id: &str, limit: usize) -> Result<Vec<VersionInfo>> {
         let g = self.lock();
-        let head = g.store.head(id).ok_or_else(|| Error::NoSuchNote(id.to_string()))?;
+        let head = g
+            .store
+            .head(id)
+            .ok_or_else(|| Error::NoSuchNote(id.to_string()))?;
         let (all, _) = g.store.walk_history(head, &Default::default())?;
         let mut rows = Vec::new();
         for addr in all {
             let m = g.store.manifest(&addr)?;
             rows.push((addr, m));
         }
-        rows.sort_by(|a, b| b.1.at.cmp(&a.1.at).then_with(|| b.0.to_hex().cmp(&a.0.to_hex())));
+        rows.sort_by(|a, b| {
+            b.1.at
+                .cmp(&a.1.at)
+                .then_with(|| b.0.to_hex().cmp(&a.0.to_hex()))
+        });
         rows.truncate(limit.max(1));
         rows.into_iter()
             .map(|(addr, m)| {
@@ -217,7 +237,11 @@ impl Engine {
 
     pub fn missing_blocks(&self, theirs: &[HeadEntry], limit: usize) -> Result<Vec<String>> {
         let g = self.lock();
-        Ok(g.store.missing_blocks(theirs, limit.clamp(1, 4096))?.iter().map(Hash::to_hex).collect())
+        Ok(g.store
+            .missing_blocks(theirs, limit.clamp(1, 4096))?
+            .iter()
+            .map(Hash::to_hex)
+            .collect())
     }
 
     pub fn export_blocks(&self, hashes: &[String]) -> Result<Vec<u8>> {
@@ -242,13 +266,23 @@ impl Engine {
         if !is_note_id(note_id) {
             return Err(Error::Invalid(format!("not a note id: {note_id:?}")));
         }
-        self.lock().store.resolve_conflict(note_id, &parse_hash(remote)?, how)
+        self.lock()
+            .store
+            .resolve_conflict(note_id, &parse_hash(remote)?, how)
     }
 
     pub fn stats(&self) -> CoreStats {
         let g = self.lock();
-        let manifests: Vec<_> = g.store.heads().values().map(|h| g.store.manifest(h)).collect();
-        let live = manifests.iter().filter(|m| matches!(m, Ok(m) if !m.deleted)).count();
+        let manifests: Vec<_> = g
+            .store
+            .heads()
+            .values()
+            .map(|h| g.store.manifest(h))
+            .collect();
+        let live = manifests
+            .iter()
+            .filter(|m| matches!(m, Ok(m) if !m.deleted))
+            .count();
         let unreadable = manifests.iter().filter(|m| m.is_err()).count();
         CoreStats {
             app_id: g.ctx.app_id().to_string(),

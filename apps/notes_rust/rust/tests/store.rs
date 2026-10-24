@@ -15,20 +15,38 @@ fn create_read_edit_delete() {
 
     let list = c.engine.list_notes().unwrap();
     assert_eq!(list.len(), 1);
-    assert_eq!((list[0].title.as_str(), list[0].preview.as_str()), ("Shopping", "milk"));
+    assert_eq!(
+        (list[0].title.as_str(), list[0].preview.as_str()),
+        ("Shopping", "milk")
+    );
 
-    let n2 = c.engine.save_note(&n.id, "Shopping", "milk\neggs\nbread\n").unwrap();
+    let n2 = c
+        .engine
+        .save_note(&n.id, "Shopping", "milk\neggs\nbread\n")
+        .unwrap();
     assert_ne!(n2.head, n.head);
     // an unchanged save writes no version
-    assert_eq!(c.engine.save_note(&n.id, "Shopping", "milk\neggs\nbread\n").unwrap().head, n2.head);
+    assert_eq!(
+        c.engine
+            .save_note(&n.id, "Shopping", "milk\neggs\nbread\n")
+            .unwrap()
+            .head,
+        n2.head
+    );
     assert_eq!(c.engine.list_versions(&n.id, 50).unwrap().len(), 2);
 
     c.engine.delete_note(&n.id).unwrap();
     assert!(c.engine.list_notes().unwrap().is_empty());
-    assert!(matches!(c.engine.get_note(&n.id), Err(Error::NoSuchNote(_))));
+    assert!(matches!(
+        c.engine.get_note(&n.id),
+        Err(Error::NoSuchNote(_))
+    ));
     // history survives the delete
     assert_eq!(c.engine.list_versions(&n.id, 50).unwrap().len(), 3);
-    assert!(matches!(c.engine.save_note("nosuchnote1", "x", "y"), Err(Error::NoSuchNote(_))));
+    assert!(matches!(
+        c.engine.save_note("nosuchnote1", "x", "y"),
+        Err(Error::NoSuchNote(_))
+    ));
 }
 
 #[test]
@@ -59,11 +77,18 @@ fn restoring_a_version_writes_one_manifest_and_no_body_block() {
     let before = c.engine.stats().block_count;
     let restored = c.engine.restore_version(&n.id, first).unwrap();
     assert_eq!(restored.body, big);
-    assert_eq!(c.engine.stats().block_count, before + 1, "only the new manifest is a new block");
+    assert_eq!(
+        c.engine.stats().block_count,
+        before + 1,
+        "only the new manifest is a new block"
+    );
     // history is a line: restore, edit, original
     assert_eq!(c.engine.list_versions(&n.id, 50).unwrap().len(), 3);
     // restoring what is already current changes nothing
-    let again = c.engine.restore_version(&n.id, &c.engine.get_note(&n.id).unwrap().head).unwrap();
+    let again = c
+        .engine
+        .restore_version(&n.id, &c.engine.get_note(&n.id).unwrap().head)
+        .unwrap();
     assert_eq!(again.head, restored.head);
 }
 
@@ -74,16 +99,28 @@ fn identical_bodies_share_their_blocks() {
     c.engine.create_note("one", &body).unwrap();
     let after_first = c.engine.stats().block_count;
     c.engine.create_note("two", &body).unwrap();
-    assert_eq!(c.engine.stats().block_count, after_first + 1, "the second copy of the text adds one manifest");
+    assert_eq!(
+        c.engine.stats().block_count,
+        after_first + 1,
+        "the second copy of the text adds one manifest"
+    );
 }
 
 #[test]
 fn a_damaged_head_index_is_reported_and_never_replaced() {
     let c = open_copy("laptop", "0a1b2c3d");
     c.engine.create_note("x", "y").unwrap();
-    let index = fs::read_dir(c.data()).unwrap().map(|e| e.unwrap().path()).find(|p| {
-        p.file_name().unwrap().to_str().unwrap().starts_with("heads-")
-    }).unwrap();
+    let index = fs::read_dir(c.data())
+        .unwrap()
+        .map(|e| e.unwrap().path())
+        .find(|p| {
+            p.file_name()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .starts_with("heads-")
+        })
+        .unwrap();
     let Copy { dir, engine, .. } = c;
     drop(engine);
     fs::write(&index, "{not json").unwrap();
@@ -106,7 +143,10 @@ fn the_owner_writes_settings_and_the_core_only_reads_them() {
     let before = fs::read(&cfg).unwrap();
 
     assert_eq!(c.engine.stats().max_note_bytes, 10);
-    assert!(matches!(c.engine.create_note("t", "01234567890"), Err(Error::TooLarge { len: 11, limit: 10 })));
+    assert!(matches!(
+        c.engine.create_note("t", "01234567890"),
+        Err(Error::TooLarge { len: 11, limit: 10 })
+    ));
     c.engine.create_note("t", "0123456789").unwrap();
 
     // The core never touched the owner's file, and made no roster entry.
@@ -122,20 +162,36 @@ fn the_owner_writes_settings_and_the_core_only_reads_them() {
 fn the_partition_is_the_one_the_account_and_app_name() {
     let c = open_copy("laptop", "0a1b2c3d");
     let stats = c.engine.stats();
-    let expect = notes_core::namespace::Namespace::new("home", APP).unwrap().partition().to_hex();
+    let expect = notes_core::namespace::Namespace::new("home", APP)
+        .unwrap()
+        .partition()
+        .to_hex();
     assert_eq!(stats.partition, expect);
     assert!(c.data().join("blocks").join(&expect).is_dir());
-    assert_eq!((stats.app_id.as_str(), stats.instance.as_str(), stats.mode.as_str()), (APP, "0a1b2c3d", "real"));
+    assert_eq!(
+        (
+            stats.app_id.as_str(),
+            stats.instance.as_str(),
+            stats.mode.as_str()
+        ),
+        (APP, "0a1b2c3d", "real")
+    );
 }
 
 #[test]
 fn bad_snapshots_and_arguments_are_typed_errors() {
     let dir = tempfile::tempdir().unwrap();
-    let mut bad = serde_json::from_str::<serde_json::Value>(&snapshot_json(dir.path(), "0a1b2c3d")).unwrap();
+    let mut bad =
+        serde_json::from_str::<serde_json::Value>(&snapshot_json(dir.path(), "0a1b2c3d")).unwrap();
     bad["dirs"]["data"] = serde_json::json!("relative/data");
     let err = notes_core::Engine::open(&bad.to_string(), "home", "laptop").unwrap_err();
     assert_eq!(err.code(), "bad_snapshot");
-    assert!(notes_core::Engine::open(&snapshot_json(dir.path(), "0a1b2c3d"), "bad\naccount", "laptop").is_err());
+    assert!(notes_core::Engine::open(
+        &snapshot_json(dir.path(), "0a1b2c3d"),
+        "bad\naccount",
+        "laptop"
+    )
+    .is_err());
     assert!(notes_core::Engine::open(&snapshot_json(dir.path(), "0a1b2c3d"), "home", "").is_err());
 }
 
@@ -143,13 +199,26 @@ fn bad_snapshots_and_arguments_are_typed_errors() {
 fn a_torn_pack_tail_hides_one_note_not_the_list() {
     let c = open_copy("laptop", "0a1b2c3d");
     c.engine.create_note("first", "safe").unwrap();
-    let last = c.engine.create_note("last", "written when the power went").unwrap();
-    let pack = c.data().join("blocks").join(c.engine.stats().partition).join("active").join("active.pack");
+    let last = c
+        .engine
+        .create_note("last", "written when the power went")
+        .unwrap();
+    let pack = c
+        .data()
+        .join("blocks")
+        .join(c.engine.stats().partition)
+        .join("active")
+        .join("active.pack");
     let Copy { dir, engine, .. } = c;
     drop(engine);
     // Cut the file in the middle of the last note's final block, as a power cut that lost unsynced pages would.
     let len = fs::metadata(&pack).unwrap().len();
-    fs::OpenOptions::new().write(true).open(&pack).unwrap().set_len(len - 20).unwrap();
+    fs::OpenOptions::new()
+        .write(true)
+        .open(&pack)
+        .unwrap()
+        .set_len(len - 20)
+        .unwrap();
     let engine = Engine_open(&dir).unwrap();
     let stats = engine.stats();
     assert_eq!(stats.unreadable_notes, 1);

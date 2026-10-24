@@ -31,7 +31,11 @@ pub fn snapshot_json(root: &Path, instance: &str) -> String {
 pub fn open_copy(device: &str, instance: &str) -> Copy {
     let dir = TempDir::new().unwrap();
     let engine = Engine::open(&snapshot_json(dir.path(), instance), "home", device).unwrap();
-    Copy { dir, engine, instance: instance.to_string() }
+    Copy {
+        dir,
+        engine,
+        instance: instance.to_string(),
+    }
 }
 
 impl Copy {
@@ -43,10 +47,18 @@ impl Copy {
     }
     /// Reopen the same directories (a restart).
     pub fn reopen(self, device: &str) -> Copy {
-        let Copy { dir, engine, instance } = self;
+        let Copy {
+            dir,
+            engine,
+            instance,
+        } = self;
         drop(engine);
         let engine = Engine::open(&snapshot_json(dir.path(), &instance), "home", device).unwrap();
-        Copy { dir, engine, instance }
+        Copy {
+            dir,
+            engine,
+            instance,
+        }
     }
 }
 
@@ -64,6 +76,9 @@ pub fn text(len: usize, seed: u64) -> String {
     String::from_utf8(out).unwrap()
 }
 
+/// A change applied to an export in flight (a tampering peer).
+pub type Tamper<'a> = &'a dyn Fn(&mut Vec<u8>);
+
 #[derive(Debug, Default, Clone, PartialEq, Eq)]
 pub struct Wire {
     /// Export bytes carried (what a transport would split into parts).
@@ -76,7 +91,7 @@ pub struct Wire {
 pub fn pull(
     to: &Engine,
     from: &Engine,
-    tamper: Option<&dyn Fn(&mut Vec<u8>)>,
+    tamper: Option<Tamper>,
 ) -> Result<(Wire, ApplyReport), notes_core::Error> {
     let theirs: Vec<HeadEntry> = from.heads();
     let mut wire = Wire::default();

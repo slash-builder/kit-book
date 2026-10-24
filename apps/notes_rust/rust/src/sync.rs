@@ -19,9 +19,7 @@ use storage_kit::{Hash, ImmutableStore};
 
 use crate::error::{Error, Result};
 use crate::store::{list_children, parse_hash, Body, Manifest, NotesStore};
-use crate::types::{
-    ApplyReport, Conflict, HeadEntry, ImportReport, NoteVersion, Resolution, Side,
-};
+use crate::types::{ApplyReport, Conflict, HeadEntry, ImportReport, NoteVersion, Resolution, Side};
 
 /// First four bytes of an export.
 pub const EXPORT_MAGIC: &[u8; 4] = b"NBK1";
@@ -51,7 +49,10 @@ impl NotesStore {
     pub fn head_entries(&self) -> Vec<HeadEntry> {
         self.heads()
             .iter()
-            .map(|(id, h)| HeadEntry { id: id.clone(), head: h.to_hex() })
+            .map(|(id, h)| HeadEntry {
+                id: id.clone(),
+                head: h.to_hex(),
+            })
             .collect()
     }
 
@@ -97,7 +98,10 @@ impl NotesStore {
             if self.has_block(&r) {
                 let m = self.manifest(&r)?;
                 if m.id != e.id {
-                    return Err(Error::Invalid(format!("head {} is not a version of note {}", e.head, e.id)));
+                    return Err(Error::Invalid(format!(
+                        "head {} is not a version of note {}",
+                        e.head, e.id
+                    )));
                 }
                 let mut tree = Vec::new();
                 self.missing_in_tree(m.root_hash(), m.depth, &mut tree, limit)?;
@@ -109,7 +113,13 @@ impl NotesStore {
         Ok(out)
     }
 
-    fn missing_in_tree(&self, hash: Hash, depth: u32, out: &mut Vec<Hash>, limit: usize) -> Result<()> {
+    fn missing_in_tree(
+        &self,
+        hash: Hash,
+        depth: u32,
+        out: &mut Vec<Hash>,
+        limit: usize,
+    ) -> Result<()> {
         if out.len() >= limit {
             return Ok(());
         }
@@ -137,7 +147,9 @@ impl NotesStore {
                 continue;
             }
             let bytes = self.get_block(h)?;
-            if out.len() > EXPORT_MAGIC.len() && out.len() + RECORD_HEADER + bytes.len() > MAX_EXPORT_BYTES {
+            if out.len() > EXPORT_MAGIC.len()
+                && out.len() + RECORD_HEADER + bytes.len() > MAX_EXPORT_BYTES
+            {
                 break;
             }
             out.extend_from_slice(h.as_bytes());
@@ -169,10 +181,13 @@ impl NotesStore {
                 return Err(Error::BadExport("a record header runs past the end".into()));
             }
             let claimed = Hash::from_bytes(export[pos..pos + 32].try_into().expect("32 bytes"));
-            let len = u32::from_le_bytes(export[pos + 32..pos + 36].try_into().expect("4 bytes")) as usize;
+            let len = u32::from_le_bytes(export[pos + 32..pos + 36].try_into().expect("4 bytes"))
+                as usize;
             pos += RECORD_HEADER;
             if len > MAX_BLOCK_BYTES {
-                return Err(Error::BadExport(format!("a block of {len} bytes is over the limit")));
+                return Err(Error::BadExport(format!(
+                    "a block of {len} bytes is over the limit"
+                )));
             }
             if export.len() - pos < len {
                 return Err(Error::BadExport("a block runs past the end".into()));
@@ -188,7 +203,10 @@ impl NotesStore {
         for (claimed, bytes) in &records {
             let actual = Hash::of(bytes);
             if actual != *claimed {
-                return Err(Error::BadBlock { claimed: claimed.to_hex(), actual: actual.to_hex() });
+                return Err(Error::BadBlock {
+                    claimed: claimed.to_hex(),
+                    actual: actual.to_hex(),
+                });
             }
         }
         let mut stored = 0;
@@ -199,11 +217,17 @@ impl NotesStore {
             let got = self.store.put(bytes)?;
             debug_assert_eq!(got, *claimed);
             if got != *claimed {
-                return Err(Error::Corrupt("the store filed a block under another address".into()));
+                return Err(Error::Corrupt(
+                    "the store filed a block under another address".into(),
+                ));
             }
             stored += 1;
         }
-        Ok(ImportReport { received: records.len() as u32, stored, bytes: total as u64 })
+        Ok(ImportReport {
+            received: records.len() as u32,
+            stored,
+            bytes: total as u64,
+        })
     }
 
     // ---- moving heads --------------------------------------------------------------------------------------------
@@ -346,7 +370,9 @@ impl NotesStore {
 
     /// Apply the app's answer to the pending conflict on `id` against the peer version `remote`.
     pub fn resolve_conflict(&mut self, id: &str, remote: &Hash, how: &Resolution) -> Result<()> {
-        let l = self.head(id).ok_or_else(|| Error::NoSuchNote(id.to_string()))?;
+        let l = self
+            .head(id)
+            .ok_or_else(|| Error::NoSuchNote(id.to_string()))?;
         if self.conflicts.get(id) != Some(remote) || !self.has_block(remote) {
             return Err(Error::NoConflict(id.to_string()));
         }
@@ -359,15 +385,39 @@ impl NotesStore {
         let by = self.device().to_string();
         match how {
             Resolution::KeepLocal => {
-                let a = self.write_manifest_for_body(id, &lm.title, lm.deleted, Body::of(&lm), vec![l, *remote], at, &by)?;
+                let a = self.write_manifest_for_body(
+                    id,
+                    &lm.title,
+                    lm.deleted,
+                    Body::of(&lm),
+                    vec![l, *remote],
+                    at,
+                    &by,
+                )?;
                 self.set_head(id, a)?;
             }
             Resolution::TakeRemote => {
-                let a = self.write_manifest_for_body(id, &rm.title, rm.deleted, Body::of(&rm), vec![l, *remote], at, &by)?;
+                let a = self.write_manifest_for_body(
+                    id,
+                    &rm.title,
+                    rm.deleted,
+                    Body::of(&rm),
+                    vec![l, *remote],
+                    at,
+                    &by,
+                )?;
                 self.set_head(id, a)?;
             }
             Resolution::Merged { title, body } => {
-                let a = self.write_manifest(id, title, false, body.as_bytes(), vec![l, *remote], at, &by)?;
+                let a = self.write_manifest(
+                    id,
+                    title,
+                    false,
+                    body.as_bytes(),
+                    vec![l, *remote],
+                    at,
+                    &by,
+                )?;
                 self.set_head(id, a)?;
             }
             Resolution::KeepBoth { winner } => {
@@ -389,13 +439,21 @@ impl NotesStore {
     /// The losing version of a `KeepBoth` becomes a new note whose every byte is a function of the loser alone, so the
     /// other copy, deciding the same way, writes the identical manifest and the two never diverge over the copy.
     fn keep_as_copy(&mut self, id: &str, loser: &Hash, m: &Manifest) -> Result<()> {
-        let digest = Hash::of(format!("slash-builder/notes-rust/conflict-copy/v1\n{id}\n{}", loser.to_hex()).as_bytes()).to_hex();
+        let digest = Hash::of(
+            format!(
+                "slash-builder/notes-rust/conflict-copy/v1\n{id}\n{}",
+                loser.to_hex()
+            )
+            .as_bytes(),
+        )
+        .to_hex();
         let cid = format!("cf{}", &digest[..16]);
         if self.head(&cid).is_some() {
             return Ok(());
         }
         let title = format!("{} (conflict from {})", m.title, m.by);
-        let a = self.write_manifest_for_body(&cid, &title, false, Body::of(m), vec![], m.at, &m.by)?;
+        let a =
+            self.write_manifest_for_body(&cid, &title, false, Body::of(m), vec![], m.at, &m.by)?;
         self.set_head(&cid, a)
     }
 }

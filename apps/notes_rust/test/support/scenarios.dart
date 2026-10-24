@@ -7,7 +7,6 @@ import 'dart:typed_data';
 
 import 'package:application_kit/application_kit.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:notes_rust/core/notes_core.dart';
 
 import 'copy.dart';
 

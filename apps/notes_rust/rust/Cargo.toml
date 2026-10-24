@@ -6,6 +6,8 @@
 name = "notes_core"
 version = "0.1.0"
 edition = "2021"
+# The highest rust-version among the 327 packages in the lock file (aws-smithy-*, pulled in by the Storage Kit's S3 backend).
+rust-version = "1.94"
 publish = false
 license = "Apache-2.0"
 description = "Notes stored as content-addressed blocks (Storage Kit) in the app's slice of a shared Application Kit context"

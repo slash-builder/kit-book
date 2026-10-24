@@ -53,6 +53,9 @@ class _NotesAppState extends State<NotesApp> {
   Future<void> _start(AppContext ctx) async {
     try {
       final core = await widget.openCore(ctx);
+      // Hooks run last-registered first. The core is registered FIRST so it closes LAST: on quit the controller saves the last
+      // keystrokes (and announces them), then the sync engine stops, then the native object is released.
+      ctx.onClose(core.close);
       final controller = NotesController(
         core: core,
         settings: Settings(SessionSettings(ctx.config)),
@@ -78,16 +81,25 @@ class _NotesAppState extends State<NotesApp> {
         controller.onLocalChange = (ids) => p.sync.localChanged(ids);
         p.sync.changes.listen((_) => controller.changedExternally());
       }
-      // Registered AFTER the peers: hooks run last-added-first, so on quit the last keystrokes are saved (and announced) while
-      // the hub is still open, and the core is released last of all.
-      ctx.onClose(core.close);
-      ctx.onClose(controller.flush);
+      ctx.onClose(controller.flush); // registered last, so it runs first: the hub is still open while the last keystrokes go out
       await controller.load();
+      await _seed(ctx, core, controller);
       if (!mounted) return;
       setState(() => _controller = controller);
     } on NotesCoreException catch (e) {
       if (mounted) setState(() => _error = e);
     }
+  }
+
+  /// `NOTES_RUST_SEED=3` (an environment variable the context was opened with) writes that many sample notes into an EMPTY store.
+  /// It exists so a smoke test can start the built app headless and see blocks land under the data directory.
+  Future<void> _seed(AppContext ctx, NotesCore core, NotesController controller) async {
+    final n = int.tryParse(ctx.env['NOTES_RUST_SEED'] ?? '') ?? 0;
+    if (n <= 0 || controller.notes.isNotEmpty) return;
+    for (var i = 1; i <= n.clamp(1, 20); i++) {
+      await core.createNote('Sample note $i', 'Sample note $i, written by NOTES_RUST_SEED.\n' * 40);
+    }
+    await controller.load();
   }
 
   @override
