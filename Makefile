@@ -15,7 +15,7 @@ APP ?=
 KIT ?=
 # Maintainers only, for `make docs-catalog`: the Kit registry file (or set KITS_REGISTRY), the registry commit to print
 # in the catalog index, OFFLINE=1 to reuse tools/kit-visibility.tsv instead of asking GitHub, and the python to run
-# (it needs PyYAML; readers and `make docs` never do).
+# (it needs PyYAML; readers and `make docs` never do). `make docs-pull` needs no PyYAML: it uses python3 and the standard library.
 REGISTRY ?=
 REGISTRY_COMMIT ?=
 OFFLINE ?=
@@ -33,7 +33,7 @@ endif
 APPS := $(notdir $(patsubst %/,%,$(wildcard apps/*/)))
 
 .PHONY: help all build lint fmt doctor setup fetch lock test test-fast test-integration apps app run \
-        docs docs-catalog docs-pull test-tools site check-public clean clean-all
+        docs docs-catalog docs-pull docs-pull-check test-tools site check-public clean clean-all
 
 help: ## Show this list (the default)
 	@echo "$(BOOK_NAME): make targets"
@@ -103,10 +103,14 @@ docs-catalog: ## Maintainers: regenerate the Kit catalog from the registry (REGI
 	  $(PYTHON) tools/gen-catalog.py --registry "$$r" $(if $(REGISTRY_COMMIT),--registry-commit $(REGISTRY_COMMIT)) $(if $(OFFLINE),--offline)
 	@$(MAKE) --no-print-directory docs check-public
 
-docs-pull: ## Hook: pull each public Kit's own reference docs into the book (not implemented yet)
-	@echo "docs-pull: not implemented yet"
+docs-pull: ## Maintainers: pull each Kit's own reference docs (from .kits/) into the book, then run docs and check-public
+	@python3 tools/pull-docs.py
+	@$(MAKE) --no-print-directory docs check-public
 
-test-tools: ## Run the unit tests of the maintainer tools in tools/ (needs PyYAML; skips with a message without it)
+docs-pull-check: ## Maintainers: fail if the pulled reference pages differ from a fresh pull (skips Kits not in .kits/)
+	@python3 tools/pull-docs.py --check
+
+test-tools: ## Run the unit tests of the maintainer tools in tools/ (the catalog tests skip without PyYAML)
 	@$(PYTHON) -m unittest discover -s tools/tests -v
 
 site: ## Build the book as an HTML website with mdBook, if installed (output in build/site)

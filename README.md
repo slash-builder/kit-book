@@ -8,7 +8,7 @@ This repository is the place to start when you want to use SlashBuilder's Kits. 
 * **Demo apps** (in [`apps/`](apps/)): six small Flutter desktop apps that compose Kits, each chosen because it asks something different of them.
 * **A Makefile** that sets up the build environment, runs the tests and builds the apps, so you do not have to learn each Kit's toolchain first.
 
-> **Status: being set up.** Some of the Kits the demos use are not public yet, and the names *Application Kit* and *Venue* (a resource broker) are provisional. The book is a skeleton: the introduction, a quick start, two guides, a reference and the Kit catalog (a status card for every Kit in the registry, including those that are not public) are written; each Kit's own reference pages are still to come. This repository is the book, not a Kit.
+> **Status: being set up.** Some of the Kits the demos use are not public yet, and the names *Application Kit* and *Venue* (a resource broker) are provisional. The book is a skeleton: the introduction, a quick start, two guides, a reference and the Kit catalog (a status card for every Kit in the registry, including those that are not public) are written; the Application Kit's own reference pages are pulled in from the Kit, and no other Kit has reference pages yet. This repository is the book, not a Kit.
 
 ## Quick start
 

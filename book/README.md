@@ -37,7 +37,7 @@ The book is a skeleton at the moment. It says what is written and what is still 
 ### Kits
 | Page | What you get |
 |---|---|
-| [Kits](30-kits/README.md) | The generated catalog: one status card for every Kit in the registry, with its status, language, what it owns and what it will not do. Also [the status vocabulary](30-kits/status-vocabulary.md) and [what is not in the registry](30-kits/not-in-the-registry.md). Each Kit's own reference pages are still to come |
+| [Kits](30-kits/README.md) | The generated catalog: one status card for every Kit in the registry, with its status, language, what it owns and what it will not do. Also [the status vocabulary](30-kits/status-vocabulary.md) and [what is not in the registry](30-kits/not-in-the-registry.md). The [Application Kit's own reference](30-kits/application-kit/index.md) is pulled in from the Kit; no other Kit has reference pages yet |
 
 ### Reference
 | Page | What you get |

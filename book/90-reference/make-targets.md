@@ -2,7 +2,7 @@
 
 Everything is driven from the `Makefile` at the repository root. It works with the system `make` on macOS (3.81) and Linux and uses nothing newer. `make` on its own runs `make help`, which lists every target with one line. The Makefile follows the convention of the Kit repositories (`help`, `all`, `build`, `lint`, `test`, `fmt`) so the CI job and people use the same names.
 
-The scripts behind the targets are in [`tools/`](../../tools/). They are plain POSIX `sh` (and Python 3 for the link checker), so they run on the `/bin/sh` and `/bin/bash 3.2` that ship with macOS. The one exception is the catalog generator behind `docs-catalog`, a maintainer tool that also needs PyYAML; nothing a reader runs depends on it.
+The scripts behind the targets are in [`tools/`](../../tools/). They are plain POSIX `sh` (and Python 3 for the link checker), so they run on the `/bin/sh` and `/bin/bash 3.2` that ship with macOS. The one exception is the catalog generator behind `docs-catalog`, a maintainer tool that also needs PyYAML; nothing a reader runs depends on it. `docs-pull` is also a maintainer tool, but it is Python 3 standard library only.
 
 ## Variables
 
@@ -20,7 +20,7 @@ The scripts behind the targets are in [`tools/`](../../tools/). They are plain P
 | `KITS_REGISTRY` | `docs-catalog` | The same path, from the environment, for people who regenerate often |
 | `REGISTRY_COMMIT` | `docs-catalog` | The commit of the registry the catalog is generated from; the catalog index prints it as "Generated from registry commit abc1234" |
 | `OFFLINE` | `docs-catalog` | `1` does not ask GitHub who is public and reuses `tools/kit-visibility.tsv` as it is |
-| `PYTHON` | `docs-catalog`, `test-tools`, `test-fast` | The Python 3 to use for the maintainer tools (default `python3`). It must have PyYAML |
+| `PYTHON` | `docs-catalog`, `test-tools`, `test-fast` | The Python 3 to use for the catalog generator and the tool tests (default `python3`). For `docs-catalog` it must have PyYAML; `docs-pull` always uses plain `python3` |
 | `NO_COLOR` | all | Turns off colours in the output |
 | `KITS_LOCK` | the scripts in `tools/` | Read a different lock file (used for testing the fetch script) |
 
@@ -122,11 +122,50 @@ Running it twice gives identical files: nothing in the output carries a time. Pr
 
 ### `docs-pull`
 
-A hook; it prints "docs-pull: not implemented yet" today. When it exists it will pull each public Kit's own reference documentation into the book. The cards of public Kits that have a README or `docs/` already say so.
+**For maintainers; readers never need it.** Pulls each Kit's own reference documentation out of the fetched Kit (`.kits/<name>/`) into the book, then runs `docs` and `check-public` on the result. The Kits keep their documentation with their code, so it versions with the code; the book copies it in at the commit `kits.lock` pins, and the copies are **committed**, so a reader needs neither `make setup` nor access to a private Kit's repository to read them. `make docs` never needs `.kits/`.
+
+```sh
+make setup KITS=all     # once, and after every pin move: the Kit must be fetched at the pinned commit
+make docs-pull          # then commit book/ (the pulled pages and the docs-pull block of SUMMARY.md)
+```
+
+It runs `tools/pull-docs.py` (Python 3 standard library only), which reads `kits.lock` and `tools/docs-pull.conf`. For each Kit with a section in the configuration, the configuration says where the pages land, which source files are pulled, their order in the table of contents, and whether the Kit is public (`auto` reads the visibility column of `kits.lock`). Today only the Application Kit is pulled; because it is not in the registry its pages land in `book/30-kits/application-kit/`. A Kit in the registry lands in `book/30-kits/<slug>/reference/`, and its catalog card then lists the pages.
+
+What it writes, and nothing else:
+
+* `index.md`: the Kit's `docs/README.md`, followed by a generated table of every pulled page (title from the page's first heading, one line from its first paragraph);
+* one page per pulled source file, named in lower case with `docs/` dropped (`docs/GETTING-STARTED.md` becomes `getting-started.md`, a folder's `README.md` is named after the folder), and any images those pages use under `assets/`;
+* the block of `book/SUMMARY.md` between `<!-- docs-pull:start -->` and `<!-- docs-pull:end -->`, which nests the pages under one entry per Kit. It sits in its own part, "Kit reference", after the catalog (the part and the markers are added before "Reference" if missing). It is not inside the catalog's list because mdBook drops the first of two lists in one item when an HTML comment separates them, which would delete the catalog from the contents.
+
+Every pulled page starts with a banner comment and carries the visible line "Reference page pulled from `<kit>` at commit `<sha7>`. Edit it in the Kit, not here." Do not edit a pulled page: the next pull overwrites it, and a content fix belongs in the Kit. The tool changes the Kit's text only by rewriting links:
+
+| A link in a Kit page that points to... | becomes |
+|---|---|
+| a web address, a mail address, or a heading on the same page | itself, unchanged |
+| a pulled page, or a folder whose `README.md` is pulled, or the Kit's `docs/README.md` | a relative link to the pulled copy, with its `#anchor` kept (the headings are not changed, so the anchors still exist) |
+| anything else in the Kit (code, other folders), when the Kit is **private** | plain text: the link text stays, the link goes |
+| anything else in the Kit, when the Kit is **public** | a GitHub address at the pinned commit (`blob` for a file, `tree` for a folder), with any `#anchor` or `#L10` kept |
+| a place outside the Kit, or a file the Kit does not have | plain text, and a warning naming the page, so it can be fixed in the Kit |
+| an `#anchor` that is not a heading of the page it names | the link to the page without the anchor, and a warning |
+| an image that exists in the Kit | a copy under `assets/`, linked there |
+| an image that does not exist | dropped, with the visible note "image not included" |
+
+Code blocks and code spans are never touched. Running it twice gives identical files: nothing in the output carries a time.
+
+It **refuses to run** if `.kits/<name>/.fetched` is not exactly the commit `kits.lock` pins (or the Kit is not fetched at all), so the book never mixes versions. It says so, writes nothing, and prints the fix: `make fetch` (with `KITS=all` for a private Kit). It exits with status 2 on a refusal and on a configuration error.
+
+### `docs-pull-check`
+
+**For maintainers.** Pulls in memory exactly as `docs-pull` does and writes nothing; it fails (status 1) and prints each file that differs, is missing, or is stale, with the first changed lines, if the committed pages are not what a fresh pull would give. Use it to see that nobody edited a pulled page by hand and that the pages were re-pulled after a pin moved. A Kit that is not in `.kits/` is skipped with a message (and the `SUMMARY.md` block is then not judged), so it is safe to run anywhere. A Kit fetched at a different commit than the pin is a refusal, as for `docs-pull`.
 
 ### `test-tools`
 
-**For maintainers.** Runs the unit tests of the tools in `tools/` (today, the catalog generator in `tools/tests/test_gen_catalog.py`): sanitising, idempotence, the public/private link rule, the missing-repository note, status grouping and the rewrite of the `SUMMARY.md` block. They need PyYAML and skip themselves with a message when it is missing. Plain `python3 -m unittest` from the repository root runs the same tests.
+**For maintainers.** Runs the unit tests of the tools in `tools/`:
+
+* the catalog generator, `tools/tests/test_gen_catalog.py`: sanitising, idempotence, the public/private link rule, the missing-repository note, status grouping, the rewrite of the `SUMMARY.md` block and the listing of pulled reference pages on the cards. They need PyYAML and skip themselves with a message when it is missing;
+* the reference-docs puller, `tools/tests/test_pull_docs.py`: each class of link rewrite, the banner, anchors, idempotence, the pin refusal and `--check`. They need nothing beyond Python 3.
+
+Plain `python3 -m unittest` from the repository root runs the same tests.
 
 ### `site`
 
@@ -134,7 +173,7 @@ Builds the book as an HTML website with [mdBook](https://rust-lang.github.io/mdB
 
 ### `check-public`
 
-Scans every file in the tree except `.kits/` and build output for anything that must not be public: internal hostnames, ticket ids, local paths that contain a user name, notes-vault paths, references to agent instruction files, repository URLs that are not public Kits in `kits.lock` or on the card of a Kit that `tools/kit-visibility.tsv` marks public, people named in credits or licence text other than the author, and secret patterns. The generator `tools/gen-catalog.py` and its tests are not scanned, because they spell the patterns out; what they generate, including `tools/kit-visibility.tsv`, is. It prints `file:line` for every hit and exits non-zero on any. While `kits.lock` lists private Kits it also prints a note that each must become public (or stop being needed) before this repository is made public.
+Scans every file in the tree except `.kits/` and build output for anything that must not be public: internal hostnames, ticket ids, local paths that contain a user name (except the invented user name `ada` that the Kits' reference pages use in examples), notes-vault paths, references to agent instruction files, repository URLs that are not public Kits in `kits.lock` or on the card of a Kit that `tools/kit-visibility.tsv` marks public, people named in credits or licence text other than the author, and secret patterns. The generator `tools/gen-catalog.py` and its tests are not scanned, because they spell the patterns out; what they generate, including `tools/kit-visibility.tsv`, is. It prints `file:line` for every hit and exits non-zero on any. While `kits.lock` lists private Kits it also prints a note that each must become public (or stop being needed) before this repository is made public.
 
 ### `clean`
 

@@ -15,6 +15,8 @@ What it writes (all under book/30-kits/ unless said otherwise)
   README.md               the catalog index: every Kit by status group, with the "Has real code today" marker
   status-vocabulary.md    what each status means
   not-in-the-registry.md  candidates that are NOT registered Kits (so not in the catalog), and this book
+  (a card's "Reference docs" section, and the Application Kit's section there, list the pages that tools/pull-docs.py
+   has pulled into book/30-kits/<slug>/reference/ and book/30-kits/application-kit/, when those exist)
   ../SUMMARY.md           only the block between <!-- catalog:start --> and <!-- catalog:end --> (added if missing)
   ../../tools/kit-visibility.tsv   who is public, as `gh` answered on the day (so --offline can reproduce the output);
                           keyed by Kit name, it never records a repository slug or an org name
@@ -564,7 +566,39 @@ def kit_link(kit):
     return "[%s](%s.md)" % (kit.name, kit.slug)
 
 
-def render_card(kit, kits_by_name, vis):
+PULLED_TABLE_HEADING = "## Pages in this book"        # written by tools/pull-docs.py into each pulled index.md
+_PULLED_ROW = re.compile(r"^\|\s*\[((?:[^\]\\]|\\.)+)\]\(([^)\s]+)\)\s*\|")
+
+
+def pulled_pages(root, folder):
+    """The pages that tools/pull-docs.py pulled into book/30-kits/<folder>/, as [(title, path from 30-kits/)].
+    Empty when <folder>/index.md does not exist (nothing pulled). The first entry is the reference index."""
+    if not root:
+        return []
+    index = os.path.join(root, KITS_DIR, *folder.split("/"), "index.md")
+    if not os.path.isfile(index):
+        return []
+    with open(index, encoding="utf-8") as fh:
+        lines = fh.read().splitlines()
+    pages = [("Reference index", folder + "/index.md")]
+    in_table = False
+    for line in lines:
+        if line.strip() == PULLED_TABLE_HEADING:
+            in_table = True
+        elif in_table and line.startswith("## "):
+            break
+        elif in_table:
+            m = _PULLED_ROW.match(line)
+            if m and not m.group(2).startswith(("http:", "https:", "#")):
+                pages.append((m.group(1).replace("\\|", "|"), folder + "/" + m.group(2)))
+    return pages
+
+
+def pulled_list(pages):
+    return ["* [%s](%s)" % (title, path) for title, path in pages]
+
+
+def render_card(kit, kits_by_name, vis, root=None):
     out = [GENERATED_MARK, "", "# %s" % kit.name, ""]
     if kit.tagline and not kit.tagline_derived:
         out += ["*%s*" % kit.tagline, ""]
@@ -601,9 +635,14 @@ def render_card(kit, kits_by_name, vis):
     if kit.related:
         out += ["## Related Kits", "", ", ".join(kit_link(r) for r in kit.related), ""]
     out += ["## Reference docs", ""]
-    if has_public_docs(kit, vis):
-        out.append("This Kit's own reference documentation is meant to be pulled in here by `make docs-pull`. "
-                   "That target is not implemented yet; see [Make targets](../90-reference/make-targets.md#docs-pull).")
+    pulled = pulled_pages(root, "%s/reference" % kit.slug)
+    if pulled:
+        out += ["This Kit's own reference documentation is pulled into the book from the Kit, at the commit this book pins, "
+                "so you can read it here without access to the Kit's repository. Edit it in the Kit, not here.", ""]
+        out += pulled_list(pulled)
+    elif has_public_docs(kit, vis):
+        out.append("This Kit's own reference documentation has not been pulled into the book yet. `make docs-pull` pulls it "
+                   "once the Kit has a section in `tools/docs-pull.conf`; see [Make targets](../90-reference/make-targets.md#docs-pull).")
     else:
         out.append("No reference docs yet.")
     out += ["", "---", "", "[All Kits](README.md) · [Status vocabulary](status-vocabulary.md)", ""]
@@ -681,7 +720,7 @@ def render_vocabulary(kits):
     return "\n".join(out)
 
 
-def render_not_in_registry(vis):
+def render_not_in_registry(vis, root=None):
     name, repo = APPLICATION_KIT
     state = vis.get(repo, ("unknown", "unknown"))[0]
     if state == "public":
@@ -700,21 +739,27 @@ def render_not_in_registry(vis):
            "test and scratch modes, a roster entry other apps can read, a session with a resource broker, and an opt-in way "
            "to find other copies of the app. The six demo apps in this book are built on it, and the "
            "[demo apps guide](../20-guides/demo-apps.md) measures what it saved and what it still leaves for an app to write. "
-           "Its name is provisional, and it is a candidate for the registry rather than a member of it.", "",
-           "## This book", "",
+           "Its name is provisional, and it is a candidate for the registry rather than a member of it.", ""]
+    pulled = pulled_pages(root, "application-kit")
+    if pulled:
+        out += ["Its own reference documentation is pulled into this book from the Kit, at the commit this book pins "
+                "(`make docs-pull`), so you can read it without access to the Kit's repository. It is the only Kit pulled so far. "
+                "Start at the reference index.", ""]
+        out += pulled_list(pulled) + [""]
+    out += ["## This book", "",
            "This repository, kit-book, is the book, not a Kit. It has no card, it is not in the registry, and nothing "
            "depends on it.", "",
            "---", "", "[All Kits](README.md) · [Status vocabulary](status-vocabulary.md)", ""]
     return "\n".join(out)
 
 
-def render_all(kits, vis, registry_commit):
+def render_all(kits, vis, registry_commit, root=None):
     kits_by_name = dict((k.name, k) for k in kits)
     pages = {"README.md": render_index(kits, kits_by_name, vis, registry_commit),
              "status-vocabulary.md": render_vocabulary(kits),
-             "not-in-the-registry.md": render_not_in_registry(vis)}
+             "not-in-the-registry.md": render_not_in_registry(vis, root)}
     for k in kits:
-        pages["%s.md" % k.slug] = render_card(k, kits_by_name, vis)
+        pages["%s.md" % k.slug] = render_card(k, kits_by_name, vis, root)
     return pages
 
 
@@ -817,7 +862,7 @@ def main(argv=None):
     kits = load_kits(args.registry)
     tsv = os.path.join(args.root, VISIBILITY_FILE)
     vis, rows, warnings = resolve_visibility(kits, tsv, args.offline, args.gh, today)
-    pages = render_all(kits, vis, commit)
+    pages = render_all(kits, vis, commit, args.root)
     for name, text in pages.items():
         assert_page_clean(name, text)
     if rows is not None:

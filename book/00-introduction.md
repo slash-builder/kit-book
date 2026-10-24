@@ -17,7 +17,7 @@ The Kits themselves are not copied in. `make setup` downloads each one, at the c
 * **Read [Start here](10-start-here.md) first.** It takes you from an empty folder to a running app in four commands.
 * **Then read the guides** in `20-guides/`. The [demo apps guide](20-guides/demo-apps.md) shows the Kits composed into real apps, with measurements of what each Kit saved. The [guide on fitting the Application Kit to other Kits](20-guides/fitting-the-application-kit-to-other-kits.md) shows where its design meets its neighbours.
 * **Reference pages** live in `90-reference/`: every [make target](90-reference/make-targets.md) and a [glossary](90-reference/glossary.md).
-* **The Kit catalog** lives in `30-kits/`: a status card for every Kit in the registry, including the ones that are not public yet. See [Kits](30-kits/README.md). Each Kit's own reference pages are still to come.
+* **The Kit catalog** lives in `30-kits/`: a status card for every Kit in the registry, including the ones that are not public yet. See [Kits](30-kits/README.md). A Kit's own reference pages are pulled into the book from the Kit, so you never need its repository to read them; today that is the [Application Kit's reference](30-kits/application-kit/index.md), and the others are still to come.
 
 ## What is written and what is not
 
@@ -27,7 +27,7 @@ The Kits themselves are not copied in. `make setup` downloads each one, at the c
 | Demo apps guide, fitting the Application Kit to other Kits | Written; moved here from the Application Kit's own documentation and reworded for a wider audience |
 | Make targets, glossary | Written |
 | Kit catalog | Written, and generated from the registry |
-| Per-Kit reference | Not written yet |
+| Per-Kit reference | Pulled from the Kits themselves (see [Make targets](90-reference/make-targets.md#docs-pull)). The Application Kit's is in; no other Kit has reference pages yet |
 | A demo app with a Rust core | Does not exist yet. All six demo apps are Flutter on a Dart core |
 
 ## How much to trust it

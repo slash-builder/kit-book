@@ -33,7 +33,20 @@ scan() {
 
 scan "internal hostname"   '(softsurve|jenkins|nexus)' -i
 scan "ticket id"           '(^|[^A-Za-z])(CLUS|LS|QR|SOF)-[0-9]+'
-scan "local path"          '/(Users|home)/[A-Za-z0-9._-]+'
+# Local paths: /Users/<name> and /home/<name> are hits, except for the fictional user names the Kits' reference pages
+# use in examples (pulled into the book by tools/pull-docs.py). Add a name to PLACEHOLDER_USERS only if it is invented.
+PLACEHOLDER_USERS="ada"
+tr '\n' '\0' < "$FILES" | xargs -0 grep -nIE -- '/(Users|home)/[A-Za-z0-9._-]+' 2>/dev/null |
+  awk -v ok="$PLACEHOLDER_USERS" '
+    BEGIN { n = split(ok, a, " "); for (i = 1; i <= n; i++) allow[a[i]] = 1 }
+    { line = $0; real = 0
+      while (match(line, /\/(Users|home)\/[A-Za-z0-9._-]+/)) {
+        name = substr(line, RSTART, RLENGTH); sub(/^\/(Users|home)\//, "", name)
+        if (!(name in allow)) real = 1
+        line = substr(line, RSTART + RLENGTH)
+      }
+      if (real) print $0 }' |
+  sed "s#^\([^:]*\):\([0-9]*\):#\1:\2: [local path] #" >> "$HITS"
 scan "vault path"          '(^|[^A-Za-z])vault/|dlockamy|\.obsidian|wiki/(ideas|projects|meta|sources)|\.raw/'
 scan "agent file"          '(AGENTS?|CLAUDE)\.md'
 scan "secret"              'AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{20,}|gho_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|BEGIN [A-Z ]*PRIVATE KEY|xox[baprs]-[A-Za-z0-9-]{10,}'
