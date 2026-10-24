@@ -16,10 +16,11 @@ HITS=$(mktemp)
 FILES=$(mktemp)
 trap 'rm -f "$HITS" "$FILES"' EXIT INT TERM
 
-# The files to scan: everything on disk that is not fetched, built or generated.
+# The files to scan: everything on disk that is not fetched, built or generated (a Flutter app with plugins gets a git-ignored
+# .flutter-plugins-dependencies that holds absolute paths of the machine it was made on).
 find . \( -name .git -o -name .kits -o -name build -o -name .dart_tool -o -name target -o -name Pods \
           -o -name ephemeral -o -name node_modules -o -name .idea -o -name .vscode \) -prune -o -type f -print |
-  sed 's#^\./##' | grep -v -e '^tools/check-public\.sh$' -e '\.DS_Store$' > "$FILES"
+  sed 's#^\./##' | grep -v -e '^tools/check-public\.sh$' -e '\.DS_Store$' -e '/\.flutter-plugins-dependencies$' > "$FILES"
 
 # scan LABEL EXTENDED-REGEX [-i]   (binary files are skipped by grep -I)
 scan() {

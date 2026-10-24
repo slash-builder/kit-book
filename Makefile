@@ -14,6 +14,10 @@ APP ?=
 # KIT=<name from kits.lock> for `make lock`; empty means every Kit.
 KIT ?=
 
+# flutter_rust_bridge_codegen is usually installed by `cargo install`, which puts it in ~/.cargo/bin; that folder is often not on
+# PATH in a make shell (Homebrew's Rust does not add it). Look there too.
+export PATH := $(PATH):$(or $(CARGO_HOME),$(HOME)/.cargo)/bin
+
 # The host operating system decides which Flutter desktop target the apps are built for.
 UNAME := $(shell uname -s)
 ifeq ($(UNAME),Darwin)
@@ -24,7 +28,7 @@ endif
 
 APPS := $(notdir $(patsubst %/,%,$(wildcard apps/*/)))
 
-.PHONY: help all build lint fmt doctor setup fetch lock test test-fast test-integration apps app run \
+.PHONY: help all build lint fmt doctor setup fetch lock test test-fast test-integration apps app run frb \
         docs docs-catalog site check-public clean clean-all
 
 help: ## Show this list (the default)
@@ -66,6 +70,7 @@ app: ## Build one demo app: make app APP=notepad
 	@test -n "$(APP)" || { echo "Say which app: make app APP=<$(APPS)>"; exit 2; }
 	@test -d apps/$(APP) || { echo "No such app: $(APP). Choose from: $(APPS)"; exit 2; }
 	@test -d .kits/application-kit || { echo "The Application Kit is not fetched. Run: make setup (KITS=all while it is private)"; exit 2; }
+	@test ! -d apps/$(APP)/rust || test -d .kits/storage-kit || { echo "apps/$(APP) has a Rust core that builds against the Storage Kit, which is not fetched. Run: make setup KITS=all"; exit 2; }
 	@echo "==> building apps/$(APP) for $(FLUTTER_DEVICE) (debug)"
 	@cd apps/$(APP) && flutter pub get >/dev/null && flutter build $(FLUTTER_DEVICE) --debug
 
@@ -74,6 +79,9 @@ run: ## Run one demo app on this computer: make run APP=notepad
 	@test -d apps/$(APP) || { echo "No such app: $(APP). Choose from: $(APPS)"; exit 2; }
 	@test -d .kits/application-kit || { echo "The Application Kit is not fetched. Run: make setup (KITS=all while it is private)"; exit 2; }
 	@cd apps/$(APP) && flutter pub get >/dev/null && flutter run -d $(FLUTTER_DEVICE)
+
+frb: ## Regenerate the Flutter-to-Rust bridge of every app that has one (flutter_rust_bridge_codegen)
+	@sh tools/frb.sh
 
 build: apps ## Alias for apps
 
@@ -102,7 +110,7 @@ check-public: ## Scan the whole tree for anything that must not be public (names
 
 clean: ## Remove build output, test logs and the website (keeps the fetched Kits)
 	@rm -rf build
-	@for d in $(addprefix apps/,$(APPS)) labs/interface_candidates; do rm -rf $$d/build $$d/.dart_tool; done
+	@for d in $(addprefix apps/,$(APPS)) labs/interface_candidates; do rm -rf $$d/build $$d/.dart_tool $$d/rust/target; done
 	@rm -rf .kits/*/rust/target
 	@echo "cleaned build output"
 

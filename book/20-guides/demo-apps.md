@@ -1,6 +1,6 @@
 # Demo apps
 
-Six small Flutter desktop apps in `apps/` that use the Application Kit (the name is provisional; so is the name of the resource broker the Kit talks to, Venue). They were written to measure the Kit: what it removes from an app, what it still leaves for the app to write, and where it falls short.
+Seven small Flutter desktop apps in `apps/` that use the Application Kit (the name is provisional; so is the name of the resource broker the Kit talks to, Venue). They were written to measure the Kit: what it removes from an app, what it still leaves for the app to write, and where it falls short.
 
 One rule shaped them: **an app does not edit the Kit.** If an app needs something the Kit lacks, it writes it under `lib/kit_gaps/` with a `// KIT GAP:` comment. The line count of those directories is the measurement of what the Kit is missing. When the Kit absorbs a gap, the app deletes its copy.
 
@@ -12,10 +12,11 @@ One rule shaped them: **an app does not edit the Kit.** If an app needs somethin
 | [stopwatch](#stopwatch) | `dev.demo.stopwatch` | State that survives restart; a shared countdown and a signal between copies | `venue`, `peers` | 49 | 10 | 35 | 332 |
 | [render-queue](#render-queue) | `dev.demo.render-queue` | A session with a resource broker: holds, refusals, waiting | `venue` | 38 passed, 5 skipped | 11 | 0 | none |
 | [launcher](#launcher) | `dev.demo.launcher` | The roster: who is running on this machine | `venue` | 24 | 9 | 50 | none |
+| [notes_rust](#notes_rust) | `dev.demo.notes-rust` | A Flutter UI over a **Rust core** that uses the Storage Kit and shares one Application Kit context with the UI; sync with the blocks and checks in Rust | `peers` | 29 `cargo test` + 19 + 10 integration | 35 | 81 | 416 |
 
-How the numbers were taken, on 2026-10-24 with Flutter 3.41.9 and Dart 3.11.5 on macOS (Apple silicon): tests are the result of `flutter test` in each app directory; `main.dart` and gap lines are `wc -l` (raw lines, comments and blanks included) of `lib/main.dart` and `lib/kit_gaps/*.dart`; coordination lines are `wc -l` of `lib/coordination/*.dart`. The five skipped render-queue tests need a running resource-broker daemon and skip themselves when no token is set. The `venue` entry in `kits` is a label: only `peers` is checked against the `kits` list today (see the Application Kit's architecture guide, section 1).
+How the numbers were taken for the first six apps, on 2026-10-24 with Flutter 3.41.9 and Dart 3.11.5 on macOS (Apple silicon): tests are the result of `flutter test` in each app directory; `main.dart` and gap lines are `wc -l` (raw lines, comments and blanks included) of `lib/main.dart` and `lib/kit_gaps/*.dart`; coordination lines are `wc -l` of `lib/coordination/*.dart`. The five skipped render-queue tests need a running resource-broker daemon and skip themselves when no token is set. The `venue` entry in `kits` is a label: only `peers` is checked against the `kits` list today (see the Application Kit's architecture guide, section 1).
 
-Contents: [running and testing any app](#running-and-testing-any-app) · [the six apps](#calculator) · [how much code the Kit saved](#how-much-code-the-kit-saved) · [run two copies and watch them find each other](#run-two-copies-and-watch-them-find-each-other)
+Contents: [running and testing any app](#running-and-testing-any-app) · [the seven apps](#calculator) · [how much code the Kit saved](#how-much-code-the-kit-saved) · [run two copies and watch them find each other](#run-two-copies-and-watch-them-find-each-other)
 
 ## Running and testing any app
 
@@ -253,10 +254,34 @@ A file whose last heartbeat is more than 15 seconds old shows as `stale`, and a 
 
 **Did it need the Kit?** For the roster, yes: `Roster.scan()` and instance ids replaced a 70-line shim (`roster_scan.dart`) and fixed two copies erasing each other's entry; the pid check, the app index and the memory of "gone" are still the launcher's own, and they are most of what makes it a launcher.
 
+## notes_rust
+
+Folder: [`apps/notes_rust`](../../apps/notes_rust/README.md). The only demo app with a Rust core, and the only one that uses a Kit written in Rust.
+
+**Exercises.** The intended shape of an app: a Flutter interface over a Rust core, joined by `flutter_rust_bridge`. The core (`notes_core`) stores notes as content-addressed blocks on the **Storage Kit** and works inside the Application Kit context that the Flutter side opened. The question it answers is how two halves share one context. The Dart side opens the context once and hands the Rust side a snapshot of it; the Rust side **adopts** it (an `adopt` API added to the Application Kit for this) and so announces nothing, writes no settings, and creates files only under `data` and `state`. Notes have a version history (restoring a version writes one small manifest and copies no body). Two copies sync over the Application Kit's peer layer: Dart carries the bytes, Rust holds the blocks, checks every hash before storing anything, and reports conflicts with both versions.
+
+**Run and test.**
+
+```sh
+make app APP=notes_rust               # needs make setup KITS=all, flutter_rust_bridge_codegen 2.12.0 and, on macOS, CocoaPods
+make run APP=notes_rust
+make test-fast                        # cargo test (29) and flutter test (19, in-memory stand-in for the core)
+make test-integration                 # flutter test integration_test -d macos (10, the real library inside the app)
+sh apps/notes_rust/tool/smoke.sh      # launch the built macOS app for 10 s, check what it wrote, SIGTERM it
+```
+
+**What the Kits gave it.** From the Application Kit: the directories and instance id (shared with Rust through the snapshot), `AppKit.run`, the config file the Dart side owns and the Rust side only reads, `ctx.startPeers` and the peer hub. From the Storage Kit: `PartitionStore`, per-partition de-duplication, hash-verified reads and the fragment trees.
+
+**What it still writes itself.** `lib/kit_gaps/blob_pull.dart` (81 lines, copied from the notepad) for moves bigger than one message; in Rust, the head index (the Storage Kit has no mutable store implementation), a verified insert (its `put` files tampered bytes under their own hash), the child list of a list node, and the flush of the pack before a head moves. `lib/coordination/` is 416 lines of Dart; the Rust core is about 1,800 lines (plus 5,130 generated bridge lines).
+
+**What it showed.** See the [app's README](../../apps/notes_rust/README.md#measurements) for the measurements, what the bridge made awkward and how the shared context behaved in practice.
+
+**Did it need the Kits?** The Storage Kit supplied what a notes store is made of; the Application Kit's adopt API is what made one app with two runtimes possible without announcing twice. Neither supplied the sync protocol, the conflict policy or the head index.
+
 ## What the demo apps do not cover
 
-* **No Rust core.** All six apps are Flutter on a Dart core. None has a Rust crate, a `flutter_rust_bridge` dependency, or any SlashBuilder Kit built in Rust. The intended app shape is a Flutter UI over a Rust core, so the most important untested question is how the two halves share one Application Kit context: if the Dart side opens the context and the Rust side opens its own, an app would announce itself twice (two roster entries, two instance ids) and two code paths would write one settings file. The likely answer is that one side owns the context and hands the resolved directories and instance id to the other; the Rust crate has no way to adopt an existing context today.
-* **No app uses another Kit's code.** Storage, identity, messaging and transport Kits were probed in separate Rust packages in a private repository (the public-safe summary is [Fitting the Application Kit to other Kits](fitting-the-application-kit-to-other-kits.md)); the apps' own sync, conflict handling and large-note transfer are written in Dart.
+* **One Rust core, not a family.** Only `notes_rust` has a Rust crate and a `flutter_rust_bridge` dependency; the other six are Flutter on a Dart core. It was built and run on **macOS**; its Linux runner exists and was not built. The bridge was not tried with a Rust-to-Dart stream, hot reload, or a second Rust core in the same app.
+* **Two Kits used from Rust, the rest not.** `notes_rust` uses the Application Kit's Rust crate and the Storage Kit. Identity, messaging and transport Kits were probed in separate Rust packages in a private repository (the public-safe summary is [Fitting the Application Kit to other Kits](fitting-the-application-kit-to-other-kits.md)), and the other apps' own sync, conflict handling and large-note transfer are written in Dart. Even in `notes_rust` the transport is Dart: the peer layer has no Rust half.
 * **No real network.** Peers find each other through announcement files and loopback sockets on one machine.
 
 ## How much code the Kit saved

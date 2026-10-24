@@ -38,20 +38,26 @@ DART_MIN=$(cat "$ROOT"/apps/*/pubspec.yaml "$ROOT"/labs/*/pubspec.yaml 2>/dev/nu
   awk 'BEGIN{best="0"} { if (best=="0") best=$1; else { n=split($1,a,"."); split(best,b,"."); for(i=1;i<=3;i++){ if (a[i]+0>b[i]+0){best=$1;break} if (a[i]+0<b[i]+0) break } } } END{print best}')
 [ "$DART_MIN" = 0 ] && DART_MIN=3.0.0
 
-# Rust: the crate's own rust-version; else the first release that supports its edition.
+# Rust: the highest rust-version declared by a Kit's crate or an app's Rust core; else the first release that supports the
+# first crate's edition.
 RUST_MIN=""
 RUST_MIN_NOTE=""
-for cf in "$KITS_DIR"/*/rust/Cargo.toml; do
+for cf in "$KITS_DIR"/*/rust/Cargo.toml "$ROOT"/apps/*/rust/Cargo.toml; do
   [ -f "$cf" ] || continue
   rv=$(sed -n 's/^rust-version[[:space:]]*=[[:space:]]*"\([0-9.]*\)".*/\1/p' "$cf" | head -n 1)
-  if [ -n "$rv" ]; then RUST_MIN=$rv; RUST_MIN_NOTE="rust-version in $(basename "$(dirname "$(dirname "$cf")")")"; break; fi
+  who=$(basename "$(dirname "$(dirname "$cf")")")
+  if [ -n "$rv" ]; then
+    if [ -z "$RUST_MIN" ] || ! ver_ge "$RUST_MIN" "$rv"; then RUST_MIN=$rv; RUST_MIN_NOTE="rust-version in $who"; fi
+    continue
+  fi
+  [ -n "$RUST_MIN" ] && continue
   ed=$(sed -n 's/^edition[[:space:]]*=[[:space:]]*"\([0-9]*\)".*/\1/p' "$cf" | head -n 1)
   case "$ed" in
     2024) RUST_MIN=1.85.0 ;;
     2021) RUST_MIN=1.56.0 ;;
     2018) RUST_MIN=1.31.0 ;;
   esac
-  [ -n "$RUST_MIN" ] && { RUST_MIN_NOTE="edition $ed in $(basename "$(dirname "$(dirname "$cf")")")"; break; }
+  [ -n "$RUST_MIN" ] && RUST_MIN_NOTE="edition $ed in $who"
 done
 if [ -z "$RUST_MIN" ]; then RUST_MIN=1.56.0; RUST_MIN_NOTE="default; run make setup to read it from the Rust crate"; fi
 
@@ -79,7 +85,8 @@ cmd_for() {
     apt:curl) echo "sudo apt-get install -y curl" ;;
     apt:tar) echo "sudo apt-get install -y tar" ;;
     apt:desktop) echo "sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev" ;;
-    *:frb) echo "cargo install flutter_rust_bridge_codegen" ;;
+    *:frb) echo "cargo install flutter_rust_bridge_codegen --version ${FRB_PIN:-2.12.0} --locked   (then make sure ~/.cargo/bin is on PATH, or leave it: make finds it there)" ;;
+    brew:pod) echo "brew install cocoapods" ;;
     *:xcode) echo "(macOS only)" ;;
     *) echo "see the tool's own install page" ;;
   esac
@@ -183,8 +190,31 @@ if have redis-server; then row redis-server optional ok "$(redis-server --versio
 else row redis-server optional MISSING "-" "-"; fix redis-server optional "integration tests that talk to a message hub" redis; fi
 if have protoc; then row protoc optional ok "$(protoc --version | first_version)" "-"
 else row protoc optional MISSING "-" "-"; fix protoc optional "compiles protocol definitions, used by some Kits" protoc; fi
-if have flutter_rust_bridge_codegen; then row flutter_rust_bridge_codegen optional ok "$(flutter_rust_bridge_codegen --version 2>/dev/null | first_version)" "-"
-else row flutter_rust_bridge_codegen optional MISSING "-" "-"; fix flutter_rust_bridge_codegen optional "joins a Flutter app to a Rust core (no demo app uses it yet)" frb; fi
+# flutter_rust_bridge_codegen: REQUIRED when an app in the tree has a Rust core bridged with it (apps/notes_rust), at exactly the
+# version that app pins in its pubspec.yaml (the generated glue only matches the flutter_rust_bridge package at that version).
+# Optional otherwise.
+FRB_APP=""
+for y in "$ROOT"/apps/*/flutter_rust_bridge.yaml; do [ -f "$y" ] && { FRB_APP=$(dirname "$y"); break; }; done
+if [ -n "$FRB_APP" ]; then
+  FRB_PIN=$(frb_pinned_version "$FRB_APP")
+  FRB_HAVE=$(frb_codegen_version) || FRB_HAVE=""
+  if [ -z "$FRB_HAVE" ]; then
+    row flutter_rust_bridge_codegen required MISSING "-" "$FRB_PIN (exactly; pinned by $(basename "$FRB_APP"))"
+    fix flutter_rust_bridge_codegen required "joins the Flutter app $(basename "$FRB_APP") to its Rust core (make frb)" frb
+    MISSING_REQUIRED=$((MISSING_REQUIRED + 1))
+  elif [ "$FRB_HAVE" != "$FRB_PIN" ]; then
+    row flutter_rust_bridge_codegen required "WRONG VERSION" "$FRB_HAVE" "$FRB_PIN (exactly; pinned by $(basename "$FRB_APP"))"
+    fix flutter_rust_bridge_codegen required "$(basename "$FRB_APP") pins $FRB_PIN and the generated bridge must match it (has $FRB_HAVE)" frb
+    MISSING_REQUIRED=$((MISSING_REQUIRED + 1))
+  else
+    row flutter_rust_bridge_codegen required ok "$FRB_HAVE" "$FRB_PIN (exactly)"
+  fi
+elif FRB_HAVE=$(frb_codegen_version); then row flutter_rust_bridge_codegen optional ok "$FRB_HAVE" "-"
+else row flutter_rust_bridge_codegen optional MISSING "-" "-"; fix flutter_rust_bridge_codegen optional "joins a Flutter app to a Rust core (no app in the tree needs it)" frb; fi
+if [ "$OS" = macos ] && ls "$ROOT"/apps/*/macos/Podfile >/dev/null 2>&1; then
+  # An app with a native (CocoaPods) plugin, such as the cargokit glue of a Rust core, builds through CocoaPods.
+  check_tool "pod (CocoaPods)" apps pod "pod --version 2>/dev/null" "" pod "builds the macOS apps that have a native plugin (a Rust core)"
+fi
 if gh_ready; then row "gh (GitHub CLI)" optional ok "logged in" "-"
 elif have gh; then row "gh (GitHub CLI)" optional "not logged in" "-" "-"; printf '%s|%s|%s|%s\n' "gh (GitHub CLI)" optional "needed only for private Kits (KITS=all)" "gh auth login" >> "$FIXES"
 else row "gh (GitHub CLI)" optional MISSING "-" "-"; fix "gh (GitHub CLI)" optional "needed only for private Kits (KITS=all)" gh; fi

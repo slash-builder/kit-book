@@ -69,8 +69,15 @@ fetched_kits core | while read -r name dir; do
     else printf '  cargo     %s  (skipped: could not resolve; a path dependency on a Kit that is not fetched? try make setup KITS=all)\n' "$rel"; fi
   done
 done
+# An app's own Rust core (apps/notes_rust/rust) builds against the Kits' crates by path, so it needs them fetched first.
+for c in "$ROOT"/apps/*/rust; do
+  [ -f "$c/Cargo.toml" ] || continue
+  rel=${c#"$ROOT"/}
+  if (cd "$c" && cargo fetch >"$KITS_DIR/.cargo.out" 2>&1); then printf '  cargo     %s\n' "$rel"; FOUND_CARGO=1
+  else printf '  cargo     %s  (skipped: could not resolve; the Kits it depends on are not fetched? try make setup KITS=all)\n' "$rel"; fi
+done
 rm -f "$KITS_DIR/.cargo.out"
-[ -n "$(fetched_kits core)" ] || say "  (no Rust crate to fetch yet)"
+[ -n "$(fetched_kits core)" ] || [ "$FOUND_CARGO" = 1 ] || say "  (no Rust crate to fetch yet)"
 
 say ""
 if [ "$FAIL" = 0 ]; then say "Setup finished. Next: make test-fast"; else die "setup finished with errors (see above)"; fi

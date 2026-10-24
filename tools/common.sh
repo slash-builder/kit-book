@@ -73,6 +73,20 @@ override_for() {
   case "$rel" in /*) printf '%s\n' "$rel" ;; *) printf '%s\n' "$ROOT/$rel" ;; esac
 }
 
+# The flutter_rust_bridge version an app pins: the `flutter_rust_bridge: X.Y.Z` line of its pubspec.yaml (an exact version).
+frb_pinned_version() {
+  sed -n 's/^[[:space:]]*flutter_rust_bridge:[[:space:]]*\([0-9][0-9.]*\)[[:space:]]*\(#.*\)\{0,1\}$/\1/p' "$1/pubspec.yaml" | head -n 1
+}
+
+# The version of the flutter_rust_bridge_codegen on PATH (or in ~/.cargo/bin, where `cargo install` puts it); fails when none.
+# Sets nothing: callers that run the tool should have that folder on PATH (the Makefile does).
+frb_codegen_version() {
+  bin=$(command -v flutter_rust_bridge_codegen 2>/dev/null || true)
+  [ -n "$bin" ] || { [ -x "${CARGO_HOME:-$HOME/.cargo}/bin/flutter_rust_bridge_codegen" ] && bin="${CARGO_HOME:-$HOME/.cargo}/bin/flutter_rust_bridge_codegen"; }
+  [ -n "$bin" ] || return 1
+  "$bin" --version 2>/dev/null | sed -n 's/.*\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\).*/\1/p' | head -n 1
+}
+
 # Print "name dir" for every fetched Kit whose role is one of the given words.
 fetched_kits() {
   roles=" $* "

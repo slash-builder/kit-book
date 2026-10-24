@@ -27,7 +27,7 @@ The Kits themselves are not copied in. `make setup` downloads each one, at the c
 | Demo apps guide, fitting the Application Kit to other Kits | Written; moved here from the Application Kit's own documentation and reworded for a wider audience |
 | Make targets, glossary | Written |
 | Kit catalog and per-Kit reference | Not written yet |
-| A demo app with a Rust core | Does not exist yet. All six demo apps are Flutter on a Dart core |
+| A demo app with a Rust core | Written: [notes_rust](../apps/notes_rust/README.md), the seventh demo app. The other six are Flutter on a Dart core |
 
 ## How much to trust it
 

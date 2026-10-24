@@ -31,7 +31,7 @@ The book is a skeleton at the moment. It says what is written and what is still 
 ### Guides
 | Page | What you get |
 |---|---|
-| [Demo apps](20-guides/demo-apps.md) | Six apps (calculator, minesweeper, notepad, stopwatch, render queue, launcher), what each tested, how much code the Application Kit saved, and how to run two copies and watch them find each other |
+| [Demo apps](20-guides/demo-apps.md) | Seven apps (calculator, minesweeper, notepad, stopwatch, render queue, launcher, and notes_rust, the one with a Rust core), what each tested, how much code the Application Kit saved, and how to run two copies and watch them find each other |
 | [Fitting the Application Kit to other Kits](20-guides/fitting-the-application-kit-to-other-kits.md) | What fitting the Application Kit to the transport, messaging, storage, identity and UI Kits showed |
 
 ### Kits
