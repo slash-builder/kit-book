@@ -100,6 +100,12 @@ fast_suites() {
   if [ ! -d "$KITS_DIR/application-kit" ]; then
     say "  (no Kit fetched: run make setup first. KITS=all while the Kits are private.)"
   fi
+  say "Maintainer tools:"
+  if ${PYTHON:-python3} -c 'import yaml' >/dev/null 2>&1; then
+    run_suite "tools: catalog generator unit tests" other "$ROOT" ${PYTHON:-python3} -m unittest discover -s tools/tests
+  else
+    skip_suite "tools: catalog generator unit tests" "PyYAML is not installed (python3 -m pip install pyyaml); only maintainers need it"
+  fi
   say "Labs and demo apps:"
   run_suite "labs/interface_candidates: flutter test" dart "$ROOT/labs/interface_candidates" flutter test -r expanded
   for a in "$ROOT"/apps/*/; do

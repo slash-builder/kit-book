@@ -13,6 +13,21 @@ make test-fast     # every test (run make setup first; add KITS=all while some K
 make lint          # analyse the Dart code, then the two checks above
 ```
 
+## Maintainer notes: the Kit catalog
+
+`book/30-kits/` is **generated** from the Kit registry, which lives in a private repository, and the generated pages are committed so readers never need the registry. Do not edit those pages by hand: the next regeneration overwrites them. To change a card, change the registry entry and regenerate.
+
+```sh
+python3 -m pip install pyyaml     # only the generator needs it; make docs and make test-fast do not
+make docs-catalog REGISTRY=/path/to/kits.yaml REGISTRY_COMMIT=<registry commit>
+make test-tools                   # the generator's own tests
+```
+
+* `make docs-catalog` asks GitHub (`gh`) which repositories are public, records the answer in `tools/kit-visibility.tsv`, and links a repository only if it is public. Add `OFFLINE=1` to reuse the file without calling GitHub. Commit the file with the pages.
+* The generator drops, rather than rewords, any registry sentence that names people, roles, agents, tickets, hostnames, paths, notes-vault pages, Jira or dates, and it refuses to write a page that still matches. If a card looks thin, the registry entry is thin; fix it there. Do not weaken the sanitiser to make a card longer.
+* A new Kit, a renamed Kit or a changed status needs no edit here beyond regenerating. Read the diff: it is the review.
+* `make docs-pull` (pulling each public Kit's own reference docs into the book) is a documented hook that is not implemented yet.
+
 ## Rules for what you write
 
 * **This repository is public.** Do not put internal hostnames, ticket ids, local file paths that contain a user name, notes-vault paths, or the names of people (other than the author in the credit line) in any file. `make check-public` finds the common cases; it cannot find them all, so read your own diff.

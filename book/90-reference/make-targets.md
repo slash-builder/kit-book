@@ -2,7 +2,7 @@
 
 Everything is driven from the `Makefile` at the repository root. It works with the system `make` on macOS (3.81) and Linux and uses nothing newer. `make` on its own runs `make help`, which lists every target with one line. The Makefile follows the convention of the Kit repositories (`help`, `all`, `build`, `lint`, `test`, `fmt`) so the CI job and people use the same names.
 
-The scripts behind the targets are in [`tools/`](../../tools/). They are plain POSIX `sh` (and Python 3 for the link checker), so they run on the `/bin/sh` and `/bin/bash 3.2` that ship with macOS.
+The scripts behind the targets are in [`tools/`](../../tools/). They are plain POSIX `sh` (and Python 3 for the link checker), so they run on the `/bin/sh` and `/bin/bash 3.2` that ship with macOS. The one exception is the catalog generator behind `docs-catalog`, a maintainer tool that also needs PyYAML; nothing a reader runs depends on it.
 
 ## Variables
 
@@ -16,6 +16,11 @@ The scripts behind the targets are in [`tools/`](../../tools/). They are plain P
 | `GITHUB_TOKEN` | `fetch`, `lock` | A token that can read private Kits, used when the GitHub CLI is not logged in |
 | `VENUE_TOKEN_FILE` | `test`, `test-integration` | A resource-broker token file. When set, the render-queue tests that need a running broker run for real instead of skipping |
 | `CHECK_PUBLIC_STRICT` | `check-public` | `1` also fails while `kits.lock` lists private Kits |
+| `REGISTRY` | `docs-catalog` | Maintainers only: the path of the Kit registry file (`kits.yaml`). If empty, `KITS_REGISTRY` from the environment is used. With neither, `docs-catalog` stops with a message |
+| `KITS_REGISTRY` | `docs-catalog` | The same path, from the environment, for people who regenerate often |
+| `REGISTRY_COMMIT` | `docs-catalog` | The commit of the registry the catalog is generated from; the catalog index prints it as "Generated from registry commit abc1234" |
+| `OFFLINE` | `docs-catalog` | `1` does not ask GitHub who is public and reuses `tools/kit-visibility.tsv` as it is |
+| `PYTHON` | `docs-catalog`, `test-tools`, `test-fast` | The Python 3 to use for the maintainer tools (default `python3`). It must have PyYAML |
 | `NO_COLOR` | all | Turns off colours in the output |
 | `KITS_LOCK` | the scripts in `tools/` | Read a different lock file (used for testing the fetch script) |
 
@@ -55,7 +60,7 @@ Runs every fetched Kit's own test suite, then `labs/interface_candidates`, then 
 
 ### `test-fast`
 
-The same as `test` without anything that needs Docker, Redis or a running daemon. This is the everyday command.
+The same as `test` without anything that needs Docker, Redis or a running daemon. This is the everyday command. It also runs the unit tests of the maintainer tools (see [`test-tools`](#test-tools)) when PyYAML is installed, and skips them with a message when it is not.
 
 ### `test-integration`
 
@@ -97,7 +102,31 @@ Checks every relative link and heading anchor in `book/` and in the README files
 
 ### `docs-catalog`
 
-A hook for the generated Kit catalog. It prints "catalog generation not implemented yet" today. The rule it will follow: the catalog lists **every** Kit in the registry, public, private, banked and archived, as status cards, with a repository link only for public Kits; this repository is the book, not a Kit, and is never listed.
+**For maintainers; readers never need it.** Regenerates the Kit catalog in `book/30-kits/` from the Kit registry, then runs `docs` and `check-public` on the result. The registry is in a private repository, so the generated pages are committed here and `make docs` never asks for it.
+
+```sh
+python3 -m pip install pyyaml            # once; only this tool needs PyYAML
+gh auth login                            # once; the tool asks GitHub which repositories are public
+make docs-catalog REGISTRY=/path/to/kits.yaml REGISTRY_COMMIT=abc1234
+make docs-catalog REGISTRY=/path/to/kits.yaml OFFLINE=1     # no GitHub calls: reuse tools/kit-visibility.tsv
+```
+
+With neither `REGISTRY` nor `KITS_REGISTRY` set it stops and says so. It runs `tools/gen-catalog.py`, which writes:
+
+* one status card per Kit in the registry (`book/30-kits/<name>.md`), for **every** Kit: public, private, banked and archived; this repository is the book, not a Kit, and is never listed;
+* the catalog index (`book/30-kits/README.md`), the [status vocabulary](../30-kits/status-vocabulary.md) and the page for [things that are not in the registry](../30-kits/not-in-the-registry.md);
+* the block of `book/SUMMARY.md` between `<!-- catalog:start -->` and `<!-- catalog:end -->` (the markers are added if missing; nothing else in that file is touched);
+* `tools/kit-visibility.tsv`: for each repository, `public`, `private`, `missing` (it does not exist) or `unknown`, the day that was recorded, and whether a public repository has a README or `docs/`. A repository link appears on a card only for `public`.
+
+Running it twice gives identical files: nothing in the output carries a time. Prose from the registry passes through a sanitiser that drops, rather than rewords, any sentence or parenthetical that names people, roles, agents, tickets, hostnames, local paths, notes-vault paths, Jira or dates, and `check-public` scans the result again. A card that comes out thin is thin because the registry entry behind it is.
+
+### `docs-pull`
+
+A hook; it prints "docs-pull: not implemented yet" today. When it exists it will pull each public Kit's own reference documentation into the book. The cards of public Kits that have a README or `docs/` already say so.
+
+### `test-tools`
+
+**For maintainers.** Runs the unit tests of the tools in `tools/` (today, the catalog generator in `tools/tests/test_gen_catalog.py`): sanitising, idempotence, the public/private link rule, the missing-repository note, status grouping and the rewrite of the `SUMMARY.md` block. They need PyYAML and skip themselves with a message when it is missing. Plain `python3 -m unittest` from the repository root runs the same tests.
 
 ### `site`
 
@@ -105,7 +134,7 @@ Builds the book as an HTML website with [mdBook](https://rust-lang.github.io/mdB
 
 ### `check-public`
 
-Scans every file in the tree except `.kits/` and build output for anything that must not be public: internal hostnames, ticket ids, local paths that contain a user name, notes-vault paths, references to agent instruction files, repository URLs that are not public Kits in `kits.lock`, people named in credits or licence text other than the author, and secret patterns. It prints `file:line` for every hit and exits non-zero on any. While `kits.lock` lists private Kits it also prints a note that each must become public (or stop being needed) before this repository is made public.
+Scans every file in the tree except `.kits/` and build output for anything that must not be public: internal hostnames, ticket ids, local paths that contain a user name, notes-vault paths, references to agent instruction files, repository URLs that are not public Kits in `kits.lock` or in `tools/kit-visibility.tsv`, people named in credits or licence text other than the author, and secret patterns. The generator `tools/gen-catalog.py` and its tests are not scanned, because they spell the patterns out; what they generate is. It prints `file:line` for every hit and exits non-zero on any. While `kits.lock` lists private Kits it also prints a note that each must become public (or stop being needed) before this repository is made public.
 
 ### `clean`
 

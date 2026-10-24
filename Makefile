@@ -13,6 +13,14 @@ export KITS
 APP ?=
 # KIT=<name from kits.lock> for `make lock`; empty means every Kit.
 KIT ?=
+# Maintainers only, for `make docs-catalog`: the Kit registry file (or set KITS_REGISTRY), the registry commit to print
+# in the catalog index, OFFLINE=1 to reuse tools/kit-visibility.tsv instead of asking GitHub, and the python to run
+# (it needs PyYAML; readers and `make docs` never do).
+REGISTRY ?=
+REGISTRY_COMMIT ?=
+OFFLINE ?=
+PYTHON ?= python3
+export PYTHON
 
 # The host operating system decides which Flutter desktop target the apps are built for.
 UNAME := $(shell uname -s)
@@ -25,7 +33,7 @@ endif
 APPS := $(notdir $(patsubst %/,%,$(wildcard apps/*/)))
 
 .PHONY: help all build lint fmt doctor setup fetch lock test test-fast test-integration apps app run \
-        docs docs-catalog site check-public clean clean-all
+        docs docs-catalog docs-pull test-tools site check-public clean clean-all
 
 help: ## Show this list (the default)
 	@echo "$(BOOK_NAME): make targets"
@@ -89,10 +97,17 @@ docs: ## Check every relative link and heading anchor in the book and the README
 	@python3 tools/check-links.py
 	@sh tools/check-make-docs.sh
 
-docs-catalog: ## Hook for the generated Kit catalog (not implemented yet; it will list EVERY Kit in the registry)
-	@echo "catalog generation not implemented yet"
-	@echo "rule for when it is: the catalog lists EVERY Kit in the registry, public, private, banked and archived, as status cards;"
-	@echo "a repository link appears only for a public Kit; this repository is the book, not a Kit, and is never listed."
+docs-catalog: ## Maintainers: regenerate the Kit catalog from the registry (REGISTRY=path), then run docs and check-public
+	@r="$(REGISTRY)"; [ -n "$$r" ] || r="$$KITS_REGISTRY"; \
+	  [ -n "$$r" ] || { echo "Say where the Kit registry (kits.yaml) is: make docs-catalog REGISTRY=/path/to/kits.yaml, or set KITS_REGISTRY."; exit 2; }; \
+	  $(PYTHON) tools/gen-catalog.py --registry "$$r" $(if $(REGISTRY_COMMIT),--registry-commit $(REGISTRY_COMMIT)) $(if $(OFFLINE),--offline)
+	@$(MAKE) --no-print-directory docs check-public
+
+docs-pull: ## Hook: pull each public Kit's own reference docs into the book (not implemented yet)
+	@echo "docs-pull: not implemented yet"
+
+test-tools: ## Run the unit tests of the maintainer tools in tools/ (needs PyYAML; skips with a message without it)
+	@$(PYTHON) -m unittest discover -s tools/tests -v
 
 site: ## Build the book as an HTML website with mdBook, if installed (output in build/site)
 	@sh tools/site.sh

@@ -6,7 +6,7 @@
 
 Developer documentation and composed demos for every SlashBuilder Kit. A Kit is a focused piece of SlashBuilder's platform that owns one job, such as an app's identity and files, or machine time on a shared computer. This book explains the Kits, shows them working together in small apps, and gives you the commands to build and run it all.
 
-The book is a skeleton at the moment. It says what is written and what is still to come, page by page.
+The book is a skeleton at the moment. It says what is written and what is still to come, page by page. The Kit catalog is written: it is generated from the Kit registry and lists every Kit, public or not.
 
 ## Start here
 
@@ -18,7 +18,7 @@ The book is a skeleton at the moment. It says what is written and what is still 
 | understand how the Application Kit meets its neighbours | [Fitting the Application Kit to other Kits](20-guides/fitting-the-application-kit-to-other-kits.md) |
 | look up a command | [Make targets](90-reference/make-targets.md) |
 | look up a word | [Glossary](90-reference/glossary.md) |
-| find the reference for one Kit | [Kits](30-kits/README.md) (placeholder: the catalog is still to come) |
+| find the reference for one Kit | [Kits](30-kits/README.md), the catalog of every Kit with a status card each |
 
 ## Every page
 
@@ -37,7 +37,7 @@ The book is a skeleton at the moment. It says what is written and what is still 
 ### Kits
 | Page | What you get |
 |---|---|
-| [Kits](30-kits/README.md) | Where the generated catalog and each Kit's reference pages will land |
+| [Kits](30-kits/README.md) | The generated catalog: one status card for every Kit in the registry, with its status, language, what it owns and what it will not do. Also [the status vocabulary](30-kits/status-vocabulary.md) and [what is not in the registry](30-kits/not-in-the-registry.md). Each Kit's own reference pages are still to come |
 
 ### Reference
 | Page | What you get |

@@ -8,7 +8,7 @@ This repository is the place to start when you want to use SlashBuilder's Kits. 
 * **Demo apps** (in [`apps/`](apps/)): six small Flutter desktop apps that compose Kits, each chosen because it asks something different of them.
 * **A Makefile** that sets up the build environment, runs the tests and builds the apps, so you do not have to learn each Kit's toolchain first.
 
-> **Status: being set up.** Some of the Kits the demos use are not public yet, and the names *Application Kit* and *Venue* (a resource broker) are provisional. The book is a skeleton: the introduction, a quick start, two guides and a reference are written; the per-Kit catalog is still to come. This repository is the book, not a Kit.
+> **Status: being set up.** Some of the Kits the demos use are not public yet, and the names *Application Kit* and *Venue* (a resource broker) are provisional. The book is a skeleton: the introduction, a quick start, two guides, a reference and the Kit catalog (a status card for every Kit in the registry, including those that are not public) are written; each Kit's own reference pages are still to come. This repository is the book, not a Kit.
 
 ## Quick start
 
@@ -30,7 +30,7 @@ make run APP=calculator
 | [`book/`](book/README.md) | The book. Open [`book/README.md`](book/README.md) for the table of contents |
 | [`apps/`](apps/) | Six demo apps: [calculator](apps/calculator/README.md), [minesweeper](apps/minesweeper/README.md), [notepad](apps/notepad/README.md), [stopwatch](apps/stopwatch/README.md), [render-queue](apps/render-queue/README.md), [launcher](apps/launcher/README.md) |
 | [`labs/interface_candidates`](labs/interface_candidates/README.md) | Components proposed for the shared UI Kit, built from what the demo apps duplicate. Plain Material |
-| [`tools/`](tools/) | The scripts behind the Makefile (POSIX `sh` and Python 3 only) |
+| [`tools/`](tools/) | The scripts behind the Makefile (POSIX `sh` and Python 3 only; the maintainer-only catalog generator also needs PyYAML) |
 | [`kits.lock`](kits.lock) | Which Kits the apps use, each pinned to one commit. `make setup` downloads them into `.kits/` |
 
 The Kits are not copied into this repository and are not git submodules. A script downloads each one at its pinned commit as a plain archive, so nothing here asks you to run a recursive git command.
@@ -43,7 +43,7 @@ What the demos do not cover is said plainly there: **no demo app has a Rust core
 
 ## About the book
 
-The book is meant to be read in order the first time and used as a reference after that. Narrative guides come first, then one section per Kit, then reference pages. In the spirit of the Be Book, the reference that documented every Kit of an operating system in one place. The catalog of Kits will list every Kit in the registry, including those that are not public yet.
+The book is meant to be read in order the first time and used as a reference after that. Narrative guides come first, then one section per Kit, then reference pages. In the spirit of the Be Book, the reference that documented every Kit of an operating system in one place. The [catalog of Kits](book/30-kits/README.md) lists every Kit in the registry, including those that are not public yet, as honest status cards.
 
 ## Contributing
 

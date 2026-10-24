@@ -15,3 +15,7 @@ Cargo.lock
 .DS_Store
 .idea/
 .vscode/
+
+# Python bytecode (tools/ tests)
+__pycache__/
+*.pyc

@@ -4,10 +4,12 @@
 #
 # What it looks for:
 #   internal hostnames, ticket ids, local absolute paths with a user name, notes-vault paths,
-#   references to agent instruction files, studio repository URLs that are not public Kits in kits.lock,
+#   references to agent instruction files, studio repository URLs that are not public Kits in kits.lock or in
+#   tools/kit-visibility.tsv,
 #   people named in credits or licence text other than the author, and secret patterns.
 #
-# This file is excluded from its own scan because it has to spell the patterns out.
+# This file, tools/gen-catalog.py (its sanitiser lists the same patterns) and the generator's tests (which feed it
+# sample leaks) are excluded from the scan because they have to spell the patterns out. Everything they generate is scanned.
 set -u
 . "$(dirname "$0")/common.sh"
 cd "$ROOT"
@@ -19,7 +21,7 @@ trap 'rm -f "$HITS" "$FILES"' EXIT INT TERM
 # The files to scan: everything on disk that is not fetched, built or generated.
 find . \( -name .git -o -name .kits -o -name build -o -name .dart_tool -o -name target -o -name Pods \
           -o -name ephemeral -o -name node_modules -o -name .idea -o -name .vscode \) -prune -o -type f -print |
-  sed 's#^\./##' | grep -v -e '^tools/check-public\.sh$' -e '\.DS_Store$' > "$FILES"
+  sed 's#^\./##' | grep -v -e '^tools/check-public\.sh$' -e '^tools/gen-catalog\.py$' -e '^tools/tests/test_gen_catalog\.py$' -e '\.DS_Store$' > "$FILES"
 
 # scan LABEL EXTENDED-REGEX [-i]   (binary files are skipped by grep -I)
 scan() {
@@ -38,7 +40,13 @@ scan "secret"              'AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{20,}|gho_[A-Za-z0-9
 
 # Studio repository URLs: only public Kits listed in kits.lock may be linked. kits.lock itself is the list, so it is
 # not scanned for this rule (its private lines are reported separately below).
+# A repository is also public when tools/kit-visibility.tsv (written by tools/gen-catalog.py from `gh`) says so: the
+# generated Kit catalog links to those and to no others.
 PUBLIC=$(lock_lines | awk '$4=="public" {print $2}' | sed -e 's#^https://github\.com/##' -e 's#\.git$##')
+if [ -f "$ROOT/tools/kit-visibility.tsv" ]; then
+  PUBLIC="$PUBLIC
+$(awk -F'\t' '$1 !~ /^#/ && $3 == "public" {print $2}' "$ROOT/tools/kit-visibility.tsv")"
+fi
 grep -v '^kits\.lock$' "$FILES" | tr '\n' '\0' |
   xargs -0 grep -nIoE 'github\.com[/:](slash-builder|lockamy-studios|lockamystudios|softsurve)/[A-Za-z0-9._-]+' 2>/dev/null |
   while IFS= read -r line; do
