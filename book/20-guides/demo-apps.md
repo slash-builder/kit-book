@@ -20,7 +20,7 @@ Contents: [running and testing any app](#running-and-testing-any-app) · [the se
 
 ## Running and testing any app
 
-Each app is a standard Flutter project. Desktop runners exist for macOS and Linux; the apps were run on macOS only. Every command below assumes you are in the repository root, and that you have run `make setup` once (add `KITS=all` while the App Context Kit is private) so the Kits the apps depend on are in `.kits/`.
+Each app is a standard Flutter project. Desktop runners exist for macOS and Linux; the apps were run on macOS, and on Linux they were built and launched headless in a container (see [Linux smoke test](#linux-smoke-test)). Every command below assumes you are in the repository root, and that you have run `make setup` once (add `KITS=all` while the App Context Kit is private) so the Kits the apps depend on are in `.kits/`.
 
 The Makefile wraps the common cases: `make test-fast` runs every app's tests, `make app APP=stopwatch` builds one app for this computer and `make run APP=stopwatch` runs it. The plain Flutter commands work too:
 
@@ -55,6 +55,24 @@ Details are in the App Context Kit's specification (`spec/APP-CONTEXT.md` in tha
 The sandboxed apps that use peers, notepad and minesweeper, also need the `com.apple.security.network.client` and `com.apple.security.network.server` entitlements; both projects have them in Debug and Release. With only the server entitlement, two copies listen but never connect, and nothing is logged. That observation was recorded in the apps' development notes (not published) and was not repeated for this page.
 
 Everything about the sandbox is macOS-specific, and the entitlement files are native build files that a running Dart app cannot change. The App Context Kit's platforms guide has the full table of what each capability needs.
+
+## Linux smoke test
+
+`make linux-smoke-image` and then `make linux-smoke` build every app with `flutter build linux --release` in an Ubuntu 24.04 container (Flutter 3.41.9, the same version as the macOS runs, and Rust 1.98.1 for `notes_rust`) and launch each one under a virtual display (Xvfb, 1280x800x24). Run on 2026-10-24, all seven apps built and started; the table is the summary (the full output, every warning line and the screenshots are what the command writes to `build/linux-smoke/`; the target is described in [make targets](../90-reference/make-targets.md#linux-smoke)).
+
+| What was checked | Result |
+|---|---|
+| Release build, `linux/arm64` | All seven built in 8 to 10 s each (54 s for `notes_rust`, which also compiles its Rust core); bundles 49 to 54 MB |
+| Launch | All seven were still running at 10 s and drew a real window with content (screenshots read by eye: calculator, stopwatch, minesweeper, notepad, notes_rust, render-queue, launcher, and two copies side by side) |
+| SIGTERM | Exit code 143 for every app, in 0.1 s; the roster entry (`<manifest id>@<instance>.json`) appeared and was withdrawn, for `render-queue` too, so the manifest id `dev.demo.render-queue` against the Linux application id `dev.demo.render_queue` does not stop it from launching |
+| Input | xdotool clicks reached the Flutter window (the calculator showed 42 after 7 x 6 =) and typing reached the notepad |
+| State survives a relaunch | stopwatch (`state.json`; the second launch showed the running stopwatch at 13.9 s), minesweeper (`game.json`; the second launch showed a half-played board with the timer at 012), notepad (a note typed in the first launch was listed in the second), notes_rust (the three seeded notes and `heads-<partition>.json` in the second, "Rust core: 3 notes, 6 blocks") |
+| Two copies, one `APP_CONTEXT_PEERS_DIR` | stopwatch and notepad, real mode, devices `smoke-a` and `smoke-b`: each announced, the two processes held a TCP connection to each other on 127.0.0.1, each footer read `Peers: 1` with the other copy's name, and a note written into copy A's folder arrived in copy B's folder. Both announcements were withdrawn on exit |
+| Warnings and exceptions | No uncaught exception in any app. The only Gtk/GLib lines are the same four per app: `dbind-WARNING ... AT-SPI: Error retrieving accessibility bus address` and `Atk-CRITICAL ... atk_socket_embed: assertion 'plug_id != NULL' failed`, which come from the container having no accessibility bus, plus `libEGL warning: DRI3 error` from the virtual display having no GPU |
+
+**What this is not.** It is headless, under a virtual display, in a container, on `linux/arm64` only (Docker on Apple silicon). There was no window manager and no compositor, no real GPU (software OpenGL), no click on a window's close button (only SIGTERM), no notification daemon (the stopwatch's desktop notification was not exercised), and no other distribution, Wayland or `x86_64`. It is independent evidence that the Linux runners build and the apps start, draw, take input and keep their state; it does not replace a session on a real Linux desktop.
+
+One thing it found outside the apps: with a clean `~/.cargo`, `notes_rust` does not build, because the Storage Kit's manifest names a cargo registry (`lockamy`) that only the Kit's own `.cargo/config.toml` defines, and cargo reads that file only when run inside the Kit. The smoke test copies it into the container's cargo configuration, as the Kit's own README says to; the fix belongs in the Kit (for example by not naming the registry in a dev-dependency).
 
 ## calculator
 
@@ -280,7 +298,7 @@ sh apps/notes_rust/tool/smoke.sh      # launch the built macOS app for 10 s, che
 
 ## What the demo apps do not cover
 
-* **One Rust core, not a family.** Only `notes_rust` has a Rust crate and a `flutter_rust_bridge` dependency; the other six are Flutter on a Dart core. It was built and run on **macOS**; its Linux runner exists and was not built. The bridge was not tried with a Rust-to-Dart stream, hot reload, or a second Rust core in the same app.
+* **One Rust core, not a family.** Only `notes_rust` has a Rust crate and a `flutter_rust_bridge` dependency; the other six are Flutter on a Dart core. It was built and run on **macOS**; on Linux it was built and launched headless in a container (see [Linux smoke test](#linux-smoke-test)), not on a real desktop. The bridge was not tried with a Rust-to-Dart stream, hot reload, or a second Rust core in the same app.
 * **Two Kits used from Rust, the rest not.** `notes_rust` uses the App Context Kit's Rust crate and the Storage Kit. Identity, messaging and transport Kits were probed in separate Rust packages in a private repository (the public-safe summary is [Fitting the App Context Kit to other Kits](fitting-the-app-context-kit-to-other-kits.md)), and the other apps' own sync, conflict handling and large-note transfer are written in Dart. Even in `notes_rust` the transport is Dart: the peer layer has no Rust half.
 * **`notes_rust` needs a private Kit.** The Storage Kit is not public yet, so the app cannot be built from a public clone alone: it needs `make setup KITS=all` and a GitHub login with access. Without it, `make setup`, `make test` and `make apps` skip the app with one line (`skipped apps/notes_rust: needs storage-kit (private; fetch with KITS=all)`) and carry on with the other six; the Kit it needs is named in its `kits.need` file. The App Context Kit's Rust crate, which the app also uses, is part of the pinned release candidate.
 * **No real network.** Peers find each other through announcement files and loopback sockets on one machine. That holds for `notes_rust` too: nothing in it was run on a second machine.

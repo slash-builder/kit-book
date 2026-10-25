@@ -7,7 +7,7 @@ A notes app whose core is Rust. The Flutter interface is a facade; the notes liv
 | Manifest id | `dev.demo.notes-rust` (macOS bundle id the same; Linux application id `dev.demo.notes_rust`) |
 | Kits | App Context Kit (Dart: `AppContextKit.run`, peers; Rust: the `adopt` API) and Storage Kit (Rust: `PartitionStore`, fragment trees) |
 | Kits in `app.json` | `peers` |
-| Runners | macOS (built and run) and Linux (runner generated; **not built or run**) |
+| Runners | macOS (built and run) and Linux (built and launched headless in a container; see [Linux](#linux)) |
 | Tests | `cargo test` 29, `flutter test` 19 (no native library), `integration_test` 10 (the real library inside the app) |
 
 > **One temporary thing you will meet.** The Storage Kit is private, so fetching it needs a GitHub login: `make setup KITS=all`. Without it this app is skipped, not failed: `make setup`, `make test`, `make apps` and `make doctor` print `skipped apps/notes_rust: needs storage-kit (private; fetch with KITS=all)` and carry on (the Kit is named in [`kits.need`](kits.need)); `make app APP=notes_rust` and `make run APP=notes_rust` say what to run. The App Context Kit's `adopt` API is in the Kit's pinned release candidate (`kits.lock`); [`kits.override`](../../kits.override) is empty.
@@ -84,7 +84,7 @@ All on 2026-10-24, macOS (Apple silicon, 10 cores), Flutter 3.41.9, Rust 1.98.1,
 | `kill -9` of the app | the roster file stays (the App Context Kit's rule: it goes stale after 15 s); the three notes are still in the head index; a relaunch on the same folders starts normally and writes its own roster file |
 | `kill -9` of the Rust half | The core is in the app's process, so it cannot be killed apart from the Dart half. Tested on the crate alone: `rust/tests/kill9.rs` starts a writer, kills it with SIGKILL three times at different moments, reopens, and reads every note and every version in full |
 
-Not measured: runtime speed of the core against a Dart one, memory, a Linux build, and anything on a machine that was not shared.
+Not measured: runtime speed of the core against a Dart one, memory, and anything on a machine that was not shared. (The Linux build time and size are in the next section.)
 
 
 ## What the bridge made awkward
@@ -101,6 +101,17 @@ Not measured: runtime speed of the core against a Dart one, memory, a Linux buil
 * **Build plumbing.** The generated glue's library name must equal the CocoaPods plugin name, so the plugin package is called `notes_core` after the crate. macOS needs CocoaPods only because of the plugin. Without a deployment target set for the Rust build, the linker printed 391 "built for newer macOS" warnings (fixed in `rust/.cargo/config.toml`).
 * **Hot reload.** Not tested. A change to Rust needs a rebuild; Dart-only changes rebuild in seconds (see the table).
 * **A test run replaces the app.** `flutter test integration_test -d macos` builds into the same `build/macos/.../Debug/notes_rust.app` as `make app`, so running it and then launching that app starts the test harness (a black window), not the app. Run `make app` again before `tool/smoke.sh`.
+
+## Linux
+
+`make linux-smoke-image` then `make linux-smoke LINUX_SMOKE_APPS=notes_rust` builds and runs it in an Ubuntu 24.04 container (`linux/arm64`, Flutter 3.41.9, Rust 1.98.1), under Xvfb, so it is **headless**: no real desktop, no window manager, no real GPU. Run on 2026-10-24:
+
+* `flutter build linux --release`: 54 s clean (it compiles the Rust core, cargokit, on the way); the bundle is 54 MB with `libnotes_core.so` beside `libflutter_linux_gtk.so`.
+* Launched with `APP_CONTEXT_SCRATCH`, `NOTES_RUST_SEED=3` and mock mode: a 1280x720 window with the three sample notes and the line "Rust core: 3 notes, 6 blocks, shares this app's context (instance ...)". Still running at 10 s; one roster file, `dev.demo.notes-rust@<instance>.json`; `blocks/<partition>/active/active.pack` of 1,240 bytes (the macOS smoke test saw the same size) and `heads-<partition>.json` under `data`; SIGTERM exit code 143 and the roster file withdrawn.
+* A second launch on the same folders showed the same three notes.
+* On Linux there is no sandbox, so `APP_CONTEXT_SCRATCH` can be any path.
+* **Not done on Linux:** the sync between two copies, the `integration_test` suite, `cargo test`, a click on the window's close button, anything on a real desktop or another architecture.
+* **A build prerequisite the smoke test had to add:** the Storage Kit's `Cargo.toml` has a dev-dependency on a private cargo registry named `lockamy`, and the registry's index is defined only in the Kit's own `.cargo/config.toml`. A machine without that entry in its own `~/.cargo/config.toml` stops with `failed to load manifest for dependency storage-kit ... registry index was not found in any configuration: lockamy`. The smoke test copies the Kit's file into the container's cargo home. This is a Storage Kit issue.
 
 ## Generated files: committed, and why
 
@@ -127,7 +138,7 @@ tool/smoke.sh                     a 10 s headless-ish launch of the built macOS 
 
 ## Limits
 
-* The Linux runner exists and is wired to the same glue; it was **not built or run**.
+* Linux: built and launched only headless in a container (see [Linux](#linux)); no real desktop, no real GPU, no second machine.
 * **No fsync in the Storage Kit's `put`.** The core flushes the active pack before it moves a head, so a process kill (tested) and, as far as the operating system honours `fsync`, a power cut leave a readable store. macOS's `fsync` does not flush the drive's own cache; that was not tested.
 * No delete, garbage collection or quota in the Storage Kit: versions and unused blocks accumulate. A peer can fill the disk with valid blocks it was not asked for.
 * History from a peer arrives as manifests only; an old version's body is "not on this copy" until its blocks arrive another way.

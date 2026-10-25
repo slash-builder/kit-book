@@ -58,7 +58,7 @@ APPS := $(notdir $(patsubst %/,%,$(wildcard apps/*/)))
 
 .PHONY: help all build lint fmt doctor setup fetch lock test test-fast test-integration apps app run frb \
         docs docs-catalog docs-pull docs-pull-check test-tools site site-check publish-site check-public community \
-        go-public-check stranger-test clean clean-all
+        go-public-check stranger-test linux-smoke-image linux-smoke clean clean-all
 
 help: ## Show this list (the default)
 	@echo "$(BOOK_NAME): make targets"
@@ -166,6 +166,12 @@ go-public-check: ## Maintainers: the launch gate. A read-only checklist (ok / wa
 
 stranger-test: ## Maintainers, AFTER release: clone the public repository with no GitHub login and run doctor, setup, test-fast (STRANGER_DRY=1 prints the plan)
 	@sh tools/stranger-test.sh
+
+linux-smoke-image: ## Build the Docker image for linux-smoke (Ubuntu, Flutter 3.41.9 and Rust pinned, Xvfb); slow once, then cached
+	@sh tools/linux-smoke.sh image
+
+linux-smoke: ## Build every demo app for Linux in a container and launch it under a virtual display (LINUX_SMOKE_APPS="a b" for some); results in build/linux-smoke/
+	@sh tools/linux-smoke.sh run
 
 clean: ## Remove build output, test logs and the website (keeps the fetched Kits)
 	@rm -rf build

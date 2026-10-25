@@ -34,6 +34,12 @@ The scripts behind the targets are in [`tools/`](../../tools/). They are plain P
 | `STRANGER_STEPS` | `stranger-test` | Which steps to run after the clone, in order (default `doctor setup test-fast`) |
 | `STRANGER_KEEP` | `stranger-test` | `1` keeps the temporary clone and prints where it is |
 | `GO_PUBLIC_OFFLINE` | `go-public-check` | `1` skips the checks that need the network and ends INCOMPLETE (exit 3), never a pass |
+| `LINUX_SMOKE_APPS` | `linux-smoke` | The app folders to test, separated by spaces (default: every app that can be built here; an app whose Kit is not fetched is skipped with a line) |
+| `LINUX_SMOKE_IMAGE` | `linux-smoke`, `linux-smoke-image` | The Docker image name (default `kit-book-linux-smoke:flutter-3.41.9`) |
+| `LINUX_SMOKE_PLATFORM` | `linux-smoke`, `linux-smoke-image` | A Docker `--platform` (default: the daemon's own, `linux/arm64` on Apple silicon) |
+| `LINUX_SMOKE_UP`, `LINUX_SMOKE_SHOT_AT` | `linux-smoke` | Seconds to keep each app up (default 10) and the second of the screenshot (default 6) |
+| `LINUX_SMOKE_PEERS` | `linux-smoke` | The apps for the two-copies check (default `stopwatch notepad`; empty skips it) |
+| `LINUX_SMOKE_NOCACHE` | `linux-smoke` | `1` does not use the two cache volumes for Dart packages and Rust crates |
 | `NO_COLOR` | all | Turns off colours in the output |
 | `KITS_LOCK` | the scripts in `tools/` | Read a different lock file (used for testing the fetch script) |
 
@@ -257,6 +263,20 @@ With `CHECK_PUBLIC_STRICT=1` it also fails while `kits.lock` lists a private Kit
 **For maintainers, after the repository is public.** Does what a newcomer with no GitHub account would do, and shows what they would see: clones `STRANGER_REPO_URL` into a fresh temporary folder, then runs `make doctor`, `make setup` (with `KITS=public`, the default) and `make test-fast` in the clone. Everything runs in a sanitised environment (`tools/stranger-env.py`): the GitHub token variables are removed, git may not ask for a password and has no credential helper (`-c credential.helper=`, `GIT_TERMINAL_PROMPT=0`), and `gh` is not on `PATH`, so a step that needs a login cannot quietly use yours. A fetch that skips for want of a login does not make `make setup` fail, so afterwards the script checks that every `core` Kit in `kits.lock` is public and was fetched at its pinned commit, and fails loudly if not (`A STRANGER COULD NOT GET ...`). It ends with a table of steps and exits non-zero if anything failed.
 
 `STRANGER_DRY=1 make stranger-test` prints the plan and the names (never the values) of the environment variables it would remove, and clones nothing. `STRANGER_STEPS="doctor setup"` runs fewer steps; `STRANGER_KEEP=1` keeps the clone. Apps that need a Kit that is still private are skipped with a message, which is the expected result; see [`kits.need`](#kitsneed).
+
+### `linux-smoke-image`
+
+Builds the Docker image that `linux-smoke` runs in, from `tools/linux-smoke/Dockerfile`: Ubuntu 24.04, the Flutter Linux desktop prerequisites (`clang`, `cmake`, `ninja-build`, `pkg-config`, GTK 3 and `liblzma` development files), Xvfb, ImageMagick and xdotool, a software OpenGL (Mesa) and one font (without a font Flutter draws no text), **Flutter 3.41.9** (the version of the maintainer's machine; Flutter publishes no Linux arm64 archive, so it is cloned at the tag and the commit is checked) and **Rust 1.98.1** through a hash-checked `rustup-init`. The sources and hashes of the pins are printed at the end and kept in the image as `/opt/linux-smoke-pins.txt`. The first build takes a few minutes and the image is about 4 GB; after that it is cached by Docker and `linux-smoke` does not need the network except for `flutter pub get` and Rust crates (cached in two named Docker volumes). The build log is `build/linux-smoke/image-build.log`.
+
+### `linux-smoke`
+
+Builds every demo app for Linux **in a container** and launches each one under a virtual display. Needs Docker, `make linux-smoke-image` once, and the Kits fetched (`make setup KITS=all` while they are private; `notes_rust` is skipped without the Storage Kit like everywhere else). The repository is mounted read-only; each app is copied to the container's own disk (without `build/` and `.dart_tool`) and the host is never written to except `build/linux-smoke/`.
+
+For each app: `flutter pub get`, `flutter build linux --release` (seconds and bundle size are recorded), then a launch under `xvfb-run` (1280x800x24, no window manager) with `APP_CONTEXT_SCRATCH` set, `APP_CONTEXT_MODE=mock` and the app's own `<PREFIX>_MODE=mock`. It keeps the app up 10 s, takes a screenshot at 6 s, sends SIGTERM and records whether it was still running, the exit code, whether the roster entry appeared and was withdrawn, any Gtk/GLib warning and uncaught exception in the output, and the files the app wrote under the scratch directory. For `calculator`, `stopwatch`, `minesweeper` and `notepad` the first launch is **driven with xdotool** (a few clicks, and typing in the notepad) so there is something to save; a **second launch** on the same scratch directory then shows what survived. Finally two copies of `stopwatch` and of `notepad` run side by side in real mode with the same `APP_CONTEXT_PEERS_DIR` and different `APP_CONTEXT_DEVICE` values; the harness checks that each announced, that the two processes hold a TCP connection to each other, and, for notepad, that a note written into copy A's folder arrives in copy B's. The apps do not log peers, so the screenshot (each footer reads `Peers: 1`) is the other evidence.
+
+Results: `build/linux-smoke/results.md` (a table, the environment and the details, including every warning line) and the screenshots `build/linux-smoke/<app>-first.png`, `-second.png` and `-peers.png`. `build/` is ignored by git. Exit status is non-zero when an app did not build or was not running at 10 s.
+
+**What it proves and what it does not.** It shows that the Linux runners build and that the apps start, draw, take mouse and keyboard input, write their state, survive a relaunch and exit on SIGTERM, **headless under a virtual display, in a container, on one architecture** (`linux/arm64` on Apple silicon; `linux/amd64` was not run). It is not a real desktop session (no window manager or compositor, no window-close click, no notification daemon), not a real GPU (software rendering), and says nothing about other distributions, Wayland, or X11 with a real server. The GTK accessibility-bus warnings it lists come from the container having no accessibility bus.
 
 ### `clean`
 
