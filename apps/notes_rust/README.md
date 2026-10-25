@@ -111,7 +111,7 @@ Not measured: runtime speed of the core against a Dart one, memory, and anything
 * A second launch on the same folders showed the same three notes.
 * On Linux there is no sandbox, so `APP_CONTEXT_SCRATCH` can be any path.
 * **Not done on Linux:** the sync between two copies, the `integration_test` suite, `cargo test`, a click on the window's close button, anything on a real desktop or another architecture.
-* **A build prerequisite the smoke test had to add:** the Storage Kit's `Cargo.toml` has a dev-dependency on a private cargo registry named `lockamy`, and the registry's index is defined only in the Kit's own `.cargo/config.toml`. A machine without that entry in its own `~/.cargo/config.toml` stops with `failed to load manifest for dependency storage-kit ... registry index was not found in any configuration: lockamy`. The smoke test copies the Kit's file into the container's cargo home. This is a Storage Kit issue.
+* **A build prerequisite the smoke test had to add:** the Storage Kit's `Cargo.toml` has a dev-dependency on a private cargo registry, and the registry's index is defined only in the Kit's own `.cargo/config.toml`. A machine without that entry in its own `~/.cargo/config.toml` stops with `failed to load manifest for dependency storage-kit ... registry index was not found in any configuration: <the private registry's name>`. The smoke test copies the Kit's file into the container's cargo home. This is a Storage Kit issue.
 
 ## Generated files: committed, and why
 

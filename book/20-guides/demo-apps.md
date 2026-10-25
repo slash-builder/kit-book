@@ -72,7 +72,7 @@ Everything about the sandbox is macOS-specific, and the entitlement files are na
 
 **What this is not.** It is headless, under a virtual display, in a container, on `linux/arm64` only (Docker on Apple silicon). There was no window manager and no compositor, no real GPU (software OpenGL), no click on a window's close button (only SIGTERM), no notification daemon (the stopwatch's desktop notification was not exercised), and no other distribution, Wayland or `x86_64`. It is independent evidence that the Linux runners build and the apps start, draw, take input and keep their state; it does not replace a session on a real Linux desktop.
 
-One thing it found outside the apps: with a clean `~/.cargo`, `notes_rust` does not build, because the Storage Kit's manifest names a cargo registry (`lockamy`) that only the Kit's own `.cargo/config.toml` defines, and cargo reads that file only when run inside the Kit. The smoke test copies it into the container's cargo configuration, as the Kit's own README says to; the fix belongs in the Kit (for example by not naming the registry in a dev-dependency).
+One thing it found outside the apps: with a clean `~/.cargo`, `notes_rust` does not build, because the Storage Kit's manifest names a private cargo registry that only the Kit's own `.cargo/config.toml` defines, and cargo reads that file only when run inside the Kit. The smoke test copies it into the container's cargo configuration, as the Kit's own README says to; the fix belongs in the Kit (for example by not naming the registry in a dev-dependency).
 
 ## calculator
 
