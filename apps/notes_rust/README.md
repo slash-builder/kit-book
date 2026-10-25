@@ -49,7 +49,7 @@ What is awkward: the snapshot has no **account** or **device**, which the Rust s
 
 ## How it stores notes
 
-A note **version** is its body cut into blocks by the Storage Kit (FastCDC chunks under a tree of list nodes) plus a small JSON **manifest** block: title, time, device, the tree root, and the versions it follows. A version's address is the hash of its manifest, so history is a graph and two copies can tell "ahead" from "diverged". The only mutable thing is the **head index**, written last and by rename, so a crash leaves unused blocks at worst. The Storage Kit partition is `BLAKE3("slash-builder/application-kit/storage-partition/v1\n<account>\n<app id>")[0..16]`, the derivation from the App Context Kit's earlier storage prototype (a test pins the same value).
+A note **version** is its body cut into blocks by the Storage Kit (FastCDC chunks under a tree of list nodes) plus a small JSON **manifest** block: title, time, device, the tree root, and the versions it follows. A version's address is the hash of its manifest, so history is a graph and two copies can tell "ahead" from "diverged". The only mutable thing is the **head index**, written last and by rename, so a crash leaves unused blocks at worst. The Storage Kit partition is `BLAKE3("slash-builder/app-context-kit/storage-partition/v1\n<account>\n<app id>")[0..16]`, the derivation from the App Context Kit's earlier storage prototype (a test pins the same value).
 
 ## How sync works
 

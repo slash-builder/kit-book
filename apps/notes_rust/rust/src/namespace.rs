@@ -2,7 +2,7 @@
 //! of the Storage Kit.
 //!
 //! ```text
-//! partition = BLAKE3("slash-builder/application-kit/storage-partition/v1\n<account>\n<app id>")[0..16]
+//! partition = BLAKE3("slash-builder/app-context-kit/storage-partition/v1\n<account>\n<app id>")[0..16]
 //! ```
 //!
 //! * The domain string is fixed and versioned, so the same pair can never collide with a partition another subsystem derives,
@@ -19,7 +19,7 @@ use storage_kit::PartitionId;
 
 use crate::error::{Error, Result};
 
-pub const PARTITION_DOMAIN: &str = "slash-builder/application-kit/storage-partition/v1";
+pub const PARTITION_DOMAIN: &str = "slash-builder/app-context-kit/storage-partition/v1";
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Namespace {
@@ -97,14 +97,14 @@ mod tests {
         );
     }
 
-    /// The same derivation, string for string, as the App Context Kit's storage prototype, whose test pins this value
-    /// (account "00000000-0000-0000-0000-000000000001", app "dev.demo.notepad"). Changing the domain string or the layout
-    /// would re-home every user's data.
+    /// Pins the derivation for account "00000000-0000-0000-0000-000000000001" and app "dev.demo.notepad", and recomputes it
+    /// directly with BLAKE3 so the pin and the code cannot drift together. Changing the domain string or the layout would
+    /// re-home every user's data, so it must fail a test.
     #[test]
-    fn matches_the_prototype_pin_and_a_hand_computed_blake3() {
+    fn partition_derivation_is_pinned_and_matches_a_direct_blake3() {
         let a = Namespace::new("00000000-0000-0000-0000-000000000001", "dev.demo.notepad").unwrap();
-        assert_eq!(a.partition().to_hex(), "8094edc87c3dec028f1b9841ac7064c5");
-        let s = "slash-builder/application-kit/storage-partition/v1\n00000000-0000-0000-0000-000000000001\ndev.demo.notepad";
+        assert_eq!(a.partition().to_hex(), "37fdbe1f9dabded5c230efdc5cfb39e4");
+        let s = "slash-builder/app-context-kit/storage-partition/v1\n00000000-0000-0000-0000-000000000001\ndev.demo.notepad";
         let full = storage_kit::Hash::of(s.as_bytes());
         assert_eq!(a.partition().as_bytes(), &full.as_bytes()[..16]);
     }
