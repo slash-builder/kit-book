@@ -51,9 +51,18 @@ if [ ! -s "$KITS_DIR/.pkgs" ]; then
   say "  (no Kit is fetched, so the demo apps cannot resolve their dependencies; run make setup KITS=all while the Kits are private)"
 fi
 HAVE_APP_CONTEXT_KIT=0; [ -d "$KITS_DIR/app-context-kit" ] && HAVE_APP_CONTEXT_KIT=1
+SKIPPED_APPS=""
 while read -r kind dir; do
   case "$dir" in
-    "$ROOT"/apps/*) if [ "$HAVE_APP_CONTEXT_KIT" = 0 ]; then printf '  %-9s %s  (skipped: app-context-kit not fetched)\n' "$kind" "${dir#"$ROOT"/}"; continue; fi ;;
+    "$ROOT"/apps/*)
+      if [ "$HAVE_APP_CONTEXT_KIT" = 0 ]; then printf '  %-9s %s  (skipped: app-context-kit not fetched)\n' "$kind" "${dir#"$ROOT"/}"; continue; fi
+      # an app that needs a Kit that is not fetched (apps/<app>/kits.need) is skipped, not an error
+      appname=${dir#"$ROOT"/apps/}; appname=${appname%%/*}
+      reason=$(app_skip_reason "$ROOT/apps/$appname")
+      if [ -n "$reason" ]; then
+        case " $SKIPPED_APPS " in *" $appname "*) ;; *) say "  skipped apps/$appname: $reason"; SKIPPED_APPS="$SKIPPED_APPS $appname" ;; esac
+        continue
+      fi ;;
   esac
   pub_get "$kind" "$dir" || FAIL=1
 done < "$KITS_DIR/.pkgs.all"
@@ -73,6 +82,11 @@ done
 for c in "$ROOT"/apps/*/rust; do
   [ -f "$c/Cargo.toml" ] || continue
   rel=${c#"$ROOT"/}
+  reason=$(app_skip_reason "$(dirname "$c")")
+  if [ -n "$reason" ]; then
+    case " $SKIPPED_APPS " in *" $(basename "$(dirname "$c")") "*) ;; *) say "  skipped $(dirname "$rel"): $reason"; SKIPPED_APPS="$SKIPPED_APPS $(basename "$(dirname "$c")")" ;; esac
+    continue
+  fi
   if (cd "$c" && cargo fetch >"$KITS_DIR/.cargo.out" 2>&1); then printf '  cargo     %s\n' "$rel"; FOUND_CARGO=1
   else printf '  cargo     %s  (skipped: could not resolve; the Kits it depends on are not fetched? try make setup KITS=all)\n' "$rel"; fi
 done
@@ -80,4 +94,7 @@ rm -f "$KITS_DIR/.cargo.out"
 [ -n "$(fetched_kits core)" ] || [ "$FOUND_CARGO" = 1 ] || say "  (no Rust crate to fetch yet)"
 
 say ""
+if [ -n "$SKIPPED_APPS" ]; then
+  say "Skipped (their Kits are not fetched):$(printf ' apps/%s' $SKIPPED_APPS). Everything else is set up. The Kits they need are listed in each app's kits.need."
+fi
 if [ "$FAIL" = 0 ]; then say "Setup finished. Next: make test-fast"; else die "setup finished with errors (see above)"; fi

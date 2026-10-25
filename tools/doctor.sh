@@ -33,7 +33,17 @@ esac
 
 # --- minimum versions, read from the code rather than written down twice -----------------------------------------
 # Dart: the highest "sdk: ^X" found in the demo apps' pubspec files.
-DART_MIN=$(cat "$ROOT"/apps/*/pubspec.yaml "$ROOT"/labs/*/pubspec.yaml 2>/dev/null |
+# Only the apps that can be built here count: an app whose needed Kit is not fetched (apps/<app>/kits.need) is skipped everywhere,
+# so it must not raise the minimum versions or add a required tool.
+INCLUDED_APPS=$(included_apps)
+SKIPPED_APPS=""
+for d in "$ROOT"/apps/*/; do
+  d=${d%/}; [ -d "$d" ] || continue
+  r=$(app_skip_reason "$d")
+  [ -n "$r" ] && SKIPPED_APPS="${SKIPPED_APPS}  skipped apps/$(basename "$d"): $r
+"
+done
+DART_MIN=$({ printf '%s\n' "$INCLUDED_APPS" | while read -r d; do [ -n "$d" ] && cat "$d/pubspec.yaml"; done; cat "$ROOT"/labs/*/pubspec.yaml; } 2>/dev/null |
   awk '/^environment:/ {e=1; next} /^[^ #]/ {e=0} e && $1=="sdk:" && $2 ~ /^\^?[0-9]/ {v=$2; sub(/^\^/, "", v); print v}' |
   awk 'BEGIN{best="0"} { if (best=="0") best=$1; else { n=split($1,a,"."); split(best,b,"."); for(i=1;i<=3;i++){ if (a[i]+0>b[i]+0){best=$1;break} if (a[i]+0<b[i]+0) break } } } END{print best}')
 [ "$DART_MIN" = 0 ] && DART_MIN=3.0.0
@@ -44,6 +54,7 @@ RUST_MIN=""
 RUST_MIN_NOTE=""
 for cf in "$KITS_DIR"/*/rust/Cargo.toml "$ROOT"/apps/*/rust/Cargo.toml; do
   [ -f "$cf" ] || continue
+  case "$cf" in "$ROOT"/apps/*) [ -z "$(app_missing_kits "$(dirname "$(dirname "$cf")")")" ] || continue ;; esac
   rv=$(sed -n 's/^rust-version[[:space:]]*=[[:space:]]*"\([0-9.]*\)".*/\1/p' "$cf" | head -n 1)
   who=$(basename "$(dirname "$(dirname "$cf")")")
   if [ -n "$rv" ]; then
@@ -193,8 +204,14 @@ else row protoc optional MISSING "-" "-"; fix protoc optional "compiles protocol
 # flutter_rust_bridge_codegen: REQUIRED when an app in the tree has a Rust core bridged with it (apps/notes_rust), at exactly the
 # version that app pins in its pubspec.yaml (the generated glue only matches the flutter_rust_bridge package at that version).
 # Optional otherwise.
+# An app that is skipped here (its needed Kit is not fetched) does not make it required.
 FRB_APP=""
-for y in "$ROOT"/apps/*/flutter_rust_bridge.yaml; do [ -f "$y" ] && { FRB_APP=$(dirname "$y"); break; }; done
+FRB_SKIPPED_APP=""
+for y in "$ROOT"/apps/*/flutter_rust_bridge.yaml; do
+  [ -f "$y" ] || continue
+  if [ -z "$(app_missing_kits "$(dirname "$y")")" ]; then FRB_APP=$(dirname "$y"); break; fi
+  [ -n "$FRB_SKIPPED_APP" ] || FRB_SKIPPED_APP=$(dirname "$y")
+done
 if [ -n "$FRB_APP" ]; then
   FRB_PIN=$(frb_pinned_version "$FRB_APP")
   FRB_HAVE=$(frb_codegen_version) || FRB_HAVE=""
@@ -210,8 +227,17 @@ if [ -n "$FRB_APP" ]; then
     row flutter_rust_bridge_codegen required ok "$FRB_HAVE" "$FRB_PIN (exactly)"
   fi
 elif FRB_HAVE=$(frb_codegen_version); then row flutter_rust_bridge_codegen optional ok "$FRB_HAVE" "-"
-else row flutter_rust_bridge_codegen optional MISSING "-" "-"; fix flutter_rust_bridge_codegen optional "joins a Flutter app to a Rust core (no app in the tree needs it)" frb; fi
-if [ "$OS" = macos ] && ls "$ROOT"/apps/*/macos/Podfile >/dev/null 2>&1; then
+else
+  if [ -n "$FRB_SKIPPED_APP" ]; then frb_why="joins a Flutter app to a Rust core (apps/$(basename "$FRB_SKIPPED_APP") needs it, but is skipped here: $(app_skip_reason "$FRB_SKIPPED_APP"))"
+  else frb_why="joins a Flutter app to a Rust core (no app in the tree needs it)"; fi
+  row flutter_rust_bridge_codegen optional MISSING "-" "-"; fix flutter_rust_bridge_codegen optional "$frb_why" frb
+fi
+HAVE_PODFILE=0
+for pd in "$ROOT"/apps/*/macos/Podfile; do
+  [ -f "$pd" ] || continue
+  [ -z "$(app_missing_kits "$(dirname "$(dirname "$pd")")")" ] && HAVE_PODFILE=1
+done
+if [ "$OS" = macos ] && [ "$HAVE_PODFILE" = 1 ]; then
   # An app with a native (CocoaPods) plugin, such as the cargokit glue of a Rust core, builds through CocoaPods.
   check_tool "pod (CocoaPods)" apps pod "pod --version 2>/dev/null" "" pod "builds the macOS apps that have a native plugin (a Rust core)"
 fi
@@ -248,6 +274,12 @@ if [ -s "$FIXES" ]; then
                printf "  [%s] %s: %s\n        %s\n", lvl, $1, $3, $4 }' "$FIXES"
   say ""
   say "make doctor installs nothing. Run the commands above yourself, or let make setup run the REQUIRED ones: SETUP_INSTALL=1 make setup"
+fi
+
+if [ -n "$SKIPPED_APPS" ]; then
+  say ""
+  say "Apps left out here (their Kit is not fetched; make setup, make test and the other targets skip them, and they add no requirement above):"
+  printf '%s' "$SKIPPED_APPS"
 fi
 
 say ""

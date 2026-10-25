@@ -96,6 +96,51 @@ fetched_kits() {
   done
 }
 
+# --- per-app Kit requirements: apps/<app>/kits.need -----------------------------------------------------------------------
+# An app may list, one Kit name per line (# comments allowed), the Kits it needs besides the App Context Kit. An app whose
+# needed Kit is not in .kits/ is SKIPPED by setup, test, apps, frb and doctor with a one-line reason; it is never an error.
+# app_needs DIR: the Kit names in DIR/kits.need, or nothing.
+app_needs() {
+  [ -f "$1/kits.need" ] || return 0
+  sed -e 's/[[:space:]]*#.*$//' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' "$1/kits.need" | grep -v '^$' || true
+}
+
+# app_missing_kits DIR: the Kits the app needs that are not in .kits/ (as a folder or a link, which is how fetch-kits.sh leaves them).
+app_missing_kits() {
+  for amk_k in $(app_needs "$1"); do
+    [ -d "$KITS_DIR/$amk_k" ] || printf '%s\n' "$amk_k"
+  done
+}
+
+# kit_visibility NAME: public or private as kits.lock says, or unknown when the Kit is not listed there.
+kit_visibility() {
+  lock_lines | awk -v n="$1" '$1 == n { print $4; found = 1; exit } END { if (!found) print "unknown" }'
+}
+
+# app_skip_reason DIR: "needs storage-kit (private; fetch with KITS=all)" when something is missing, nothing otherwise.
+app_skip_reason() {
+  asr_out=""
+  for asr_k in $(app_missing_kits "$1"); do
+    case "$(kit_visibility "$asr_k")" in
+      private) asr_why="private; fetch with KITS=all" ;;
+      public) asr_why="public; fetch with make setup" ;;
+      *) asr_why="not listed in kits.lock" ;;
+    esac
+    asr_out="${asr_out:+$asr_out, }$asr_k ($asr_why)"
+  done
+  [ -z "$asr_out" ] || printf 'needs %s\n' "$asr_out"
+}
+
+# included_apps: the absolute folder of every app under apps/ whose needed Kits are all fetched.
+included_apps() {
+  for ia_d in "$ROOT"/apps/*/; do
+    ia_d=${ia_d%/}
+    [ -d "$ia_d" ] || continue
+    [ -z "$(app_missing_kits "$ia_d")" ] && printf '%s\n' "$ia_d"
+  done
+  return 0
+}
+
 # Version helpers. ver_ge A B succeeds when A >= B (dotted numbers; extra text ignored).
 ver_ge() {
   awk -v a="$1" -v b="$2" 'BEGIN {

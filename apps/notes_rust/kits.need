@@ -1,0 +1,4 @@
+# The Kits this app needs besides the App Context Kit, one name per line (names from kits.lock). `make setup`, `make test`,
+# `make apps` and the other targets skip this app, with a one-line reason, when one of them is not fetched (not in .kits/).
+# The Storage Kit is private for now: fetch it with `make setup KITS=all` (needs a GitHub login).
+storage-kit

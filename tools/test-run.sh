@@ -7,6 +7,7 @@
 #
 # Fast suites: every fetched "core" Kit's own tests (its Makefile's test target if it has one, else the native
 # command: dart test, flutter test, cargo test), then labs/interface_candidates, then each demo app (flutter test).
+# An app that lists a Kit in apps/<app>/kits.need which is not fetched is skipped whole (a line says why; the table shows it).
 # Integration suites (Docker containers, a broker daemon, and an app's integration_test/ run inside the built app) are skipped
 # with a message when what they need is absent. Skipping is not a failure.
 # Exit status is non-zero when a suite that ran has failures.
@@ -69,6 +70,13 @@ skip_suite() {
   printf '%s|-|-|-|0|skipped (%s)\n' "$1" "$2" >> "$RESULTS"
 }
 
+# skip_app APPDIR REASON: a whole app is left out because a Kit it needs is not fetched (apps/<app>/kits.need). One explanation line
+# and one row in the table; never a failure.
+skip_app() {
+  printf '  skipped apps/%s: %s\n' "$(basename "$1")" "$2" >&2
+  printf 'apps/%s|-|-|-|0|skipped: %s\n' "$(basename "$1")" "$2" >> "$RESULTS"
+}
+
 has_make_target() { [ -f "$1/Makefile" ] && grep -Eq "^$2:" "$1/Makefile"; }
 
 fast_suites() {
@@ -112,6 +120,9 @@ fast_suites() {
   run_suite "labs/interface_candidates: flutter test" dart "$ROOT/labs/interface_candidates" flutter test -r expanded
   for a in "$ROOT"/apps/*/; do
     a=${a%/}
+    # An app whose needed Kit is not fetched (apps/<app>/kits.need) is skipped whole, with its reason.
+    skip_why=$(app_skip_reason "$a")
+    if [ -n "$skip_why" ]; then skip_app "$a" "$skip_why"; continue; fi
     # An app with a Rust core: its own `cargo test` first (no Flutter, no native library needed), when the Kits it builds against are here.
     if [ -f "$a/rust/Cargo.toml" ]; then
       if (cd "$a/rust" && cargo metadata --format-version 1 >/dev/null 2>&1); then run_suite "apps/$(basename "$a")/rust: cargo test" cargo "$a/rust" cargo test
@@ -141,7 +152,7 @@ integration_suites() {
     [ -d "$a/integration_test" ] || continue
     label="apps/$(basename "$a"): flutter test integration_test (the built app)"
     if [ ! -d "$KITS_DIR/app-context-kit" ]; then skip_suite "$label" "app-context-kit is not fetched"
-    elif [ -f "$a/rust/Cargo.toml" ] && [ ! -d "$KITS_DIR/storage-kit" ]; then skip_suite "$label" "storage-kit is not fetched (make setup KITS=all)"
+    elif [ -n "$(app_skip_reason "$a")" ]; then skip_suite "$label" "$(app_skip_reason "$a")"
     elif [ "$(os_family)" = linux ] && [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then skip_suite "$label" "no display (on Linux run it under xvfb-run)"
     elif [ "$(os_family)" = other ]; then skip_suite "$label" "no desktop target on this system"
     else
