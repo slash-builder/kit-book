@@ -91,6 +91,32 @@ class LinkTests(Site):
         self.assertEqual(problems, [])
 
 
+class NoticesTests(Site):
+    def setUp(self):
+        super().setUp()
+        self.notices = os.path.join(self.vendor, "root-notices.md")
+        self.write(self.notices, "# notices\n")
+        for d in (self.site, self.publish):
+            self.write(os.path.join(d, "THIRD-PARTY-NOTICES.md"), "# notices\n")
+
+    def test_identical_copies_pass(self):
+        self.assertEqual(sc.check_notices(self.site, self.publish, self.notices), [])
+
+    def test_missing_copy_in_the_site_or_publish_folder(self):
+        os.remove(os.path.join(self.site, "THIRD-PARTY-NOTICES.md"))
+        os.remove(os.path.join(self.publish, "THIRD-PARTY-NOTICES.md"))
+        self.assertEqual(len(sc.check_notices(self.site, self.publish, self.notices)), 2)
+
+    def test_a_different_copy_is_reported(self):
+        self.write(os.path.join(self.publish, "THIRD-PARTY-NOTICES.md"), "# old\n")
+        problems = sc.check_notices(self.site, self.publish, self.notices)
+        self.assertEqual(len(problems), 1)
+        self.assertIn("differs", problems[0])
+
+    def test_missing_source_file(self):
+        self.assertEqual(len(sc.check_notices(self.site, self.publish, os.path.join(self.vendor, "nope.md"))), 1)
+
+
 class PublishTests(Site):
     def make_publish(self, cname="kits.example.org", nojekyll=True):
         self.page("index.html", "x", root=self.publish)

@@ -22,6 +22,8 @@ REF=refs/heads/$BRANCH
 [ -f "$PUB/index.html" ] || die "no built site in build/site-publish/. Run make publish-site (it builds first), or make site."
 [ -f "$PUB/CNAME" ] && [ "$(cat "$PUB/CNAME")" = "$SITE_DOMAIN" ] || die "build/site-publish/CNAME is missing or is not exactly $SITE_DOMAIN. Run make site again."
 [ -f "$PUB/.nojekyll" ] || die "build/site-publish/.nojekyll is missing. Run make site again."
+[ -f "$PUB/THIRD-PARTY-NOTICES.md" ] || die "build/site-publish/THIRD-PARTY-NOTICES.md is missing (the vendored diagram script's licences ask for it to be published with it). Run make site again."
+cmp -s "$PUB/THIRD-PARTY-NOTICES.md" "$ROOT/THIRD-PARTY-NOTICES.md" || die "build/site-publish/THIRD-PARTY-NOTICES.md differs from the one at the repository root. Run make site again."
 have git || die "git is required"
 
 GIT_DIR_ABS=$(git rev-parse --absolute-git-dir)

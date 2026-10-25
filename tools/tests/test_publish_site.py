@@ -13,6 +13,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 TOOLS = os.path.dirname(HERE)
 ROOT = os.path.dirname(TOOLS)
 DOMAIN = "kits.example.org"
+NOTICES = "# Third-party notices\n"
 
 
 @unittest.skipUnless(shutil.which("git") and shutil.which("sh"), "needs git and sh")
@@ -34,6 +35,8 @@ class PublishSite(unittest.TestCase):
                      "SITE_REPO_BRANCH ?= main\nSITE_REWRITE_REPO_LINKS ?= 1\nSITE_INDEXABLE ?= 0\n" % DOMAIN)
         with open(os.path.join(self.repo, ".gitignore"), "w") as fh:
             fh.write("build/\n")
+        with open(os.path.join(self.repo, "THIRD-PARTY-NOTICES.md"), "w") as fh:
+            fh.write(NOTICES)
         self.env = dict(os.environ, GIT_AUTHOR_NAME="t", GIT_AUTHOR_EMAIL="t@example.org", GIT_COMMITTER_NAME="t",
                         GIT_COMMITTER_EMAIL="t@example.org", PATH=self.stub + os.pathsep + os.environ["PATH"], NO_COLOR="1")
         for k in ("PUBLISH", "SITE_DOMAIN", "SITE_INDEXABLE", "SITE_REPO_BRANCH"):
@@ -63,7 +66,7 @@ class PublishSite(unittest.TestCase):
         pub = os.path.join(self.repo, "build", "site-publish")
         shutil.rmtree(pub, ignore_errors=True)
         os.makedirs(os.path.join(pub, "sub"))
-        for rel, text in (("index.html", html), ("sub/p.html", "p"), ("CNAME", cname), (".nojekyll", "")):
+        for rel, text in (("index.html", html), ("sub/p.html", "p"), ("CNAME", cname), (".nojekyll", ""), ("THIRD-PARTY-NOTICES.md", NOTICES)):
             if rel == "CNAME" and cname is None:
                 continue
             with open(os.path.join(pub, rel), "w") as fh:
@@ -87,11 +90,23 @@ class PublishSite(unittest.TestCase):
         self.assertEqual(self.git("show", "gh-pages:CNAME"), DOMAIN)
         self.assertEqual(self.git("cat-file", "-s", "gh-pages:.nojekyll"), "0")
         self.assertEqual(self.git("show", "gh-pages:sub/p.html"), "p")
-        self.assertEqual(self.git("ls-tree", "--name-only", "gh-pages").split(), [".nojekyll", "CNAME", "index.html", "sub"])
+        self.assertEqual(self.git("ls-tree", "--name-only", "gh-pages").split(), [".nojekyll", "CNAME", "THIRD-PARTY-NOTICES.md", "index.html", "sub"])
         # main, the working tree and the real index are untouched
         self.assertEqual(self.git("rev-parse", "main"), main_before)
         self.assertEqual(self.git("rev-parse", "--abbrev-ref", "HEAD"), "main")
         self.assertEqual(self.git("status", "--porcelain"), "")
+
+    def test_the_third_party_notices_must_be_in_the_staging_folder_and_match_the_repository_copy(self):
+        pub = os.path.join(self.repo, "build", "site-publish", "THIRD-PARTY-NOTICES.md")
+        os.remove(pub)
+        p = self.publish()
+        self.assertNotEqual(p.returncode, 0)
+        self.assertIn("THIRD-PARTY-NOTICES.md is missing", p.stderr)
+        with open(pub, "w") as fh:
+            fh.write("something else\n")
+        p = self.publish()
+        self.assertNotEqual(p.returncode, 0)
+        self.assertIn("differs from the one at the repository root", p.stderr)
 
     def test_publish_on_a_private_repository_is_a_dry_run(self):
         p = self.publish(PUBLISH="1")

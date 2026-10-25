@@ -3,7 +3,7 @@
 #
 #   build/site-src/      a staged copy of book/ in which links that leave the book point to GitHub (tools/site-stage.py)
 #   build/mdbook/        the generated book.toml, the robots head file and the diagram script, so there is no book.toml to keep
-#   build/site/          the website: what you preview locally (python3 -m http.server -d build/site)
+#   build/site/          the website: what you preview locally (python3 -m http.server -d build/site); its root also holds THIRD-PARTY-NOTICES.md
 #   build/site-publish/  build/site plus CNAME and .nojekyll: exactly what make publish-site commits to gh-pages
 #
 # The settings (SITE_DOMAIN, SITE_TITLE, SITE_REPO_URL, SITE_REPO_BRANCH, SITE_REWRITE_REPO_LINKS, SITE_INDEXABLE) are
@@ -73,10 +73,13 @@ else
   say "noindex: every page carries <meta name=\"robots\" content=\"noindex\"> (the default; SITE_INDEXABLE=1 removes it at publish time)."
 fi
 
-# 3. Build, then add the vendored diagram library (mdBook only copies what the book refers to).
+# 3. Build, then add the vendored diagram library (mdBook only copies what the book refers to) and its third-party notices.
 rm -rf "$ROOT/build/site" "$ROOT/build/site-publish"
 "$MDBOOK_BIN" build "$CFG" 2>&1 | sed 's/^/  mdbook: /'
 cp "$VENDOR/mermaid.min.js" "$ROOT/build/site/mermaid.min.js"
+# The licences of that bundle ask for their notice to travel with it: the notices file goes into the site root too.
+[ -f "$ROOT/THIRD-PARTY-NOTICES.md" ] || die "THIRD-PARTY-NOTICES.md is missing at the repository root (it is committed; see tools/site/vendor/README.md)"
+cp "$ROOT/THIRD-PARTY-NOTICES.md" "$ROOT/build/site/THIRD-PARTY-NOTICES.md"
 
 # 4. The publish staging folder: the site, a CNAME file with the domain only, and an empty .nojekyll.
 cp -R "$ROOT/build/site" "$ROOT/build/site-publish"

@@ -13,6 +13,8 @@
   4. Diagrams: the vendored mermaid file in tools/site/vendor/, the copy in the site and the copy in the publish folder
      all match the sha256 recorded in tools/site/vendor/README.md, the licence file is there, and every page with a
      mermaid code block loads the init script.
+  5. Notices: THIRD-PARTY-NOTICES.md is in the site root and in the publish folder, byte-for-byte the one at the repository root
+     (the vendored script is a bundle of other people's code, and its licences ask for the notice to travel with it).
 
 The domain and SITE_INDEXABLE come from the environment (make exports them) or the Makefile. Standard library only.
 Exit status 1 when anything fails.
@@ -222,11 +224,31 @@ def check_diagrams(site, publish, vendor):
     return pages, blocks, problems
 
 
+def check_notices(site, publish, notices):
+    """THIRD-PARTY-NOTICES.md must be in the site and in the publish folder, identical to the repository's own."""
+    name = "THIRD-PARTY-NOTICES.md"
+    if not os.path.isfile(notices):
+        return ["%s is missing at the repository root" % name]
+    with open(notices, "rb") as fh:
+        want = fh.read()
+    problems = []
+    for label, folder in (("the site", site), ("the publish folder", publish)):
+        path = os.path.join(folder, name)
+        if not os.path.isfile(path):
+            problems.append("%s is missing from %s (make site copies it)" % (name, label))
+            continue
+        with open(path, "rb") as fh:
+            if fh.read() != want:
+                problems.append("%s in %s differs from the one at the repository root (rebuild with make site)" % (name, label))
+    return problems
+
+
 def main(argv):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--site", default=os.path.join(ROOT, "build", "site"))
     ap.add_argument("--publish", default=os.path.join(ROOT, "build", "site-publish"))
     ap.add_argument("--vendor", default=VENDOR)
+    ap.add_argument("--notices", default=os.path.join(ROOT, "THIRD-PARTY-NOTICES.md"))
     ap.add_argument("--domain", default=None)
     ap.add_argument("--indexable", default=None)
     args = ap.parse_args(argv)
@@ -262,6 +284,8 @@ def main(argv):
     pages, blocks, problems = check_diagrams(args.site, args.publish, args.vendor)
     report("diagrams", problems, "vendored mermaid matches the recorded sha256 in all three places; %d mermaid blocks on %d pages load the init script"
            % (blocks, pages))
+    report("notices", check_notices(args.site, args.publish, args.notices),
+           "THIRD-PARTY-NOTICES.md is in the site root and the publish folder, identical to the repository's")
     if failed:
         print("\nsite-check: %d problem(s)." % failed)
         return 1
