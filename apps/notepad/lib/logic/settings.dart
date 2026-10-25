@@ -1,4 +1,4 @@
-import 'package:application_kit/application_kit.dart' show SessionSettings;
+import 'package:app_context_kit/app_context_kit.dart' show SessionSettings;
 
 /// The one setting this app has, in the Kit's ConfigStore (through a session overlay for when the file is damaged).
 class Settings {

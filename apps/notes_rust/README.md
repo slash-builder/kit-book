@@ -1,16 +1,16 @@
 # notes_rust
 
-A notes app whose core is Rust. The Flutter interface is a facade; the notes live in a Rust crate, `notes_core`, that stores them as content-addressed blocks with the **Storage Kit** and works inside the **Application Kit** context that the Flutter side opened. The two halves are joined by [flutter_rust_bridge](https://cjycode.com/flutter_rust_bridge/) 2.12.0. It is the first demo app that is not Flutter on a Dart core, and the first to use a Kit written in Rust.
+A notes app whose core is Rust. The Flutter interface is a facade; the notes live in a Rust crate, `notes_core`, that stores them as content-addressed blocks with the **Storage Kit** and works inside the **App Context Kit** context that the Flutter side opened. The two halves are joined by [flutter_rust_bridge](https://cjycode.com/flutter_rust_bridge/) 2.12.0. It is the first demo app that is not Flutter on a Dart core, and the first to use a Kit written in Rust.
 
 | | |
 |---|---|
 | Manifest id | `dev.demo.notes-rust` (macOS bundle id the same; Linux application id `dev.demo.notes_rust`) |
-| Kits | Application Kit (Dart: `AppKit.run`, peers; Rust: the `adopt` API) and Storage Kit (Rust: `PartitionStore`, fragment trees) |
+| Kits | App Context Kit (Dart: `AppContextKit.run`, peers; Rust: the `adopt` API) and Storage Kit (Rust: `PartitionStore`, fragment trees) |
 | Kits in `app.json` | `peers` |
 | Runners | macOS (built and run) and Linux (runner generated; **not built or run**) |
 | Tests | `cargo test` 29, `flutter test` 19 (no native library), `integration_test` 10 (the real library inside the app) |
 
-> **One temporary thing you will meet.** The Storage Kit is private, so fetching it needs a GitHub login: `make setup KITS=all`. The Application Kit's `adopt` API is in the Kit's pinned release candidate (`kits.lock`); [`kits.override`](../../kits.override) is empty.
+> **One temporary thing you will meet.** The Storage Kit is private, so fetching it needs a GitHub login: `make setup KITS=all`. The App Context Kit's `adopt` API is in the Kit's pinned release candidate (`kits.lock`); [`kits.override`](../../kits.override) is empty.
 
 ## Run and test
 
@@ -25,20 +25,20 @@ make frb                           # regenerate the bridge after changing rust/s
 sh apps/notes_rust/tool/smoke.sh   # start the built macOS app for 10 s, check what it wrote, SIGTERM it
 ```
 
-Two copies on one machine need different `APPKIT_DEVICE` values (the app refuses a peer with its own device id: two copies with one device id share one data folder and are one replica) and, because the macOS app is sandboxed, paths inside its container; see the [demo apps guide](../../book/20-guides/demo-apps.md#running-and-testing-any-app). `NOTES_RUST_SEED=3` writes three sample notes into an empty store (the smoke test uses it).
+Two copies on one machine need different `APP_CONTEXT_DEVICE` values (the app refuses a peer with its own device id: two copies with one device id share one data folder and are one replica) and, because the macOS app is sandboxed, paths inside its container; see the [demo apps guide](../../book/20-guides/demo-apps.md#running-and-testing-any-app). `NOTES_RUST_SEED=3` writes three sample notes into an empty store (the smoke test uses it).
 
 ## What it does
 
 * Notes: create, edit (autosave 600 ms after the last keystroke), rename, delete. Each save is a **version**.
 * **Version history**: the clock button opens a sheet of every version this copy knows of; tap one to read it, or restore it. A restore writes one new manifest that points at the old version's existing blocks. No body is copied (a test counts the blocks: +1).
-* **Sync between copies** over the Application Kit's peer layer, with the blocks and every check in Rust. Notes you make on one copy appear on the other; a second copy of a 10 MiB note receives the body once, and a one-byte edit moves about half a percent of it.
+* **Sync between copies** over the App Context Kit's peer layer, with the blocks and every check in Rust. Notes you make on one copy appear on the other; a second copy of a 10 MiB note receives the body once, and a one-byte edit moves about half a percent of it.
 * **Conflicts**: two copies edit one note while apart. The core hands back both versions and never merges; the app's policy (the notepad's) keeps the later edit as the note and the other as "title (conflict from device)", and both copies reach the same result without talking.
 
 ## How the two halves share one context
 
-This was the open question: if the Dart side opens an Application Kit context and the Rust side opens its own, the app announces itself twice and two code paths write one `config.json`. The answer here is the Kit's **adopt** API (`spec/APP-CONTEXT.md` section 8 in the Application Kit):
+This was the open question: if the Dart side opens an App Context Kit context and the Rust side opens its own, the app announces itself twice and two code paths write one `config.json`. The answer here is the Kit's **adopt** API (`spec/APP-CONTEXT.md` section 8 in the App Context Kit):
 
-1. `AppKit.run` opens the context once. That side **owns `config.json` and the roster entry**.
+1. `AppContextKit.run` opens the context once. That side **owns `config.json` and the roster entry**.
 2. `main.dart` opens the core with `FrbNotesCore.open(ctx)`, which passes `jsonEncode(ctx.snapshot())`: the directories, the instance id, the mode. No secrets and no handles.
 3. Rust calls `ContextSnapshot::parse` (strict: unknown schema, missing field or relative path is a typed error that reaches Dart as `bad_snapshot`) and `AppContext::adopt`. An adopter announces nothing, starts no heartbeat, never writes `config.json`, and may create directories under `data` and `state` only. It reads settings through a reader that refuses writes (the core reads `maxNoteBytes` that way).
 4. **One owner per file.** The Rust side owns what it creates under `data`: `blocks/` (the Storage Kit store), `heads-<partition>.json` (which version is current for each note) and `conflicts-<partition>.json`.
@@ -49,7 +49,7 @@ What is awkward: the snapshot has no **account** or **device**, which the Rust s
 
 ## How it stores notes
 
-A note **version** is its body cut into blocks by the Storage Kit (FastCDC chunks under a tree of list nodes) plus a small JSON **manifest** block: title, time, device, the tree root, and the versions it follows. A version's address is the hash of its manifest, so history is a graph and two copies can tell "ahead" from "diverged". The only mutable thing is the **head index**, written last and by rename, so a crash leaves unused blocks at worst. The Storage Kit partition is `BLAKE3("slash-builder/application-kit/storage-partition/v1\n<account>\n<app id>")[0..16]`, the derivation from the Application Kit's earlier storage prototype (a test pins the same value).
+A note **version** is its body cut into blocks by the Storage Kit (FastCDC chunks under a tree of list nodes) plus a small JSON **manifest** block: title, time, device, the tree root, and the versions it follows. A version's address is the hash of its manifest, so history is a graph and two copies can tell "ahead" from "diverged". The only mutable thing is the **head index**, written last and by rename, so a crash leaves unused blocks at worst. The Storage Kit partition is `BLAKE3("slash-builder/application-kit/storage-partition/v1\n<account>\n<app id>")[0..16]`, the derivation from the App Context Kit's earlier storage prototype (a test pins the same value).
 
 ## How sync works
 
@@ -81,7 +81,7 @@ All on 2026-10-24, macOS (Apple silicon, 10 cores), Flutter 3.41.9, Rust 1.98.1,
 | Sync, 10 MiB note, real core in the built app (`integration_test`) | cold sync 10,526,955 bytes (100.4% of the body, 524 blocks); then **one byte changed: 48,395 bytes (0.46%)** in 3 blocks over 3 rounds (a changed manifest, the root list node, one chunk). The Rust test measured 54,866 bytes. The in-memory fake, 2 MiB: 37,763 bytes |
 | Two copies, both halves up | exactly one roster file; the core's instance id equals the Dart context's; `config.json` unchanged by the core (asserted in `integration_test`) |
 | Launch, `tool/smoke.sh` (10 s, sandbox container) | started; one roster file; `blocks/<partition>/`, `heads-<partition>.json` and a 1,240-byte pack under `data`; SIGTERM exit code 143 after the Dart side closed the context; roster file withdrawn; nothing left running |
-| `kill -9` of the app | the roster file stays (the Application Kit's rule: it goes stale after 15 s); the three notes are still in the head index; a relaunch on the same folders starts normally and writes its own roster file |
+| `kill -9` of the app | the roster file stays (the App Context Kit's rule: it goes stale after 15 s); the three notes are still in the head index; a relaunch on the same folders starts normally and writes its own roster file |
 | `kill -9` of the Rust half | The core is in the app's process, so it cannot be killed apart from the Dart half. Tested on the crate alone: `rust/tests/kill9.rs` starts a writer, kills it with SIGKILL three times at different moments, reopens, and reads every note and every version in full |
 
 Not measured: runtime speed of the core against a Dart one, memory, a Linux build, and anything on a machine that was not shared.
@@ -89,7 +89,7 @@ Not measured: runtime speed of the core against a Dart one, memory, a Linux buil
 
 ## What the bridge made awkward
 
-* **Everything is a `Future`.** Each Rust call runs on the bridge's worker pool and is asynchronous in Dart. The Application Kit's coordination hook asks for `hello()` synchronously, so the heads digest is cached in Dart and refreshed after every change (extra state that can go stale). A `#[frb(sync)]` call would block the UI thread whenever the core's lock is held by a long write, so it was not used.
+* **Everything is a `Future`.** Each Rust call runs on the bridge's worker pool and is asynchronous in Dart. The App Context Kit's coordination hook asks for `hello()` synchronously, so the heads digest is cached in Dart and refreshed after every change (extra state that can go stale). A `#[frb(sync)]` call would block the UI thread whenever the core's lock is held by a long write, so it was not used.
 * **Error types.** `Result<T, E>` becomes a Dart exception of the type `E`, which has to be a struct the bridge can see (`CoreError { code, message }`). It is mapped to a `NotesCoreException` in one file (`lib/core/frb_notes_core.dart`) so the UI never sees generated types.
 * **Enums that carry data need `freezed`.** The conflict answer (`KeepLocal`, `Merged { title, body }`, ...) is a Rust enum with data; the generator refused to continue without `freezed` and a `build_runner` step in the Dart project. It was replaced by a flat struct plus a plain enum (`ResolutionChoice`), and the nicer `sealed class` lives on the Dart side. Two shapes for one idea.
 * **A `type R<T> = Result<T, CoreError>` alias breaks the generated Rust** (the generator does not resolve aliases); every signature spells it out.
@@ -109,9 +109,9 @@ Not measured: runtime speed of the core against a Dart one, memory, a Linux buil
 ## Layout
 
 ```text
-app.json, pubspec.yaml            the Application Kit manifest and the Flutter app (flutter_rust_bridge pinned to 2.12.0)
+app.json, pubspec.yaml            the App Context Kit manifest and the Flutter app (flutter_rust_bridge pinned to 2.12.0)
 flutter_rust_bridge.yaml          codegen config
-lib/main.dart                     RustLib.init, then AppKit.run
+lib/main.dart                     RustLib.init, then AppContextKit.run
 lib/core/                         NotesCore (the interface), FrbNotesCore (over the generated binding), FakeNotesCore (in memory)
 lib/coordination/                 the peer-layer hook and the sync engine (Dart: transport and policy)
 lib/ui/, lib/logic/               the notepad's screen, list and autosaver, plus the history sheet

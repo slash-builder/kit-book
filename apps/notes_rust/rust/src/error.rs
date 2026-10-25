@@ -7,10 +7,10 @@ use storage_kit::StorageError;
 
 #[derive(Debug)]
 pub enum Error {
-    /// The snapshot the Dart side passed was refused by the Application Kit's strict parser.
-    Snapshot(application_kit::SnapshotError),
-    /// Something the Application Kit's adopt API refused (a bad name, a directory that cannot be created).
-    Adopt(application_kit::AdoptError),
+    /// The snapshot the Dart side passed was refused by the App Context Kit's strict parser.
+    Snapshot(app_context_kit::SnapshotError),
+    /// Something the App Context Kit's adopt API refused (a bad name, a directory that cannot be created).
+    Adopt(app_context_kit::AdoptError),
     Storage(StorageError),
     Io(std::io::Error),
     Json(serde_json::Error),
@@ -103,7 +103,7 @@ macro_rules! from {
 from!(StorageError, Storage);
 from!(std::io::Error, Io);
 from!(serde_json::Error, Json);
-from!(application_kit::SnapshotError, Snapshot);
-from!(application_kit::AdoptError, Adopt);
+from!(app_context_kit::SnapshotError, Snapshot);
+from!(app_context_kit::AdoptError, Adopt);
 
 pub type Result<T> = std::result::Result<T, Error>;

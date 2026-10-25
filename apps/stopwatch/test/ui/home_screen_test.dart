@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:application_kit/application_kit.dart';
-import 'package:application_kit_flutter/testing.dart';
+import 'package:app_context_kit/app_context_kit.dart';
+import 'package:app_context_kit_flutter/testing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:stopwatch/bootstrap.dart';
@@ -25,7 +25,7 @@ void main() {
 
   final manifest = File('app.json').readAsStringSync();
 
-  // pumpKitApp: scratch dir + mock mode + AppContextScope, the same tree AppKit.run mounts.
+  // pumpKitApp: scratch dir + mock mode + AppContextScope, the same tree AppContextKit.run mounts.
   Future<KitTestContext> launch(WidgetTester t, RecordingNotifier notifier) =>
       pumpKitApp(t, manifest: manifest, app: (ctx) => StopwatchApp(controller: buildController(ctx, notifier, now: () => now)));
 

@@ -1,4 +1,4 @@
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 
 /// running: announced and alive. stale: a roster file is there but the heartbeat lapsed or the process is gone
 /// (a crash left it behind). gone: was running and its file was withdrawn (a clean exit). notRunning: known from a

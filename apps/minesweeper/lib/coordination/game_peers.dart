@@ -1,7 +1,7 @@
 /// Glue between the app (controller, notice banner) and the pure hook in `game_hook.dart`. No Flutter.
 library;
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 
 import 'game_hook.dart';
 

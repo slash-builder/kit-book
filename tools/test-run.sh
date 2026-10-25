@@ -98,7 +98,7 @@ fast_suites() {
     fi
   done < "$LOGDIR/.kits"
   rm -f "$LOGDIR/.kits"
-  if [ ! -d "$KITS_DIR/application-kit" ]; then
+  if [ ! -d "$KITS_DIR/app-context-kit" ]; then
     say "  (no Kit fetched: run make setup first. KITS=all while the Kits are private.)"
   fi
   say "Maintainer tools:"
@@ -117,8 +117,8 @@ fast_suites() {
       if (cd "$a/rust" && cargo metadata --format-version 1 >/dev/null 2>&1); then run_suite "apps/$(basename "$a")/rust: cargo test" cargo "$a/rust" cargo test
       else skip_suite "apps/$(basename "$a")/rust: cargo test" "cargo cannot resolve the crate; a Kit it depends on is not fetched (make setup KITS=all)"; fi
     fi
-    if [ -d "$KITS_DIR/application-kit" ]; then run_suite "apps/$(basename "$a"): flutter test" dart "$a" flutter test -r expanded
-    else skip_suite "apps/$(basename "$a"): flutter test" "application-kit is not fetched"; fi
+    if [ -d "$KITS_DIR/app-context-kit" ]; then run_suite "apps/$(basename "$a"): flutter test" dart "$a" flutter test -r expanded
+    else skip_suite "apps/$(basename "$a"): flutter test" "app-context-kit is not fetched"; fi
   done
 }
 
@@ -140,7 +140,7 @@ integration_suites() {
     a=${a%/}
     [ -d "$a/integration_test" ] || continue
     label="apps/$(basename "$a"): flutter test integration_test (the built app)"
-    if [ ! -d "$KITS_DIR/application-kit" ]; then skip_suite "$label" "application-kit is not fetched"
+    if [ ! -d "$KITS_DIR/app-context-kit" ]; then skip_suite "$label" "app-context-kit is not fetched"
     elif [ -f "$a/rust/Cargo.toml" ] && [ ! -d "$KITS_DIR/storage-kit" ]; then skip_suite "$label" "storage-kit is not fetched (make setup KITS=all)"
     elif [ "$(os_family)" = linux ] && [ -z "${DISPLAY:-}" ] && [ -z "${WAYLAND_DISPLAY:-}" ]; then skip_suite "$label" "no display (on Linux run it under xvfb-run)"
     elif [ "$(os_family)" = other ]; then skip_suite "$label" "no desktop target on this system"
@@ -152,8 +152,8 @@ integration_suites() {
   # 2. A resource-broker daemon: the render-queue and Rust tests run for real when VENUE_TOKEN_FILE names a token.
   if [ -z "${VENUE_TOKEN_FILE:-}" ]; then
     skip_suite "resource-broker daemon tests" "VENUE_TOKEN_FILE is not set (the fast suites skip these tests themselves)"
-  elif [ ! -d "$KITS_DIR/application-kit" ]; then
-    skip_suite "resource-broker daemon tests" "application-kit is not fetched"
+  elif [ ! -d "$KITS_DIR/app-context-kit" ]; then
+    skip_suite "resource-broker daemon tests" "app-context-kit is not fetched"
   else
     run_suite "apps/render-queue: flutter test (real daemon)" dart "$ROOT/apps/render-queue" flutter test -r expanded test/venue_real_test.dart
   fi

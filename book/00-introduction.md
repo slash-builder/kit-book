@@ -2,9 +2,9 @@
 
 ## What a Kit is
 
-A **Kit** is a focused piece of SlashBuilder's platform that owns one job and says plainly what it will not do. The Application Kit owns an app's identity, its folders for files and settings, test and scratch modes, and a presence entry other apps can read. The Venue (a resource broker) owns machine time on a shared computer. A storage Kit owns where bytes live; an identity Kit owns who is allowed to do what. Each Kit lives in its own repository with its own tests and documentation, and an app is built by composing the ones it needs.
+A **Kit** is a focused piece of SlashBuilder's platform that owns one job and says plainly what it will not do. The App Context Kit owns an app's identity, its folders for files and settings, test and scratch modes, and a presence entry other apps can read. The Venue (a resource broker) owns machine time on a shared computer. A storage Kit owns where bytes live; an identity Kit owns who is allowed to do what. Each Kit lives in its own repository with its own tests and documentation, and an app is built by composing the ones it needs.
 
-The names *Application Kit* and *Venue* are provisional; they may change.
+The names *App Context Kit* and *Venue* are provisional; they may change.
 
 ## What this repository is
 
@@ -15,19 +15,19 @@ The Kits themselves are not copied in. `make setup` downloads each one, at the c
 ## How to use this book
 
 * **Read [Start here](10-start-here.md) first.** It takes you from an empty folder to a running app in four commands.
-* **Then read the guides** in `20-guides/`. The [demo apps guide](20-guides/demo-apps.md) shows the Kits composed into real apps, with measurements of what each Kit saved. The [guide on fitting the Application Kit to other Kits](20-guides/fitting-the-application-kit-to-other-kits.md) shows where its design meets its neighbours.
+* **Then read the guides** in `20-guides/`. The [demo apps guide](20-guides/demo-apps.md) shows the Kits composed into real apps, with measurements of what each Kit saved. The [guide on fitting the App Context Kit to other Kits](20-guides/fitting-the-app-context-kit-to-other-kits.md) shows where its design meets its neighbours.
 * **Reference pages** live in `90-reference/`: every [make target](90-reference/make-targets.md) and a [glossary](90-reference/glossary.md).
-* **The Kit catalog** lives in `30-kits/`: a status card for every Kit in the registry, including the ones that are not public yet. See [Kits](30-kits/README.md). A Kit's own reference pages are pulled into the book from the Kit, so you never need its repository to read them; today that is the [Application Kit's reference](30-kits/application-kit/index.md), and the others are still to come.
+* **The Kit catalog** lives in `30-kits/`: a status card for every Kit in the registry, including the ones that are not public yet. See [Kits](30-kits/README.md). A Kit's own reference pages are pulled into the book from the Kit, so you never need its repository to read them; today that is the [App Context Kit's reference](30-kits/app-context-kit/index.md), and the others are still to come.
 
 ## What is written and what is not
 
 | Section | State |
 |---|---|
 | Introduction, start here | Written |
-| Demo apps guide, fitting the Application Kit to other Kits | Written; moved here from the Application Kit's own documentation and reworded for a wider audience |
+| Demo apps guide, fitting the App Context Kit to other Kits | Written; moved here from the App Context Kit's own documentation and reworded for a wider audience |
 | Make targets, glossary | Written |
 | Kit catalog | Written, and generated from the registry |
-| Per-Kit reference | Pulled from the Kits themselves (see [Make targets](90-reference/make-targets.md#docs-pull)). The Application Kit's is in; no other Kit has reference pages yet |
+| Per-Kit reference | Pulled from the Kits themselves (see [Make targets](90-reference/make-targets.md#docs-pull)). The App Context Kit's is in; no other Kit has reference pages yet |
 | A demo app with a Rust core | Written: [notes_rust](../apps/notes_rust/README.md), the seventh demo app. The other six are Flutter on a Dart core |
 
 ## How much to trust it

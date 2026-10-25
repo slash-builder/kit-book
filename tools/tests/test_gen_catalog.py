@@ -146,7 +146,7 @@ VISIBILITY = {
     "slash-builder/delta-kit": ("private", "-"),
     "slash-builder/banked-kit": ("private", "-"),
     "slash-builder/pending-kit": ("missing", "-"),
-    "slash-builder/application-kit": ("private", "-"),
+    "slash-builder/app-context-kit": ("private", "-"),
 }
 
 
@@ -180,7 +180,7 @@ class GeneratorTestCase(unittest.TestCase):
             return fh.read()
 
     def write_tsv(self, visibility):
-        names = {"slash-builder/application-kit": "Application Kit"}
+        names = {"slash-builder/app-context-kit": "App Context Kit"}
         rows = [{"name": names.get(repo) or repo.split("/")[1].replace("-", " ").title(), "visibility": v,
                  "date": "2026-01-01", "docs": "unknown" if d == "-" else d}
                 for repo, (v, d) in visibility.items()]
@@ -321,14 +321,14 @@ class CardTests(GeneratorTestCase):
         self.assertIn("has not been pulled into the book yet", section)
         self.assertNotIn("not implemented", section)
 
-    def test_not_in_the_registry_lists_the_application_kits_pulled_pages(self):
+    def test_not_in_the_registry_lists_the_app_context_kits_pulled_pages(self):
         self.run_gen()
         self.assertNotIn("reference documentation", self.read("book", "30-kits", "not-in-the-registry.md"))
-        self.pull("application-kit")
+        self.pull("app-context-kit")
         self.run_gen()
         page = self.read("book", "30-kits", "not-in-the-registry.md")
-        self.assertIn("* [Reference index](application-kit/index.md)", page)
-        self.assertIn("* [Overview](application-kit/overview.md)", page)
+        self.assertIn("* [Reference index](app-context-kit/index.md)", page)
+        self.assertIn("* [Overview](app-context-kit/overview.md)", page)
 
     def test_will_not_do_comes_only_from_the_registry_and_is_cleaned(self):
         self.run_gen()
@@ -400,7 +400,7 @@ class IndexTests(GeneratorTestCase):
     def test_not_in_the_registry_page_says_kit_book_is_not_a_kit(self):
         self.run_gen()
         page = self.read("book", "30-kits", "not-in-the-registry.md")
-        self.assertIn("Application Kit", page)
+        self.assertIn("App Context Kit", page)
         self.assertIn("not a Kit", page)
         self.assertNotIn("github.com", page)                                  # the repository is private
 

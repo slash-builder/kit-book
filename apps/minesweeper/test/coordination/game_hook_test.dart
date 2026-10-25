@@ -5,7 +5,7 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:minesweeper/coordination/game_hook.dart';
 import 'package:minesweeper/coordination/game_peers.dart';
@@ -54,7 +54,7 @@ void main() {
   Future<Copy> open(String device, {AppManifest? m, Map<String, String> env = const {}}) async {
     final dir = Directory('${tmp.path}/$device')..createSync(recursive: true);
     final ctx = await AppContext.open(m ?? manifest,
-        env: {'APPKIT_SCRATCH': dir.path, 'APPKIT_MODE': 'mock', 'APPKIT_DEVICE': device, 'HOME': dir.path, ...env}, announce: false);
+        env: {'APP_CONTEXT_SCRATCH': dir.path, 'APP_CONTEXT_MODE': 'mock', 'APP_CONTEXT_DEVICE': device, 'HOME': dir.path, ...env}, announce: false);
     final c = GameController(storage: GameStorage(ctx.dirs.data), settings: Settings(SessionSettings(ctx.config)), rng: Random(7));
     final p = GamePeers.start(ctx, c, network: net);
     c.peers = p;
@@ -378,7 +378,7 @@ void main() {
       final other = AppManifest.parse(File('app.json').readAsStringSync().replaceAll('dev.demo.minesweeper', 'dev.demo.notepad'));
       final (a, b) = await pair();
       final notes = await open('laptop-notes', m: other);
-      final stranger = await open('stranger', env: {'APPKIT_ACCOUNT': 'someone-else'});
+      final stranger = await open('stranger', env: {'APP_CONTEXT_ACCOUNT': 'someone-else'});
       playSome(a);
       await a.hook.offer(a.peer('desktop'), 'handoff');
       await until(() => b.hook.incoming.isNotEmpty);
@@ -396,7 +396,7 @@ void main() {
     test('peers not declared in app.json: starting fails loudly with the Kit\'s error', () async {
       final undeclared = AppManifest.parse(File('app.json').readAsStringSync().replaceAll('"kits": ["peers"]', '"kits": []'));
       final dir = Directory('${tmp.path}/undeclared')..createSync();
-      final ctx = await AppContext.open(undeclared, env: {'APPKIT_SCRATCH': dir.path, 'APPKIT_MODE': 'mock', 'HOME': dir.path}, announce: false);
+      final ctx = await AppContext.open(undeclared, env: {'APP_CONTEXT_SCRATCH': dir.path, 'APP_CONTEXT_MODE': 'mock', 'HOME': dir.path}, announce: false);
       final c = GameController(storage: GameStorage(ctx.dirs.data), settings: Settings(SessionSettings(ctx.config)));
       expect(() => GamePeers.start(ctx, c, network: net), throwsA(isA<KitNotDeclared>()));
       await ctx.close();
@@ -406,7 +406,7 @@ void main() {
       final dir = Directory('${tmp.path}/real')..createSync();
       final blocker = File('${tmp.path}/file')..writeAsStringSync('x');
       final ctx = await AppContext.open(manifest,
-          env: {'APPKIT_SCRATCH': dir.path, 'APPKIT_MODE': 'real', 'HOME': dir.path, 'APPKIT_PEERS_DIR': blocker.path}, announce: false);
+          env: {'APP_CONTEXT_SCRATCH': dir.path, 'APP_CONTEXT_MODE': 'real', 'HOME': dir.path, 'APP_CONTEXT_PEERS_DIR': blocker.path}, announce: false);
       final c = GameController(storage: GameStorage(ctx.dirs.data), settings: Settings(SessionSettings(ctx.config)));
       final p = GamePeers.start(ctx, c);
       await p.handle.started;

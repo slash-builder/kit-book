@@ -29,7 +29,7 @@ import 'dart:convert';
 import 'dart:io' show FileSystemException;
 import 'dart:typed_data';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 
 import '../kit_gaps/blob_pull.dart';
 import '../logic/note.dart';

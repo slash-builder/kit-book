@@ -34,6 +34,6 @@ of the package on npm). This repository does not review them one by one.
 1. Fetch the new tarball from the registry over HTTPS and check its sha1 against `https://registry.npmjs.org/mermaid/<version>` (`dist.shasum`).
 2. Extract `package/dist/mermaid.min.js` and `package/LICENSE` from it. Replace the two files here.
 3. Update the version, date, tarball sha1 and both checksums above.
-4. Run `make site` and `make site-check`, and open a page with a diagram (for example the Application Kit's architecture page) in a browser, in the light and the dark theme.
+4. Run `make site` and `make site-check`, and open a page with a diagram (for example the App Context Kit's architecture page) in a browser, in the light and the dark theme.
 
 Nothing else in `tools/site/` is third party. The code that draws the diagrams on the page is `tools/site/mermaid-init.js`.

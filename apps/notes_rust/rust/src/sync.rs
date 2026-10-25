@@ -1,4 +1,4 @@
-//! The sync primitive. The transport is not here (the Dart side carries bytes over the Application Kit's peer layer); what
+//! The sync primitive. The transport is not here (the Dart side carries bytes over the App Context Kit's peer layer); what
 //! is here is everything that needs the blocks:
 //!
 //! * [`NotesStore::heads_digest`]: one hash for "everything I have", sent in the peer hello.

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:application_kit_flutter/application_kit_flutter.dart';
+import 'package:app_context_kit_flutter/app_context_kit_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:interface_candidates/interface_candidates.dart';
 

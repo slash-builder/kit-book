@@ -1,4 +1,4 @@
-//! The idea this app takes from the Application Kit's storage prototype: ONE `(account, app id)` pair names the app's slice
+//! The idea this app takes from the App Context Kit's storage prototype: ONE `(account, app id)` pair names the app's slice
 //! of the Storage Kit.
 //!
 //! ```text
@@ -12,7 +12,7 @@
 //!   same account share one, which is what lets them sync by content address.
 //! * It is not access control: anyone who knows the two strings can compute the partition.
 //!
-//! The Application Kit does not hand out an account to the Rust side (the snapshot has none), so the Dart owner passes
+//! The App Context Kit does not hand out an account to the Rust side (the snapshot has none), so the Dart owner passes
 //! `ctx.peerAccount`, the same account the peer layer scopes by. That is a gap noted in the README.
 
 use storage_kit::PartitionId;
@@ -97,7 +97,7 @@ mod tests {
         );
     }
 
-    /// The same derivation, string for string, as the Application Kit's storage prototype, whose test pins this value
+    /// The same derivation, string for string, as the App Context Kit's storage prototype, whose test pins this value
     /// (account "00000000-0000-0000-0000-000000000001", app "dev.demo.notepad"). Changing the domain string or the layout
     /// would re-home every user's data.
     #[test]

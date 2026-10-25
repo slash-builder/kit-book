@@ -100,6 +100,7 @@ for f in $(grep -E '(\.md$|^LICENSE)' "$FILES"); do
   awk -v F="$f" '
     function strip(s) {
       gsub(/Douglas Lockamy/, "", s); gsub(/Slash[ ]?Builder/, "", s); gsub(/Lockamy Studios/, "", s)
+      gsub(/App Context Kit/, "", s)   # the name of the Kit (two capitalised words) is not a person
       gsub(/Apache License/, "", s); gsub(/Creative Commons/, "", s); gsub(/Attribution [0-9]/, "", s)
       # ordinary capitalised words that start sentences or name things in licence text are not people
       gsub(/(^|[^A-Za-z])(The|This|That|These|Kits?|Code|Documentation|Licen[cs]e[sd]?|Apache|Application|Venue|Attribution|Full|Human|Summary|Under|Your|You|Share|Adapt|Public|Domain|Hearth|Message|Storage|Identity|Interface|Fabric)([^A-Za-z]|$)/, " ", s)

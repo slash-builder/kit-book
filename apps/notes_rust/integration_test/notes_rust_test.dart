@@ -1,11 +1,11 @@
 // Runs INSIDE the built app (`flutter test integration_test -d macos`), so the Rust core is the real native library and the
 // Storage Kit writes real packfiles. The same contract and sync scenarios as test/, plus what only the real pair can show: one
-// Application Kit context shared by the Dart UI and the Rust core.
+// App Context Kit context shared by the Dart UI and the Rust core.
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:application_kit/application_kit.dart';
-import 'package:application_kit_flutter/testing.dart';
+import 'package:app_context_kit/app_context_kit.dart';
+import 'package:app_context_kit_flutter/testing.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -34,7 +34,7 @@ void main() {
       if (root.existsSync()) root.deleteSync(recursive: true);
     });
     final ctx = await AppContext.open(AppManifest.parse(manifestText),
-        env: {'APPKIT_SCRATCH': root.path, 'APPKIT_MODE': 'mock', 'APPKIT_DEVICE': device, 'HOME': root.path}, announce: false);
+        env: {'APP_CONTEXT_SCRATCH': root.path, 'APP_CONTEXT_MODE': 'mock', 'APP_CONTEXT_DEVICE': device, 'HOME': root.path}, announce: false);
     return FrbNotesCore.open(ctx);
   });
 
@@ -56,12 +56,12 @@ void main() {
   });
 
   // ---- one context, two halves ----
-  group('one Application Kit context shared by the Dart UI and the Rust core', () {
+  group('one App Context Kit context shared by the Dart UI and the Rust core', () {
     testWidgets('the app running with both halves up has exactly one roster entry, one instance id, and Dart wrote config.json', (t) async {
       final kit = await pumpKitApp(t,
           manifest: manifestText,
           announce: true,
-          env: {'APPKIT_DEVICE': 'laptop', 'APPKIT_MODE': 'real'},
+          env: {'APP_CONTEXT_DEVICE': 'laptop', 'APP_CONTEXT_MODE': 'real'},
           app: (_) => NotesApp(openCore: FrbNotesCore.open, autosaveDelay: const Duration(milliseconds: 100), peers: false));
       for (var i = 0; i < 100; i++) {
         await t.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 20)));

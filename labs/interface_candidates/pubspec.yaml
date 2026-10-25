@@ -1,6 +1,6 @@
 name: interface_candidates
 description: >-
-  CANDIDATE Interface Kit components, derived from what six Application Kit
+  CANDIDATE Interface Kit components, derived from what six App Context Kit
   demo apps and a larger SlashBuilder app actually duplicate. Plain Material, themed only from
   Theme.of(context). Not the Interface Kit; its maintainers decide what gets promoted.
 version: 0.0.1

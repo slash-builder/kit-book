@@ -1,7 +1,7 @@
-//! The core as one object: an adopted Application Kit context plus the Storage Kit slice for `(account, app id)`.
+//! The core as one object: an adopted App Context Kit context plus the Storage Kit slice for `(account, app id)`.
 //!
-//! **Who owns what.** The Dart UI opened the Application Kit context (`AppKit.run`); it owns `config.json` and the roster
-//! entry. This side adopted a snapshot of it ([`application_kit::AppContext::adopt`]): it announces nothing, never writes
+//! **Who owns what.** The Dart UI opened the App Context Kit context (`AppContextKit.run`); it owns `config.json` and the roster
+//! entry. This side adopted a snapshot of it ([`app_context_kit::AppContext::adopt`]): it announces nothing, never writes
 //! settings (it only reads `maxNoteBytes` through the Kit's read-only reader), and owns the files it creates under `data`:
 //! `blocks/` (the Storage Kit store), `heads-<partition>.json` and `conflicts-<partition>.json`.
 //!
@@ -9,7 +9,7 @@
 
 use std::sync::{Mutex, MutexGuard};
 
-use application_kit::{AdoptedContext, AppContext, ContextSnapshot};
+use app_context_kit::{AdoptedContext, AppContext, ContextSnapshot};
 use storage_kit::Hash;
 
 use crate::error::{Error, Result};

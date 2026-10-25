@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:launcher/kit_gaps/manifest_scan.dart';
 import 'package:launcher/kit_gaps/pid_alive.dart';
@@ -167,7 +167,7 @@ void main() {
 
   group('with the real AppContext', () {
     test('an app announced by the Kit shows as running, then gone after it closes', () async {
-      final env = {'APPKIT_SCRATCH': tmp.path, 'APPKIT_MODE': 'mock', 'HOME': tmp.path};
+      final env = {'APP_CONTEXT_SCRATCH': tmp.path, 'APP_CONTEXT_MODE': 'mock', 'HOME': tmp.path};
       final self = AppManifest.fromJson(manifestJson('dev.demo.other', 'Other'));
       final other = await AppContext.open(self, env: env, heartbeat: const Duration(milliseconds: 50));
       final c = LauncherController(roster: other.roster, appsDir: null, nodes: other.venue.nodes);
@@ -182,7 +182,7 @@ void main() {
     });
 
     test('two instances of one app are two rows, and the first to quit no longer removes the other', () async {
-      final env = {'APPKIT_SCRATCH': tmp.path, 'APPKIT_MODE': 'mock', 'HOME': tmp.path};
+      final env = {'APP_CONTEXT_SCRATCH': tmp.path, 'APP_CONTEXT_MODE': 'mock', 'HOME': tmp.path};
       final m = AppManifest.fromJson(manifestJson('dev.demo.twin', 'Twin'));
       final a = await AppContext.open(m, env: env, heartbeat: const Duration(seconds: 30));
       final b = await AppContext.open(m, env: env, heartbeat: const Duration(seconds: 30));

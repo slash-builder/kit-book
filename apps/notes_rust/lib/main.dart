@@ -1,11 +1,11 @@
-import 'package:application_kit_flutter/application_kit_flutter.dart';
+import 'package:app_context_kit_flutter/app_context_kit_flutter.dart';
 import 'package:flutter/material.dart';
 
 import 'core/frb_notes_core.dart';
 import 'src/rust/frb_generated.dart';
 import 'ui/notes_app.dart';
 
-/// `AppKit.run` opens the Application Kit context ONCE (the roster entry, the instance id, `config.json` are this side's).
+/// `AppContextKit.run` opens the App Context Kit context ONCE (the roster entry, the instance id, `config.json` are this side's).
 /// The Rust core is then opened by handing it that context's snapshot: it adopts the context and opens none of its own.
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +15,7 @@ Future<void> main() async {
     runApp(_NativeMissing(error: e));
     return;
   }
-  await AppKit.run(manifestAsset: 'app.json', app: (_) => NotesApp(openCore: FrbNotesCore.open));
+  await AppContextKit.run(manifestAsset: 'app.json', app: (_) => NotesApp(openCore: FrbNotesCore.open));
 }
 
 /// Shown when the native library cannot be loaded.

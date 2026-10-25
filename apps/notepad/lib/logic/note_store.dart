@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:application_kit/application_kit.dart' show AppJsonFile;
+import 'package:app_context_kit/app_context_kit.dart' show AppJsonFile;
 
 import 'note.dart';
 

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 
 /// The instance id the helpers use unless a test says otherwise (any 8 lowercase hex digits).
 const defaultInstance = 'a0000001';

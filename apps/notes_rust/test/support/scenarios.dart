@@ -5,7 +5,7 @@ library;
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'copy.dart';

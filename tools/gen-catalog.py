@@ -15,8 +15,8 @@ What it writes (all under book/30-kits/ unless said otherwise)
   README.md               the catalog index: every Kit by status group, with the "Has real code today" marker
   status-vocabulary.md    what each status means
   not-in-the-registry.md  candidates that are NOT registered Kits (so not in the catalog), and this book
-  (a card's "Reference docs" section, and the Application Kit's section there, list the pages that tools/pull-docs.py
-   has pulled into book/30-kits/<slug>/reference/ and book/30-kits/application-kit/, when those exist)
+  (a card's "Reference docs" section, and the App Context Kit's section there, list the pages that tools/pull-docs.py
+   has pulled into book/30-kits/<slug>/reference/ and book/30-kits/app-context-kit/, when those exist)
   ../SUMMARY.md           only the block between <!-- catalog:start --> and <!-- catalog:end --> (added if missing)
   ../../tools/kit-visibility.tsv   who is public, as `gh` answered on the day (so --offline can reproduce the output);
                           keyed by Kit name, it never records a repository slug or an org name
@@ -409,7 +409,7 @@ def resolve_related(kits):
 # ---------------------------------------------------------------------------------------------------------------
 
 # Candidates that are not registered Kits. They get a line in not-in-the-registry.md, never a card.
-APPLICATION_KIT = ("Application Kit", "slash-builder/application-kit")
+APP_CONTEXT_KIT = ("App Context Kit", "slash-builder/app-context-kit")
 
 
 def run_gh(gh, args):
@@ -478,7 +478,7 @@ def repos_to_check(kits):
         if own:
             entries.append((k.name, own))
         entries.extend(k.member_repos)
-    entries.append(APPLICATION_KIT)
+    entries.append(APP_CONTEXT_KIT)
     for label, repo in entries:
         if repo in seen:
             continue
@@ -721,7 +721,7 @@ def render_vocabulary(kits):
 
 
 def render_not_in_registry(vis, root=None):
-    name, repo = APPLICATION_KIT
+    name, repo = APP_CONTEXT_KIT
     state = vis.get(repo, ("unknown", "unknown"))[0]
     if state == "public":
         source = github_link(repo)
@@ -735,13 +735,13 @@ def render_not_in_registry(vis, root=None):
            "## %s (provisional name)" % name, "",
            "* **Registered Kit:** no, so it is not in the catalog",
            "* **Source:** %s" % source, "",
-           "The Application Kit is the root namespace for one running app: its identity, its folders for files and settings, "
+           "The App Context Kit is the root namespace for one running app: its identity, its folders for files and settings, "
            "test and scratch modes, a roster entry other apps can read, a session with a resource broker, and an opt-in way "
            "to find other copies of the app. The seven demo apps in this book are built on it (six are Flutter on a Dart core; "
            "notes_rust is a Flutter UI over a Rust core that shares the UI's context through the Kit's adopt API), and the "
            "[demo apps guide](../20-guides/demo-apps.md) measures what it saved and what it still leaves for an app to write. "
            "Its name is provisional, and it is a candidate for the registry rather than a member of it.", ""]
-    pulled = pulled_pages(root, "application-kit")
+    pulled = pulled_pages(root, "app-context-kit")
     if pulled:
         out += ["Its own reference documentation is pulled into this book from the Kit, at the commit this book pins "
                 "(`make docs-pull`), so you can read it without access to the Kit's repository. It is the only Kit pulled so far. "

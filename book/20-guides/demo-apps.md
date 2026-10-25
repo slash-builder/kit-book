@@ -1,6 +1,6 @@
 # Demo apps
 
-Seven small Flutter desktop apps in `apps/` that use the Application Kit (the name is provisional; so is the name of the resource broker the Kit talks to, Venue). They were written to measure the Kit: what it removes from an app, what it still leaves for the app to write, and where it falls short.
+Seven small Flutter desktop apps in `apps/` that use the App Context Kit (the name is provisional; so is the name of the resource broker the Kit talks to, Venue). They were written to measure the Kit: what it removes from an app, what it still leaves for the app to write, and where it falls short.
 
 One rule shaped them: **an app does not edit the Kit.** If an app needs something the Kit lacks, it writes it under `lib/kit_gaps/` with a `// KIT GAP:` comment. The line count of those directories is the measurement of what the Kit is missing. When the Kit absorbs a gap, the app deletes its copy.
 
@@ -12,15 +12,15 @@ One rule shaped them: **an app does not edit the Kit.** If an app needs somethin
 | [stopwatch](#stopwatch) | `dev.demo.stopwatch` | State that survives restart; a shared countdown and a signal between copies | `venue`, `peers` | 49 | 10 | 35 | 332 |
 | [render-queue](#render-queue) | `dev.demo.render-queue` | A session with a resource broker: holds, refusals, waiting | `venue` | 38 passed, 5 skipped | 11 | 0 | none |
 | [launcher](#launcher) | `dev.demo.launcher` | The roster: who is running on this machine | `venue` | 24 | 9 | 50 | none |
-| [notes_rust](#notes_rust) | `dev.demo.notes-rust` | A Flutter UI over a **Rust core** that uses the Storage Kit and shares one Application Kit context with the UI; sync with the blocks and checks in Rust | `peers` | 29 `cargo test` + 19 + 10 integration | 35 | 81 | 416 |
+| [notes_rust](#notes_rust) | `dev.demo.notes-rust` | A Flutter UI over a **Rust core** that uses the Storage Kit and shares one App Context Kit context with the UI; sync with the blocks and checks in Rust | `peers` | 29 `cargo test` + 19 + 10 integration | 35 | 81 | 416 |
 
-How the numbers were taken for the first six apps, on 2026-10-24 with Flutter 3.41.9 and Dart 3.11.5 on macOS (Apple silicon): tests are the result of `flutter test` in each app directory; `main.dart` and gap lines are `wc -l` (raw lines, comments and blanks included) of `lib/main.dart` and `lib/kit_gaps/*.dart`; coordination lines are `wc -l` of `lib/coordination/*.dart`. The five skipped render-queue tests need a running resource-broker daemon and skip themselves when no token is set. The `venue` entry in `kits` is a label: only `peers` is checked against the `kits` list today (see the Application Kit's architecture guide, section 1).
+How the numbers were taken for the first six apps, on 2026-10-24 with Flutter 3.41.9 and Dart 3.11.5 on macOS (Apple silicon): tests are the result of `flutter test` in each app directory; `main.dart` and gap lines are `wc -l` (raw lines, comments and blanks included) of `lib/main.dart` and `lib/kit_gaps/*.dart`; coordination lines are `wc -l` of `lib/coordination/*.dart`. The five skipped render-queue tests need a running resource-broker daemon and skip themselves when no token is set. The `venue` entry in `kits` is a label: only `peers` is checked against the `kits` list today (see the App Context Kit's architecture guide, section 1).
 
 Contents: [running and testing any app](#running-and-testing-any-app) · [the seven apps](#calculator) · [how much code the Kit saved](#how-much-code-the-kit-saved) · [run two copies and watch them find each other](#run-two-copies-and-watch-them-find-each-other)
 
 ## Running and testing any app
 
-Each app is a standard Flutter project. Desktop runners exist for macOS and Linux; the apps were run on macOS only. Every command below assumes you are in the repository root, and that you have run `make setup` once (add `KITS=all` while the Application Kit is private) so the Kits the apps depend on are in `.kits/`.
+Each app is a standard Flutter project. Desktop runners exist for macOS and Linux; the apps were run on macOS only. Every command below assumes you are in the repository root, and that you have run `make setup` once (add `KITS=all` while the App Context Kit is private) so the Kits the apps depend on are in `.kits/`.
 
 The Makefile wraps the common cases: `make test-fast` runs every app's tests, `make app APP=stopwatch` builds one app for this computer and `make run APP=stopwatch` runs it. The plain Flutter commands work too:
 
@@ -35,26 +35,26 @@ An app reads its settings from environment variables before it opens. These are 
 
 | Variable | Effect |
 |---|---|
-| `APPKIT_SCRATCH=/some/dir` | Puts the app's data, config, state, cache and runtime directories, and the roster, under `/some/dir`. Use it to run without touching your real settings |
-| `PREFIX_MODE=mock` (or `APPKIT_MODE=mock`) | Mock mode: the resource-broker session is an in-memory fake, and peers use the fake network |
-| `APPKIT_DEVICE=laptop` | The name of this copy for peers. Give each copy its own |
-| `APPKIT_ACCOUNT=home` | The account half of the peer scope key. Default `local` |
-| `APPKIT_PEERS_DIR=/some/dir` | Where copies on one machine announce themselves. Must be the same for every copy |
-| `APPKIT_ROSTER_DIR=/some/dir` | Where the app writes its presence file. Beats `APPKIT_SCRATCH` |
+| `APP_CONTEXT_SCRATCH=/some/dir` | Puts the app's data, config, state, cache and runtime directories, and the roster, under `/some/dir`. Use it to run without touching your real settings |
+| `PREFIX_MODE=mock` (or `APP_CONTEXT_MODE=mock`) | Mock mode: the resource-broker session is an in-memory fake, and peers use the fake network |
+| `APP_CONTEXT_DEVICE=laptop` | The name of this copy for peers. Give each copy its own |
+| `APP_CONTEXT_ACCOUNT=home` | The account half of the peer scope key. Default `local` |
+| `APP_CONTEXT_PEERS_DIR=/some/dir` | Where copies on one machine announce themselves. Must be the same for every copy |
+| `APP_CONTEXT_ROSTER_DIR=/some/dir` | Where the app writes its presence file. Beats `APP_CONTEXT_SCRATCH` |
 | `PREFIX_DATA_DIR`, `PREFIX_CONFIG_DIR`, ... | Override one directory exactly |
 
-Details are in the Application Kit's specification (`spec/APP-CONTEXT.md` in that Kit), sections 2 and 6.3.
+Details are in the App Context Kit's specification (`spec/APP-CONTEXT.md` in that Kit), sections 2 and 6.3.
 
 `flutter run -d macos` starts the app as a child of the Flutter tool, which passes your shell's variables on (this is from reading the tool's source; no window was opened for this page). An app started from Finder or the Dock does not see your shell's variables.
 
 **The macOS sandbox rule.** Three apps have the macOS App Sandbox on: calculator, minesweeper and notepad. The other three (launcher, render-queue, stopwatch) have it off. A sandboxed app can only write inside its own container, `~/Library/Containers/<bundle id>/Data/`, and that container also has its own `HOME` and `TMPDIR`. Two things follow:
 
-- A path outside the container, such as `/tmp/...`, in `APPKIT_SCRATCH` or `APPKIT_PEERS_DIR` does not work for a sandboxed app. With `APPKIT_SCRATCH` the app cannot create its directories: the companion shows its startup error screen (the calculator's first version, before the companion package, crashed with an unhandled `PathAccessException`). With `APPKIT_PEERS_DIR` the process stays up and works alone, and the footer says "Peers: off (peers unavailable: ...)" (asserted in a widget test, not seen). Use a path under the container instead, for example `~/Library/Containers/dev.demo.notepad/Data/tmp/ak-scratch`. The bundle ids are `dev.demo.calc`, `dev.demo.minesweeper` and `dev.demo.notepad`.
+- A path outside the container, such as `/tmp/...`, in `APP_CONTEXT_SCRATCH` or `APP_CONTEXT_PEERS_DIR` does not work for a sandboxed app. With `APP_CONTEXT_SCRATCH` the app cannot create its directories: the companion shows its startup error screen (the calculator's first version, before the companion package, crashed with an unhandled `PathAccessException`). With `APP_CONTEXT_PEERS_DIR` the process stays up and works alone, and the footer says "Peers: off (peers unavailable: ...)" (asserted in a widget test, not seen). Use a path under the container instead, for example `~/Library/Containers/dev.demo.notepad/Data/tmp/ak-scratch`. The bundle ids are `dev.demo.calc`, `dev.demo.minesweeper` and `dev.demo.notepad`.
 - The default roster and peers directories are inside the container too. Two copies of one sandboxed app share the container and find each other with no variables set. Two different sandboxed apps have different containers, so they are not expected to share a roster (reasoned, not tested).
 
 The sandboxed apps that use peers, notepad and minesweeper, also need the `com.apple.security.network.client` and `com.apple.security.network.server` entitlements; both projects have them in Debug and Release. With only the server entitlement, two copies listen but never connect, and nothing is logged. That observation was recorded in the apps' development notes (not published) and was not repeated for this page.
 
-Everything about the sandbox is macOS-specific, and the entitlement files are native build files that a running Dart app cannot change. The Application Kit's platforms guide has the full table of what each capability needs.
+Everything about the sandbox is macOS-specific, and the entitlement files are native build files that a running Dart app cannot change. The App Context Kit's platforms guide has the full table of what each capability needs.
 
 ## calculator
 
@@ -70,16 +70,16 @@ CALC_MODE=mock flutter run -d macos    # shows a "mock" chip in the app bar
 flutter test                           # 32 tests
 ```
 
-**What the Kit gave it.** `AppKit.run` loads `app.json` from the asset bundle and closes the app once on window close, quit, SIGINT or SIGTERM. `AppContextScope` supplies the app name for the title. `ModeBadge` shows the mock and scratch chip. `pumpKitApp` in the tests runs the app in mock mode under a scratch directory. The Kit also writes a roster entry that nothing in this app reads.
+**What the Kit gave it.** `AppContextKit.run` loads `app.json` from the asset bundle and closes the app once on window close, quit, SIGINT or SIGTERM. `AppContextScope` supplies the app name for the title. `ModeBadge` shows the mock and scratch chip. `pumpKitApp` in the tests runs the app in mock mode under a scratch directory. The Kit also writes a roster entry that nothing in this app reads.
 
 **What it still writes itself.** Nothing: `lib/kit_gaps/` does not exist. The whole of `main.dart` is:
 
 ```dart copied-from=apps/calculator/lib/main.dart
-import 'package:application_kit_flutter/application_kit_flutter.dart';
+import 'package:app_context_kit_flutter/app_context_kit_flutter.dart';
 
 import 'ui/calculator_app.dart';
 
-Future<void> main() => AppKit.run(manifestAsset: 'app.json', app: (_) => const CalculatorApp());
+Future<void> main() => AppContextKit.run(manifestAsset: 'app.json', app: (_) => const CalculatorApp());
 ```
 
 **Did it need the Kit?** No. It is the floor: the Kit is nearly free here, and what it gives back is the app name, test isolation and a roster entry nobody reads.
@@ -142,7 +142,7 @@ flutter run -d macos
 flutter test                           # 63 tests
 ```
 
-This app is sandboxed; see the sandbox rule above. Two copies need different `APPKIT_DEVICE` values: notepad refuses a peer with its own device id, because two copies with one device id share one notes folder and are one replica.
+This app is sandboxed; see the sandbox rule above. Two copies need different `APP_CONTEXT_DEVICE` values: notepad refuses a peer with its own device id, because two copies with one device id share one notes folder and are one replica.
 
 **What the Kit gave it.** The data directory, `ctx.dataJson('sync.json')` and `AppJsonFile` for atomic JSON files, `SessionSettings`, `ctx.onClose` to save the last keystrokes, `ctx.startPeers`, `PeerJson`, `PeersIndicator`, `NotesBanner`, `ModeBadge`.
 
@@ -186,7 +186,7 @@ This app is not sandboxed, so `/tmp` paths work.
 
 **What the Kit gave it.** The state directory and settings file, `ctx.onClose` to save, the exit path, test isolation (the "start, lap, relaunch" test is two opens on one scratch directory), `ctx.startPeers`, `PeerJson`, `PeersIndicator`, `NotesBanner`, `ModeBadge`.
 
-**What it still writes itself.** One gap file: `lib/kit_gaps/notifier.dart` (35 lines), which shows a desktop notification through `osascript` or `notify-send`. It is not something the Application Kit should own. `lib/coordination/` (332 lines) is the shared-countdown rule.
+**What it still writes itself.** One gap file: `lib/kit_gaps/notifier.dart` (35 lines), which shows a desktop notification through `osascript` or `notify-send`. It is not something the App Context Kit should own. `lib/coordination/` (332 lines) is the shared-countdown rule.
 
 **Did it need the Kit?** It needed the state directory, settings, the exit path and, for coordination, discovery and routing; it never needed the resource broker.
 
@@ -205,7 +205,7 @@ flutter run -d macos                          # real mode
 flutter test                                  # 38 passed, 5 skipped
 ```
 
-In real mode, with no broker token configured, the session is a local one with no limit, and the app says so. Connecting to a real broker daemon needs a token and the daemon's address; the variables are in the Application Kit's specification (`spec/APP-CONTEXT.md` in that Kit), section 3. The daemon is not part of this repository, which is why the real-daemon tests skip. The app's behaviour when refused is a setting in `config.json`: `policy` (`wait` or `failFast`), `maxWaitSeconds`, `retrySeconds` and `leaseSeconds`.
+In real mode, with no broker token configured, the session is a local one with no limit, and the app says so. Connecting to a real broker daemon needs a token and the daemon's address; the variables are in the App Context Kit's specification (`spec/APP-CONTEXT.md` in that Kit), section 3. The daemon is not part of this repository, which is why the real-daemon tests skip. The app's behaviour when refused is a setting in `config.json`: `policy` (`wait` or `failFast`), `maxWaitSeconds`, `retrySeconds` and `leaseSeconds`.
 
 **What the Kit gave it.** The session that hides fake, local and real, `withHoldWaiting` (retry a refusal for up to `maxWait`, with cancel), typed refusals, the settings file, `ctx.onClose` to cancel running jobs and wait for their holds to be released before the session closes, and the roster scan it uses to tell whether another copy of the app is running.
 
@@ -227,7 +227,7 @@ LAUNCHER_APPS_DIR="$PWD/.." flutter run -d macos   # also lists the manifests fo
 flutter test                                       # 24 tests
 ```
 
-The launcher is not sandboxed. It sees an app only if that app writes its presence file to the same roster directory. The three sandboxed apps write inside their own containers, so to see apps in the launcher run the unsandboxed ones (stopwatch, render-queue) with the same `APPKIT_ROSTER_DIR` as the launcher.
+The launcher is not sandboxed. It sees an app only if that app writes its presence file to the same roster directory. The three sandboxed apps write inside their own containers, so to see apps in the launcher run the unsandboxed ones (stopwatch, render-queue) with the same `APP_CONTEXT_ROSTER_DIR` as the launcher.
 
 **A probe, not a window.** `tool/rows_probe.dart` prints the rows the launcher would show for a roster directory. A hand-made roster directory with one live entry and one damaged file:
 
@@ -258,7 +258,7 @@ A file whose last heartbeat is more than 15 seconds old shows as `stale`, and a 
 
 Folder: [`apps/notes_rust`](../../apps/notes_rust/README.md). The only demo app with a Rust core, and the only one that uses a Kit written in Rust.
 
-**Exercises.** The intended shape of an app: a Flutter interface over a Rust core, joined by `flutter_rust_bridge`. The core (`notes_core`) stores notes as content-addressed blocks on the **Storage Kit** and works inside the Application Kit context that the Flutter side opened. The question it answers is how two halves share one context. The Dart side opens the context once and hands the Rust side a snapshot of it; the Rust side **adopts** it (an `adopt` API added to the Application Kit for this) and so announces nothing, writes no settings, and creates files only under `data` and `state`. Notes have a version history (restoring a version writes one small manifest and copies no body). Two copies sync over the Application Kit's peer layer: Dart carries the bytes, Rust holds the blocks, checks every hash before storing anything, and reports conflicts with both versions.
+**Exercises.** The intended shape of an app: a Flutter interface over a Rust core, joined by `flutter_rust_bridge`. The core (`notes_core`) stores notes as content-addressed blocks on the **Storage Kit** and works inside the App Context Kit context that the Flutter side opened. The question it answers is how two halves share one context. The Dart side opens the context once and hands the Rust side a snapshot of it; the Rust side **adopts** it (an `adopt` API added to the App Context Kit for this) and so announces nothing, writes no settings, and creates files only under `data` and `state`. Notes have a version history (restoring a version writes one small manifest and copies no body). Two copies sync over the App Context Kit's peer layer: Dart carries the bytes, Rust holds the blocks, checks every hash before storing anything, and reports conflicts with both versions.
 
 **Run and test.**
 
@@ -270,19 +270,19 @@ make test-integration                 # flutter test integration_test -d macos (
 sh apps/notes_rust/tool/smoke.sh      # launch the built macOS app for 10 s, check what it wrote, SIGTERM it
 ```
 
-**What the Kits gave it.** From the Application Kit: the directories and instance id (shared with Rust through the snapshot), `AppKit.run`, the config file the Dart side owns and the Rust side only reads, `ctx.startPeers` and the peer hub. From the Storage Kit: `PartitionStore`, per-partition de-duplication, hash-verified reads and the fragment trees.
+**What the Kits gave it.** From the App Context Kit: the directories and instance id (shared with Rust through the snapshot), `AppContextKit.run`, the config file the Dart side owns and the Rust side only reads, `ctx.startPeers` and the peer hub. From the Storage Kit: `PartitionStore`, per-partition de-duplication, hash-verified reads and the fragment trees.
 
 **What it still writes itself.** `lib/kit_gaps/blob_pull.dart` (81 lines, copied from the notepad) for moves bigger than one message; in Rust, the head index (the Storage Kit has no mutable store implementation), a verified insert (its `put` files tampered bytes under their own hash), the child list of a list node, and the flush of the pack before a head moves. `lib/coordination/` is 416 lines of Dart; the Rust core is about 1,800 lines (plus 5,130 generated bridge lines).
 
 **What it showed.** See the [app's README](../../apps/notes_rust/README.md#measurements) for the measurements, what the bridge made awkward and how the shared context behaved in practice.
 
-**Did it need the Kits?** The Storage Kit supplied what a notes store is made of; the Application Kit's adopt API is what made one app with two runtimes possible without announcing twice. Neither supplied the sync protocol, the conflict policy or the head index.
+**Did it need the Kits?** The Storage Kit supplied what a notes store is made of; the App Context Kit's adopt API is what made one app with two runtimes possible without announcing twice. Neither supplied the sync protocol, the conflict policy or the head index.
 
 ## What the demo apps do not cover
 
 * **One Rust core, not a family.** Only `notes_rust` has a Rust crate and a `flutter_rust_bridge` dependency; the other six are Flutter on a Dart core. It was built and run on **macOS**; its Linux runner exists and was not built. The bridge was not tried with a Rust-to-Dart stream, hot reload, or a second Rust core in the same app.
-* **Two Kits used from Rust, the rest not.** `notes_rust` uses the Application Kit's Rust crate and the Storage Kit. Identity, messaging and transport Kits were probed in separate Rust packages in a private repository (the public-safe summary is [Fitting the Application Kit to other Kits](fitting-the-application-kit-to-other-kits.md)), and the other apps' own sync, conflict handling and large-note transfer are written in Dart. Even in `notes_rust` the transport is Dart: the peer layer has no Rust half.
-* **`notes_rust` needs a private Kit.** The Storage Kit is not public yet, so the app cannot be built from a public clone alone: it needs `make setup KITS=all` and a GitHub login with access. The Application Kit's Rust crate, which the app also uses, is part of the pinned release candidate.
+* **Two Kits used from Rust, the rest not.** `notes_rust` uses the App Context Kit's Rust crate and the Storage Kit. Identity, messaging and transport Kits were probed in separate Rust packages in a private repository (the public-safe summary is [Fitting the App Context Kit to other Kits](fitting-the-app-context-kit-to-other-kits.md)), and the other apps' own sync, conflict handling and large-note transfer are written in Dart. Even in `notes_rust` the transport is Dart: the peer layer has no Rust half.
+* **`notes_rust` needs a private Kit.** The Storage Kit is not public yet, so the app cannot be built from a public clone alone: it needs `make setup KITS=all` and a GitHub login with access. The App Context Kit's Rust crate, which the app also uses, is part of the pinned release candidate.
 * **No real network.** Peers find each other through announcement files and loopback sockets on one machine. That holds for `notes_rust` too: nothing in it was run on a second machine.
 
 ## How much code the Kit saved
@@ -306,7 +306,7 @@ The measurement is the size of `lib/kit_gaps/` across the six apps (raw `wc -l`)
 | launcher | 162 | 50 | 50 | 50 | 18 | 9 |
 | **total** | **727** | **330** | **777** | **164** | | |
 
-These were counted from the Application Kit repository's history on 2026-10-24: the first column at the Kit's first round, the next three at the commits that migrated the apps, added coordination, and moved the repeated parts into the Kit. The "now" column matches the apps in this repository.
+These were counted from the App Context Kit repository's history on 2026-10-24: the first column at the Kit's first round, the next three at the commits that migrated the apps, added coordination, and moved the repeated parts into the Kit. The "now" column matches the apps in this repository.
 
 **What the numbers say.** Migrating to the Kit removed about 400 lines of shims. Then adding coordination added about 450 new ones, taking the total to 777, higher than before the Kit. For a while the Kit had made `main.dart` tiny and the apps' total gap code worse. Moving the repeated parts into the Kit (`ctx.startPeers`, `PeerJson`, `PeersIndicator`, `AppJsonFile`, `SessionSettings`, `VenueSession.withHoldWaiting`) brought the total to 164, 77% below the start and 79% below the peak. Calculator, minesweeper and render-queue have no gap code left. What remains is four helpers that one app each uses: `notifier`, `blob_pull`, `manifest_scan`, `pid_alive`.
 
@@ -333,7 +333,7 @@ cd apps/stopwatch
 dart run tool/peer_probe.dart --scratch /tmp/ak-demo/desktop --peers /tmp/ak-demo/peers --device desktop --for 10 --start-after-ready 1
 ```
 
-What the variables are: `--scratch` is `APPKIT_SCRATCH` (this copy's own data, config and state), `--peers` is `APPKIT_PEERS_DIR` (shared by both copies), `--device` is `APPKIT_DEVICE`. Each probe prints a line per event, starting with the epoch milliseconds. After the second probe is ready it plays the person on the second copy: it resets the countdown to 6 seconds and starts it. This is what the two probes printed, with the once-a-second `TICK` lines and a few `STATE` lines removed:
+What the variables are: `--scratch` is `APP_CONTEXT_SCRATCH` (this copy's own data, config and state), `--peers` is `APP_CONTEXT_PEERS_DIR` (shared by both copies), `--device` is `APP_CONTEXT_DEVICE`. Each probe prints a line per event, starting with the epoch milliseconds. After the second probe is ready it plays the person on the second copy: it resets the countdown to 6 seconds and starts it. This is what the two probes printed, with the once-a-second `TICK` lines and a few `STATE` lines removed:
 
 ```text
 desktop: 1792850582509 START desktop@efe50421 stamp=0
@@ -369,7 +369,7 @@ The surviving probe (the laptop) printed this on 2026-10-24, `TICK` lines remove
 1792851146452 PEER lost desktop@9bb7531b hello=null
 ```
 
-One death is three events. The operating system closed the dead copy's socket, so `lost` arrives at once. The dead copy's announcement file was still there with a recent beat, so it was `found` again. About 3.3 seconds later the beat was old enough, the provider withdrew the candidate, and the final `lost` came. The dead copy's file stays on disk until a live copy reaps it after 60 seconds. The numbers behind the rule are in the Application Kit's coordination guide, section 6 (providers).
+One death is three events. The operating system closed the dead copy's socket, so `lost` arrives at once. The dead copy's announcement file was still there with a recent beat, so it was `found` again. About 3.3 seconds later the beat was old enough, the provider withdrew the candidate, and the final `lost` came. The dead copy's file stays on disk until a live copy reaps it after 60 seconds. The numbers behind the rule are in the App Context Kit's coordination guide, section 6 (providers).
 
 ### Part 2: two windows (not run for this page)
 
@@ -379,12 +379,12 @@ Build once, then run the binary twice, rather than running `flutter run` twice f
 cd apps/stopwatch
 flutter build macos --debug
 BIN="$PWD/build/macos/Build/Products/Debug/stopwatch.app/Contents/MacOS/stopwatch"
-APPKIT_DEVICE=laptop  APPKIT_SCRATCH=/tmp/ak-demo/win-laptop  APPKIT_PEERS_DIR=/tmp/ak-demo/win-peers "$BIN" &
-APPKIT_DEVICE=desktop APPKIT_SCRATCH=/tmp/ak-demo/win-desktop APPKIT_PEERS_DIR=/tmp/ak-demo/win-peers "$BIN" &
+APP_CONTEXT_DEVICE=laptop  APP_CONTEXT_SCRATCH=/tmp/ak-demo/win-laptop  APP_CONTEXT_PEERS_DIR=/tmp/ak-demo/win-peers "$BIN" &
+APP_CONTEXT_DEVICE=desktop APP_CONTEXT_SCRATCH=/tmp/ak-demo/win-desktop APP_CONTEXT_PEERS_DIR=/tmp/ak-demo/win-peers "$BIN" &
 ```
 
-Each window's footer should read "This copy: laptop #xxxx" and "Peers: 1" with one chip for the other copy. Start the countdown in one window and the other follows. Give each copy its own `APPKIT_SCRATCH` as well as its own `APPKIT_DEVICE`: copies that share a config directory share a generated device id. The peers directory is the one thing they share, which is why it is set with `APPKIT_PEERS_DIR`. If `APPKIT_SCRATCH` were the only variable, each copy would announce in `<its scratch>/roster-peers` and never see the other.
+Each window's footer should read "This copy: laptop #xxxx" and "Peers: 1" with one chip for the other copy. Start the countdown in one window and the other follows. Give each copy its own `APP_CONTEXT_SCRATCH` as well as its own `APP_CONTEXT_DEVICE`: copies that share a config directory share a generated device id. The peers directory is the one thing they share, which is why it is set with `APP_CONTEXT_PEERS_DIR`. If `APP_CONTEXT_SCRATCH` were the only variable, each copy would announce in `<its scratch>/roster-peers` and never see the other.
 
-For the sandboxed apps (notepad, minesweeper), the same recipe works with every path under `~/Library/Containers/<bundle id>/Data/tmp/`, for example `APPKIT_SCRATCH=~/Library/Containers/dev.demo.notepad/Data/tmp/ak/laptop` and `APPKIT_PEERS_DIR=~/Library/Containers/dev.demo.notepad/Data/tmp/ak/peers`, with the binary at `build/macos/Build/Products/Debug/notepad.app/Contents/MacOS/notepad`. A copy that cannot reach the peers directory keeps working alone and its footer says why. That route was recorded in the apps' development notes (not published) and was not repeated for this page.
+For the sandboxed apps (notepad, minesweeper), the same recipe works with every path under `~/Library/Containers/<bundle id>/Data/tmp/`, for example `APP_CONTEXT_SCRATCH=~/Library/Containers/dev.demo.notepad/Data/tmp/ak/laptop` and `APP_CONTEXT_PEERS_DIR=~/Library/Containers/dev.demo.notepad/Data/tmp/ak/peers`, with the binary at `build/macos/Build/Products/Debug/notepad.app/Contents/MacOS/notepad`. A copy that cannot reach the peers directory keeps working alone and its footer says why. That route was recorded in the apps' development notes (not published) and was not repeated for this page.
 
-See also: the Application Kit's own getting-started, coordination, platforms and design-decisions guides, which ship with the Kit (after `make setup` they are under `.kits/application-kit/docs/`), and [Fitting the Application Kit to other Kits](fitting-the-application-kit-to-other-kits.md) for how it meets its neighbours.
+See also: the App Context Kit's own getting-started, coordination, platforms and design-decisions guides, which ship with the Kit (after `make setup` they are under `.kits/app-context-kit/docs/`), and [Fitting the App Context Kit to other Kits](fitting-the-app-context-kit-to-other-kits.md) for how it meets its neighbours.

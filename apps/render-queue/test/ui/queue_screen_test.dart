@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:application_kit/application_kit.dart';
-import 'package:application_kit_flutter/testing.dart';
+import 'package:app_context_kit/app_context_kit.dart';
+import 'package:app_context_kit_flutter/testing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:render_queue/bootstrap.dart';
@@ -19,7 +19,7 @@ class FailingRenewVenue extends FakeVenue {
 void main() {
   final manifest = File('app.json').readAsStringSync();
 
-  // fakeCapacity: 2 is what main() passes to AppKit.run. Scratch + mock, so no real directory and no Venue is touched.
+  // fakeCapacity: 2 is what main() passes to AppContextKit.run. Scratch + mock, so no real directory and no Venue is touched.
   Future<KitTestContext> launch(WidgetTester t,
       {Map<String, String> env = const {}, void Function(AppContext ctx)? before, void Function(RenderQueue q)? onQueue}) async {
     // A tall window: the job list is a lazy ListView and offscreen tiles are not built, so they could not be found.
@@ -93,7 +93,7 @@ void main() {
   });
 
   testWidgets('local mode (real mode, no token): the banner says local and nothing limits the jobs', (t) async {
-    final kit = await launch(t, env: {'APPKIT_MODE': 'real'});
+    final kit = await launch(t, env: {'APP_CONTEXT_MODE': 'real'});
     expect(kit.ctx.venue.kind, 'local');
     expect(find.textContaining('Venue: local (Venue not configured)'), findsOneWidget);
     expect(find.text('scratch'), findsOneWidget); // ModeBadge: scratch but not mock

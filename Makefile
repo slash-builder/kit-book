@@ -91,7 +91,7 @@ apps: ## Build every demo app for this computer in debug mode
 app: ## Build one demo app: make app APP=notepad
 	@test -n "$(APP)" || { echo "Say which app: make app APP=<$(APPS)>"; exit 2; }
 	@test -d apps/$(APP) || { echo "No such app: $(APP). Choose from: $(APPS)"; exit 2; }
-	@test -d .kits/application-kit || { echo "The Application Kit is not fetched. Run: make setup (KITS=all while it is private)"; exit 2; }
+	@test -d .kits/app-context-kit || { echo "The App Context Kit is not fetched. Run: make setup (KITS=all while it is private)"; exit 2; }
 	@test ! -d apps/$(APP)/rust || test -d .kits/storage-kit || { echo "apps/$(APP) has a Rust core that builds against the Storage Kit, which is not fetched. Run: make setup KITS=all"; exit 2; }
 	@echo "==> building apps/$(APP) for $(FLUTTER_DEVICE) (debug)"
 	@cd apps/$(APP) && flutter pub get >/dev/null && flutter build $(FLUTTER_DEVICE) --debug
@@ -99,7 +99,7 @@ app: ## Build one demo app: make app APP=notepad
 run: ## Run one demo app on this computer: make run APP=notepad
 	@test -n "$(APP)" || { echo "Say which app: make run APP=<$(APPS)>"; exit 2; }
 	@test -d apps/$(APP) || { echo "No such app: $(APP). Choose from: $(APPS)"; exit 2; }
-	@test -d .kits/application-kit || { echo "The Application Kit is not fetched. Run: make setup (KITS=all while it is private)"; exit 2; }
+	@test -d .kits/app-context-kit || { echo "The App Context Kit is not fetched. Run: make setup (KITS=all while it is private)"; exit 2; }
 	@cd apps/$(APP) && flutter pub get >/dev/null && flutter run -d $(FLUTTER_DEVICE)
 
 frb: ## Regenerate the Flutter-to-Rust bridge of every app that has one (flutter_rust_bridge_codegen)

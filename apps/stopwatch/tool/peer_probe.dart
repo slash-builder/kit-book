@@ -9,7 +9,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 import 'package:stopwatch/bootstrap.dart';
 import 'package:stopwatch/kit_gaps/notifier.dart';
 
@@ -32,7 +32,7 @@ Future<void> main(List<String> args) async {
   final manifest = AppManifest.parse(File('app.json').readAsStringSync());
   final scratch = opt('scratch');
   final ctx = await AppContext.open(manifest,
-      env: {'APPKIT_SCRATCH': scratch, 'APPKIT_MODE': 'real', 'APPKIT_PEERS_DIR': opt('peers'), 'APPKIT_DEVICE': opt('device', 'probe'), 'HOME': scratch},
+      env: {'APP_CONTEXT_SCRATCH': scratch, 'APP_CONTEXT_MODE': 'real', 'APP_CONTEXT_PEERS_DIR': opt('peers'), 'APP_CONTEXT_DEVICE': opt('device', 'probe'), 'HOME': scratch},
       announce: false);
   final c = buildController(ctx, PrintNotifier(), takeoverGrace: Duration(milliseconds: int.parse(opt('grace', '2000'))));
   final hub = c.peers!.handle.hub!;

@@ -1,4 +1,4 @@
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 
 import 'logic/fake_render.dart';
 import 'logic/render_queue.dart';

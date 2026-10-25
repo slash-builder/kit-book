@@ -15,7 +15,7 @@ use std::fs::{self, File};
 use std::io::Write;
 use std::path::{Path, PathBuf};
 
-use application_kit::AdoptedContext;
+use app_context_kit::AdoptedContext;
 use serde::{Deserialize, Serialize};
 use storage_kit::fragment::CHILD_REF_LEN;
 use storage_kit::{
@@ -36,7 +36,7 @@ pub const MAX_TITLE_BYTES: usize = 1024;
 /// The default `maxNoteBytes` (the owner can change it in `config.json`; this side only reads it).
 pub const DEFAULT_MAX_NOTE_BYTES: u64 = 32 * 1024 * 1024;
 
-/// One file per partition: the Application Kit's directories are per OS user, not per account.
+/// One file per partition: the App Context Kit's directories are per OS user, not per account.
 pub fn heads_file_name(partition: &PartitionId) -> String {
     format!("heads-{}.json", partition.to_hex())
 }

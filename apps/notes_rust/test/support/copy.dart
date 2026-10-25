@@ -1,4 +1,4 @@
-/// A running "copy" of the app without a window: an Application Kit context in mock mode, a core opened on it (the fake or the
+/// A running "copy" of the app without a window: an App Context Kit context in mock mode, a core opened on it (the fake or the
 /// real Rust one, the caller's factory decides) and the sync engine on the Kit's fake peer network.
 library;
 
@@ -6,7 +6,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 import 'package:notes_rust/coordination/notes_peers.dart';
 import 'package:notes_rust/core/notes_core.dart';
 
@@ -28,7 +28,7 @@ class Copy {
   static Future<Copy> open(String manifestText, Directory root, String name, CoreFactory factory) async {
     final ctx = await AppContext.open(
       AppManifest.parse(manifestText),
-      env: {'APPKIT_SCRATCH': '${root.path}/$name', 'APPKIT_MODE': 'mock', 'APPKIT_DEVICE': name, 'HOME': root.path},
+      env: {'APP_CONTEXT_SCRATCH': '${root.path}/$name', 'APP_CONTEXT_MODE': 'mock', 'APP_CONTEXT_DEVICE': name, 'HOME': root.path},
     );
     final core = await factory(ctx);
     return Copy._(name, ctx, core, <String>[]);

@@ -17,7 +17,7 @@ Lists the apps that are running on this machine, which tests whether **a file-ba
 
 ## Run and test
 
-From the repository root, once: `make setup` (add `KITS=all` while the Application Kit is private).
+From the repository root, once: `make setup` (add `KITS=all` while the App Context Kit is private).
 
 ```sh
 make run APP=launcher
@@ -27,4 +27,4 @@ LAUNCHER_APPS_DIR="$PWD/.." flutter run -d macos   # also lists the manifests in
 flutter test                                       # 24 tests
 ```
 
-The launcher is not sandboxed. It sees an app only if that app writes its presence file to the same roster directory, so to see apps in it, run the unsandboxed ones (stopwatch, render-queue) with the same `APPKIT_ROSTER_DIR`. `tool/rows_probe.dart` prints the rows the launcher would show for a roster directory; the walkthrough is in [the demo apps guide](../../book/20-guides/demo-apps.md#launcher).
+The launcher is not sandboxed. It sees an app only if that app writes its presence file to the same roster directory, so to see apps in it, run the unsandboxed ones (stopwatch, render-queue) with the same `APP_CONTEXT_ROSTER_DIR`. `tool/rows_probe.dart` prints the rows the launcher would show for a roster directory; the walkthrough is in [the demo apps guide](../../book/20-guides/demo-apps.md#launcher).

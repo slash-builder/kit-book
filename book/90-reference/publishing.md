@@ -36,6 +36,16 @@ The order matters. Nothing before step 5 changes what the public sees.
 5. **Add the DNS record last:** a `CNAME` record for `kits` pointing at the organisation's `github.io` name, set to DNS only (no proxy) so GitHub can issue the certificate. A name that points at GitHub before anything claims it is how subdomains get taken over, which is why the record comes after steps 1 and 4.
 6. **When the certificate is ready** (Pages shows it), tick **Enforce HTTPS**.
 
+## The Kit rename and the pin
+
+The Application Kit was renamed **App Context Kit** before going public. Its public repository, `slash-builder/app-context-kit`, does not exist yet; it is created at release time from the reviewed release candidate. Until then [`kits.lock`](../../kits.lock) names the Kit `app-context-kit` but keeps the address of the repository that exists today, `slash-builder/application-kit` on GitHub (private; the pinned commit is on its branch `public/release-prep`). That is deliberate: it keeps `make setup KITS=all` working now, and it is the only place that still says the old slug.
+
+At release, before step 3 above:
+
+1. Create `slash-builder/app-context-kit` from the release-candidate commit and make it public.
+2. In `kits.lock`, change the address on the `app-context-kit` line to the new repository, `slash-builder/app-context-kit`, and re-pin to the commit the new repository starts from (`make lock KIT=app-context-kit`). The commit id changes because the new repository is a new history.
+3. Run `make clean-all && make setup`, `make docs-pull`, `make docs` and `make check-public`. `make docs-catalog` then records the new repository's visibility. A check named `make go-public-check` is meant to refuse a release while a `kits.lock` URL still points at the old slug; it does not exist yet, so do this by hand: `grep application-kit kits.lock` must print nothing.
+
 ## What is manual
 
 Everything on the list above except building and committing: domain verification, making the repository public, switching Pages on and choosing the branch, the DNS record, and the HTTPS setting are all done by a person in the GitHub and DNS settings. The tools in this repository never change a GitHub setting or a DNS record.

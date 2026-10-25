@@ -28,7 +28,7 @@ THIN: it is a candidate, not a recommendation.
 | `relativeTime` | Launcher listed a "relative-time formatter"; its code is `formatUptime`, a **Duration** formatter ("1h 02m"), which this does not replace | none | THIN (1 app, and the evidence is a different function) |
 
 Not duplicated here, on purpose: `ModeBadge` and `NotesBanner` stay in
-the Application Kit's Flutter companion. `NotesBanner` could be rebuilt on `StatusBanner`:
+the App Context Kit's Flutter companion. `NotesBanner` could be rebuilt on `StatusBanner`:
 each note becomes `StatusBanner(severity: <1:1 map of NoteSeverity>, message:
 note.text, label: 'Note' for info, onDismiss: ...)`; the dismissed-set state stays in
 `NotesBanner` (this banner is controlled). Colours differ slightly, so its colour
@@ -97,7 +97,7 @@ and the hand-built versions in the apps are deleted in the same change.
 * **Segmented control**: Material's `SegmentedButton` already does it; one app.
 * **Keypad**: calculator's `FilledButton.tonal` set is a button style set, not a component.
 * **System notification**: stopwatch's `osascript` / `notify-send` is platform code.
-* **Mode badge, notes banner**: stay in the Application Kit's Flutter companion.
+* **Mode badge, notes banner**: stay in the App Context Kit's Flutter companion.
 * **Text roles** (the larger app's 228 hand-written `TextStyle`s): the design system's job, not the Interface Kit's.
 * **The larger app's other generic-looking widgets** (`timeline`, `message_list`, ...): not read.
 * **Tabs and drawers in `PageScaffold`**: stopwatch's `TabBar` in the app bar is not

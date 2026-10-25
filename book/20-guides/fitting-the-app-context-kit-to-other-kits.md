@@ -1,13 +1,13 @@
-# Fitting the Application Kit to other Kits
+# Fitting the App Context Kit to other Kits
 
-The Application Kit (the name is provisional) is the root namespace for one running app: identity, directories, settings, a session with a resource broker (the Venue, also a provisional name), and a way for copies of the same app to find each other. It is not the only Kit an app touches. During its first round of work, six neighbours were probed to find out where the Application Kit's design meets theirs.
+The App Context Kit (the name is provisional) is the root namespace for one running app: identity, directories, settings, a session with a resource broker (the Venue, also a provisional name), and a way for copies of the same app to find each other. It is not the only Kit an app touches. During its first round of work, six neighbours were probed to find out where the App Context Kit's design meets theirs.
 
-This page records, for each one: the question, what was built, what it showed, what the Application Kit does about it, and what is still open and with whom.
+This page records, for each one: the question, what was built, what it showed, what the App Context Kit does about it, and what is still open and with whom.
 
 How to read the evidence:
 
 * **The probes run in a private repository; the public-safe summary is here.** Each probe was a standalone Rust package that exercised a neighbouring Kit directly. You cannot rebuild them from this repository, and this page does not point at them. The numbers below were measured when the page was written.
-* **None of this is inside a demo app.** No Flutter app calls the Rust Application Kit crate or any of these Kits through a bridge, so "works in a probe" is not "works in an app". See [what the demo apps do not cover](demo-apps.md#what-the-demo-apps-do-not-cover).
+* **None of this is inside a demo app.** No Flutter app calls the Rust App Context Kit crate or any of these Kits through a bridge, so "works in a probe" is not "works in an app". See [what the demo apps do not cover](demo-apps.md#what-the-demo-apps-do-not-cover).
 * The one piece that lives in this repository is [`labs/interface_candidates`](../../labs/interface_candidates/README.md), the proposed shared UI components. Nothing in the Kit's own packages depends on it.
 * Numbers come from debug builds on one machine, usually single runs. Latencies are to show magnitude, not to rank anything.
 * Where a page below says "tested", it was tested while this page was written. Anything else is from the project's own notes and says so.
@@ -25,7 +25,7 @@ How to read the evidence:
 
 ## Hearth (transport)
 
-**The question.** Hearth is SlashBuilder's messaging protocol, with a hub that fans messages out to devices on an account. Can the Application Kit use it to carry traffic between copies of one app, using topics scoped to the app?
+**The question.** Hearth is SlashBuilder's messaging protocol, with a hub that fans messages out to devices on an account. Can the App Context Kit use it to carry traffic between copies of one app, using topics scoped to the app?
 
 **What was built.** A prototype adapter, `HearthTransport`: `join(account, app, device)`, then `broadcast`, `send(device, bytes)`, `recv`, `leave`. It validates ids before anything reaches the wire. It came with 53 tests in eight files (topics, delivery, isolation, presence, request/reply, payload, catch-up, adapter), run against a **real local hub** and Redis on loopback ports, plus a **patched copy of the hub** whose topic module changed by about 60 lines. Nothing touched a production service.
 
@@ -42,10 +42,10 @@ Re-run when this page was written: 53 passed, 0 failed (with the 90-second idle-
 * **Catch-up paging can skip messages.** Paging by a millisecond timestamp with a strict comparison skips messages that share a millisecond across a page boundary. With five synchronized senders and one message per page, a run recovered 9 of 40 messages; an earlier run recovered 10 of 40. The count depends on timing.
 * **A retention field means two things.** The hub reads field 5 of the publish message as a "do not retain" flag. The published schema and the client SDK call it a retention class. An explicit "history" class is silently not stored.
 
-**What the Application Kit does because of it.**
+**What the App Context Kit does because of it.**
 
 * The peer layer has a provider interface (discover, connect, send, inbound stream). The Kit ships a fake provider and a loopback provider. **There is no Hearth provider yet.**
-* Payload limits differ by provider, so a provider has to declare its own maximum and `send` has to fail before the wire when it is exceeded. The Application Kit's specification says so (section 6.2). **Not built:** today the app passes the limit to `PeerJson` (for Hearth: 64 KiB minus the header).
+* Payload limits differ by provider, so a provider has to declare its own maximum and `send` has to fail before the wire when it is exceeded. The App Context Kit's specification says so (section 6.2). **Not built:** today the app passes the limit to `PeerJson` (for Hearth: 64 KiB minus the header).
 * The Kit's own envelope carries a Kit-owned correlation id and `from.device` plus `from.instance`, which is how echo is suppressed. What a Hearth provider must still add: request deadlines, de-duplication across live delivery and catch-up, a `no_retain` heartbeat no more often than every 30 s, and reconnect.
 
 **What is still open, and who owns it.**
@@ -55,7 +55,7 @@ Re-run when this page was written: 53 passed, 0 failed (with the 90-second idle-
 | Amend the protocol's topic naming for app-scoped topics (or decide to stay on the shared topics). | The protocol owners |
 | The retention field mismatch, the catch-up paging cursor, and the missing unsubscribe in the hub. | The protocol owners |
 | The Fabric Kit SDK exposes no catch-up, presence or unsubscribe, and does not reconnect. The prototype used a raw wire client for those. | The Fabric Kit's maintainers |
-| Not tested: a remote hub, TLS, paired-device connections, and the Dart peer code against a real hub (only the Rust adapter ran). | The Application Kit's maintainers |
+| Not tested: a remote hub, TLS, paired-device connections, and the Dart peer code against a real hub (only the Rust adapter ran). | The App Context Kit's maintainers |
 
 ## Message Kit
 
@@ -77,7 +77,7 @@ Re-run when this page was written: 53 passed, 0 failed (with the 90-second idle-
 * **What Message Kit cannot express today:** an application answer inside a reply message; local fan-out to several receivers; a caller-chosen socket path; a configurable request timeout; and anything on macOS or iOS.
 * **The remote seam has gaps.** Several were found and reported to the Kit's maintainers.
 
-**What the Application Kit does because of it.**
+**What the App Context Kit does because of it.**
 
 * It ships the loopback provider for same-machine peers, so macOS and Windows do not wait on Message Kit.
 * The envelope header needs additions, tracked in the specification: an `in_reply_to` correlation field, a `to` field for directed messages, a per-message retain hint, and a provider-declared maximum payload checked before the wire. The Dart core already has a request id (`rid`, kind `kit.reply`) for correlation.
@@ -87,14 +87,14 @@ Re-run when this page was written: 53 passed, 0 failed (with the 90-second idle-
 
 | Open | Owner |
 |---|---|
-| Whether `seq` is per link, restarting at 1 (the Dart core), or one counter per sender (the Rust prototype). | The Application Kit's maintainers (a specification decision) |
-| Whether `kind` is a closed enum (Rust prototype) or `kit.`-prefixed strings (Dart core). | The Application Kit's maintainers (a specification decision) |
+| Whether `seq` is per link, restarting at 1 (the Dart core), or one counter per sender (the Rust prototype). | The App Context Kit's maintainers (a specification decision) |
+| Whether `kind` is a closed enum (Rust prototype) or `kit.`-prefixed strings (Dart core). | The App Context Kit's maintainers (a specification decision) |
 | The remote-provider seam gaps, an error code for an app-level refusal, an unreachable-endpoint code, and a caller-chosen socket path. | The protocol owners |
-| Not tested: a real Hearth hub behind the provider, real LAN discovery, release builds. | The Application Kit's maintainers |
+| Not tested: a real Hearth hub behind the provider, real LAN discovery, release builds. | The App Context Kit's maintainers |
 
 ## Storage Kit
 
-**The question.** Storage Kit is content-addressed storage. The Application Kit names an app by `(account, app id)`. Can that name also name the app's slice of storage, and is syncing a note between two copies cheap when only a little of it changed?
+**The question.** Storage Kit is content-addressed storage. The App Context Kit names an app by `(account, app id)`. Can that name also name the app's slice of storage, and is syncing a note between two copies cheap when only a little of it changed?
 
 **What was built.** A mapping from `(account, app id)` to a storage partition, so copies of one app on one account share a partition and different accounts never do; a notes model on that partition; and copy-to-copy sync. The "wire" was an in-process call, so this measured bytes and blocks, not network time. Conflict handling used manifest ancestry. The Kit never merges: the app's resolver chooses between keep-local, take-remote, merged, or defer.
 
@@ -109,7 +109,7 @@ The 3 blocks are one manifest, the rewritten list node (about 25 KiB), and the o
 
 Also tested: identical bodies under two names store one set of chunks; each of the 10 blocks of one version, corrupted in turn, was rejected and the old body still read back.
 
-**What the Application Kit does because of it.** Nothing yet in the Kit. The findings point at three changes to the Kit's directory model, none made:
+**What the App Context Kit does because of it.** Nothing yet in the Kit. The findings point at three changes to the Kit's directory model, none made:
 
 * Reserve names under `data` for the block store (a convention, not a sixth directory kind).
 * Add an account dimension. The specification's section 6 uses `(account, app id)` as the scope, but the Kit's directories are per operating-system user, not per account.
@@ -122,12 +122,12 @@ Also tested: identical bodies under two names store one set of chunks; each of t
 | Open | Owner |
 |---|---|
 | The gaps above. | The Storage Kit's maintainers |
-| Account dimension and reserved directory names in the Kit. | The Application Kit's maintainers |
-| Not tested: a real network, two processes on one partition, crash safety (reasoned only), the S3 and HTTP backends. | The Application Kit's maintainers |
+| Account dimension and reserved directory names in the Kit. | The App Context Kit's maintainers |
+| Not tested: a real network, two processes on one partition, crash safety (reasoned only), the S3 and HTTP backends. | The App Context Kit's maintainers |
 
 ## Identity Kit
 
-**The question.** Identity Kit has service principals with scopes. Can the Application Kit's `admit(peer, hello)` hook use them to decide whether a peer may join an app's coordination: accept, accept read-only, or reject?
+**The question.** Identity Kit has service principals with scopes. Can the App Context Kit's `admit(peer, hello)` hook use them to decide whether a peer may join an app's coordination: accept, accept read-only, or reject?
 
 **What was built.** An `admit` module with scopes `app:<id>:run`, `app:<id>:coordinate` and `app:<id>:storage`. `coordinate` is accept, `run` alone is read-only, `storage` alone is refused. An in-memory fake issuer stood in for issuance, which Identity Kit does not have yet. The fake is a test double, not a design for the real one.
 
@@ -136,7 +136,7 @@ Also tested: identical bodies under two names store one set of chunks; each of t
 * **The shape works.** A program that only types an app id is refused. One app's principal cannot join another app. A principal from another account is refused. A household rule (a child account may not run a given app) can be checked at each join, so changing a role takes effect without reissuing anything. Identity Kit keeps role out of the principal on purpose, so that rule can only live in whoever verifies.
 * **Gaps in Identity Kit:** issuance, signing and verification are not built; the principal carries no account; scopes are opaque strings with no constructor or parser; the family graph is not built, so the role rule cannot read real roles.
 
-**What the Application Kit does because of it.** The Kit's only authenticators are an open one that accepts everyone and a shared-secret one marked as a test fake, and the code says plainly that they are for one machine and tests, never a network. The loopback provider has no encryption or authentication; do not use it across a trust boundary. A real authenticator waits on Identity Kit issuance and signing. Until then the Application Kit scopes copies by account and app id as a naming convention and does not authenticate them: do not treat peers as trusted.
+**What the App Context Kit does because of it.** The Kit's only authenticators are an open one that accepts everyone and a shared-secret one marked as a test fake, and the code says plainly that they are for one machine and tests, never a network. The loopback provider has no encryption or authentication; do not use it across a trust boundary. A real authenticator waits on Identity Kit issuance and signing. Until then the App Context Kit scopes copies by account and app id as a naming convention and does not authenticate them: do not treat peers as trusted.
 
 **What is still open, and who owns it.**
 
@@ -174,7 +174,7 @@ Two attempts were reverted, per the project's notes (not re-run): `EmptyState` i
 
 No screen reader was run. The accessibility checks are semantics-tree and guideline tests.
 
-**What the Application Kit does because of it.** The core package stays free of Flutter. The Flutter companion carries `ModeBadge`, `NotesBanner` and the exit coordinator. The candidates stay in their own package. The Kit's notes carry a severity (info, warning, error) so a banner can pick its style.
+**What the App Context Kit does because of it.** The core package stays free of Flutter. The Flutter companion carries `ModeBadge`, `NotesBanner` and the exit coordinator. The candidates stay in their own package. The Kit's notes carry a severity (info, warning, error) so a banner can pick its style.
 
 **What is still open, and who owns it.**
 
@@ -192,15 +192,15 @@ No screen reader was run. The accessibility checks are semantics-tree and guidel
 
 **What it showed.** The session hides the three cases. It also showed what the Kit's first version got wrong: the daemon's refusal for a live-hold limit was mistyped as "unavailable"; a failed lease renewal was swallowed; apps had no way to find holds left by a crash; and every app that could be refused wrote the same wait-and-retry loop. All four are addressed in the Dart Kit (the wait helper is not in the Rust Kit). What remains needs changes in Venue itself.
 
-**What the Application Kit does because of it.** Typed refusals, `holds()`, lease-loss reporting and `withHoldWaiting` (Dart). Registering an app with a daemon is still four manual steps that need an operator with authority. The [render-queue](../../apps/render-queue/README.md) demo app and the [demo apps guide](demo-apps.md#render-queue) show the session in use; the full story, with code and measurements, is in the Application Kit's Venue guide.
+**What the App Context Kit does because of it.** Typed refusals, `holds()`, lease-loss reporting and `withHoldWaiting` (Dart). Registering an app with a daemon is still four manual steps that need an operator with authority. The [render-queue](../../apps/render-queue/README.md) demo app and the [demo apps guide](demo-apps.md#render-queue) show the session in use; the full story, with code and measurements, is in the App Context Kit's Venue guide.
 
 **What is still open, and who owns it.**
 
 | Open | Owner |
 |---|---|
 | A machine-readable reason for the live-hold limit, a wait queue or push, and a small typed client library. | The Venue Kit's maintainers |
-| A provisioning step for new apps, and a manifest declaration of contract classes. | Undecided; the Application Kit's maintainers |
-| A Rust `with_hold_waiting`. | The Application Kit's maintainers |
+| A provisioning step for new apps, and a manifest declaration of contract classes. | Undecided; the App Context Kit's maintainers |
+| A Rust `with_hold_waiting`. | The App Context Kit's maintainers |
 
 ## Cross-cutting
 

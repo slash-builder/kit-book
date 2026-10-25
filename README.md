@@ -8,7 +8,7 @@ This repository is the place to start when you want to use SlashBuilder's Kits. 
 * **Demo apps** (in [`apps/`](apps/)): seven small Flutter desktop apps that compose Kits, each chosen because it asks something different of them. One of them, `notes_rust`, has a Rust core.
 * **A Makefile** that sets up the build environment, runs the tests and builds the apps, so you do not have to learn each Kit's toolchain first.
 
-> **Status: being set up.** Some of the Kits the demos use are not public yet, and the names *Application Kit* and *Venue* (a resource broker) are provisional. The book is a skeleton: the introduction, a quick start, two guides, a reference and the Kit catalog (a status card for every Kit in the registry, including those that are not public) are written; the Application Kit's own reference pages are pulled in from the Kit, and no other Kit has reference pages yet. This repository is the book, not a Kit.
+> **Status: being set up.** Some of the Kits the demos use are not public yet, and the names *App Context Kit* and *Venue* (a resource broker) are provisional. The book is a skeleton: the introduction, a quick start, two guides, a reference and the Kit catalog (a status card for every Kit in the registry, including those that are not public) are written; the App Context Kit's own reference pages are pulled in from the Kit, and no other Kit has reference pages yet. This repository is the book, not a Kit.
 
 ## Quick start
 
@@ -37,7 +37,7 @@ The Kits are not copied into this repository and are not git submodules. A scrip
 
 ## The demo apps
 
-A calculator, minesweeper, a notepad, a stopwatch, a render queue, a launcher and notes_rust, the one with a Rust core. The calculator is the floor: it barely needs the Application Kit and says so. The notepad is the ceiling: it syncs notes between copies of itself and resolves conflicts. [The demo apps guide](book/20-guides/demo-apps.md) has the measurements and the walkthroughs.
+A calculator, minesweeper, a notepad, a stopwatch, a render queue, a launcher and notes_rust, the one with a Rust core. The calculator is the floor: it barely needs the App Context Kit and says so. The notepad is the ceiling: it syncs notes between copies of itself and resolves conflicts. [The demo apps guide](book/20-guides/demo-apps.md) has the measurements and the walkthroughs.
 
 What the demos do not cover is said plainly there: **only `notes_rust` has a Rust core**, built and run on macOS only, and its transport is still Dart. The other six are Flutter on a Dart core.
 

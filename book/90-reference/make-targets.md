@@ -60,7 +60,7 @@ Reads [`kits.lock`](#kitslock) and, for each Kit (unless [`kits.override`](#kits
 
 ### `lock`
 
-Shows how the pins would move: for each Kit it asks GitHub for the newest commit of the default branch and prints `old -> new` with a compare link. It rewrites `kits.lock` only after you answer `y`. `make lock KIT=application-kit` does one Kit. After it, run `make setup` and `make test-fast`.
+Shows how the pins would move: for each Kit it asks GitHub for the newest commit of the default branch and prints `old -> new` with a compare link. It rewrites `kits.lock` only after you answer `y`. `make lock KIT=app-context-kit` does one Kit. After it, run `make setup` and `make test-fast`.
 
 ### `test`
 
@@ -76,14 +76,14 @@ Only the suites that need Docker, Redis or a daemon. Each one skips with a clear
 
 | Suite | Needs | What it does |
 |---|---|---|
-| Linux containers | The Docker daemon running | Runs a Kit's Dart and Rust cores in throwaway Linux containers, if the Kit ships a script for it (the Application Kit does) |
+| Linux containers | The Docker daemon running | Runs a Kit's Dart and Rust cores in throwaway Linux containers, if the Kit ships a script for it (the App Context Kit does) |
 | Resource-broker daemon tests | `VENUE_TOKEN_FILE` set to a token for a running broker | Runs the render-queue tests that otherwise skip themselves |
 | App integration tests | A desktop to run an app on (macOS, or Linux with a display) and the Kits the app builds against | Runs an app's `integration_test/` inside the built app with `flutter test integration_test -d macos`, so a Rust core is the real native library. `apps/notes_rust` has one |
 | Message-hub probes | Redis | These run in a private repository; nothing here runs yet |
 
 ### `apps`
 
-Builds every demo app in debug mode for this computer (macOS or Linux desktop). Needs the "for apps" tools from `doctor` and a fetched Application Kit.
+Builds every demo app in debug mode for this computer (macOS or Linux desktop). Needs the "for apps" tools from `doctor` and a fetched App Context Kit.
 
 ### `app`
 
@@ -142,7 +142,7 @@ make setup KITS=all     # once, and after every pin move: the Kit must be fetche
 make docs-pull          # then commit book/ (the pulled pages and the docs-pull block of SUMMARY.md)
 ```
 
-It runs `tools/pull-docs.py` (Python 3 standard library only), which reads `kits.lock` and `tools/docs-pull.conf`. For each Kit with a section in the configuration, the configuration says where the pages land, which source files are pulled, their order in the table of contents, and whether the Kit is public (`auto` reads the visibility column of `kits.lock`). Today only the Application Kit is pulled; because it is not in the registry its pages land in `book/30-kits/application-kit/`. A Kit in the registry lands in `book/30-kits/<slug>/reference/`, and its catalog card then lists the pages.
+It runs `tools/pull-docs.py` (Python 3 standard library only), which reads `kits.lock` and `tools/docs-pull.conf`. For each Kit with a section in the configuration, the configuration says where the pages land, which source files are pulled, their order in the table of contents, and whether the Kit is public (`auto` reads the visibility column of `kits.lock`). Today only the App Context Kit is pulled; because it is not in the registry its pages land in `book/30-kits/app-context-kit/`. A Kit in the registry lands in `book/30-kits/<slug>/reference/`, and its catalog card then lists the pages.
 
 What it writes, and nothing else:
 

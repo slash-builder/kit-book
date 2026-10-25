@@ -19,7 +19,7 @@ One JSON file per note in the data directory, autosave 600 ms after the last key
 
 ## Run and test
 
-From the repository root, once: `make setup` (add `KITS=all` while the Application Kit is private).
+From the repository root, once: `make setup` (add `KITS=all` while the App Context Kit is private).
 
 ```sh
 make run APP=notepad
@@ -28,4 +28,4 @@ cd apps/notepad
 flutter test                           # 63 tests
 ```
 
-Two copies need different `APPKIT_DEVICE` values: notepad refuses a peer with its own device id, because two copies with one device id share one notes folder and are one replica. `tool/peer_probe.dart` runs two copies without a window; see [the demo apps guide](../../book/20-guides/demo-apps.md#notepad). The app is sandboxed on macOS.
+Two copies need different `APP_CONTEXT_DEVICE` values: notepad refuses a peer with its own device id, because two copies with one device id share one notes folder and are one replica. `tool/peer_probe.dart` runs two copies without a window; see [the demo apps guide](../../book/20-guides/demo-apps.md#notepad). The app is sandboxed on macOS.

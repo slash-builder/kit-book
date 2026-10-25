@@ -18,7 +18,7 @@ A stopwatch with laps and a countdown. Its state is a point in time plus banked 
 
 ## Run and test
 
-From the repository root, once: `make setup` (add `KITS=all` while the Application Kit is private).
+From the repository root, once: `make setup` (add `KITS=all` while the App Context Kit is private).
 
 ```sh
 make run APP=stopwatch

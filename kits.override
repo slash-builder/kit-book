@@ -4,8 +4,8 @@
 # `make fetch` / `make setup` then link .kits/<name> to that folder instead of downloading the pin in kits.lock.
 # An empty file (or no file) means every Kit is downloaded at its pin.
 #
-# WHY THIS FILE HAS NO LINE TODAY: apps/notes_rust needs the Application Kit's `adopt` API (a Rust core sharing the context the
-# Dart UI opened; AppContext.snapshot() in Dart, AppContext::adopt in Rust). It used to live on an unmerged Application Kit
-# branch, so this file pointed .kits/application-kit at a sibling worktree. It is merged and pinned in kits.lock now, so the committed
+# WHY THIS FILE HAS NO LINE TODAY: apps/notes_rust needs the App Context Kit's `adopt` API (a Rust core sharing the context the
+# Dart UI opened; AppContext.snapshot() in Dart, AppContext::adopt in Rust). It used to live on an unmerged App Context Kit
+# branch, so this file pointed .kits/app-context-kit at a sibling worktree. It is merged and pinned in kits.lock now, so the committed
 # state depends on no sibling checkout. To try a local change to a Kit, add a line (name, then a path relative to this folder) and
 # run make setup; remove it again before you commit.

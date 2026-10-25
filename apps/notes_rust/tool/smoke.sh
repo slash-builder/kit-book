@@ -4,7 +4,7 @@
 #   make app APP=notes_rust          # build it first
 #   sh apps/notes_rust/tool/smoke.sh [seconds]       (default 10)
 #
-# The app is sandboxed, so APPKIT_SCRATCH has to be inside its container (~/Library/Containers/<bundle id>/Data); a path
+# The app is sandboxed, so APP_CONTEXT_SCRATCH has to be inside its container (~/Library/Containers/<bundle id>/Data); a path
 # outside it cannot be created. NOTES_RUST_SEED=3 makes the app write three sample notes into an empty store so there is
 # something to see. Everything this script starts it stops, and it deletes the scratch folder at the end.
 # Checks: one roster file (the Dart side's) with the instance the Rust core reports, blocks and a head index under data,
@@ -29,7 +29,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-APPKIT_SCRATCH="$SCRATCH" APPKIT_DEVICE=smoke NOTES_RUST_SEED=3 "$BIN" >"$LOG" 2>&1 &
+APP_CONTEXT_SCRATCH="$SCRATCH" APP_CONTEXT_DEVICE=smoke NOTES_RUST_SEED=3 "$BIN" >"$LOG" 2>&1 &
 PID=$!
 echo "started pid $PID, scratch $SCRATCH"
 sleep "$SECONDS_RUN"

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:application_kit/application_kit.dart';
-import 'package:application_kit_flutter/testing.dart';
+import 'package:app_context_kit/app_context_kit.dart';
+import 'package:app_context_kit_flutter/testing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notepad/coordination/note_sync.dart';
@@ -59,7 +59,7 @@ void main() {
 
   Future<_Other> other(WidgetTester t, KitTestContext kit, FakePeerNetwork net) async {
     final ctx = await t.runAsync(() => AppContext.open(AppManifest.parse(manifestText),
-        env: {'APPKIT_SCRATCH': '${kit.scratch.path}/other', 'APPKIT_MODE': 'mock', 'APPKIT_DEVICE': 'desktop', 'HOME': kit.scratch.path},
+        env: {'APP_CONTEXT_SCRATCH': '${kit.scratch.path}/other', 'APP_CONTEXT_MODE': 'mock', 'APP_CONTEXT_DEVICE': 'desktop', 'HOME': kit.scratch.path},
         announce: false));
     final o = _Other(ctx!, NoteStore('${ctx.dirs.data}/notes'));
     o.peers = NotesPeers.start(ctx, o, report: o.reports.add, network: net, heartbeat: const Duration(milliseconds: 200));
@@ -69,7 +69,7 @@ void main() {
   Future<NotesController> boot(WidgetTester t, FakePeerNetwork net, {Directory? scratch}) async {
     final kit = await pumpKitApp(t,
         manifest: manifestText,
-        env: {'APPKIT_DEVICE': 'laptop'},
+        env: {'APP_CONTEXT_DEVICE': 'laptop'},
         scratch: scratch,
         app: (_) => NotepadApp(autosaveDelay: const Duration(milliseconds: 100), network: net, syncHeartbeat: const Duration(milliseconds: 200)));
     _kit = kit;
@@ -135,7 +135,7 @@ void main() {
     final blocker = File('${dir.path}/file')..writeAsStringSync('x');
     final kit = await pumpKitApp(t,
         manifest: manifestText,
-        env: {'APPKIT_MODE': 'real', 'APPKIT_PEERS_DIR': blocker.path},
+        env: {'APP_CONTEXT_MODE': 'real', 'APP_CONTEXT_PEERS_DIR': blocker.path},
         app: (_) => const NotepadApp(autosaveDelay: Duration(milliseconds: 100)));
     await settleUntil(t, () => find.byKey(const ValueKey('peers-offline')).evaluate().isNotEmpty);
     expect(find.textContaining('Peers: off (peers unavailable'), findsOneWidget);

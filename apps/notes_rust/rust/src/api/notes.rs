@@ -74,7 +74,7 @@ impl From<ResolutionChoice> for Resolution {
     }
 }
 
-/// The notes core. Open it with the snapshot of the Application Kit context the Dart side already holds.
+/// The notes core. Open it with the snapshot of the App Context Kit context the Dart side already holds.
 pub struct NotesEngine {
     inner: Engine,
 }

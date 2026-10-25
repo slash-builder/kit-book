@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:stopwatch/bootstrap.dart';
 import 'package:stopwatch/coordination/shared_timer.dart';
@@ -57,7 +57,7 @@ void main() {
   Future<Copy> open(String device, {AppManifest? m, String scratchName = '', Map<String, String> env = const {}, Duration grace = const Duration(seconds: 2)}) async {
     final dir = Directory('${tmp.path}/${scratchName.isEmpty ? device : scratchName}')..createSync(recursive: true);
     final ctx = await AppContext.open(m ?? manifest,
-        env: {'APPKIT_SCRATCH': dir.path, 'APPKIT_MODE': 'mock', 'APPKIT_DEVICE': device, 'HOME': dir.path, ...env}, announce: false);
+        env: {'APP_CONTEXT_SCRATCH': dir.path, 'APP_CONTEXT_MODE': 'mock', 'APP_CONTEXT_DEVICE': device, 'HOME': dir.path, ...env}, announce: false);
     final notifier = RecordingNotifier();
     final c = buildController(ctx, notifier, now: () => now, network: net, takeoverGrace: grace);
     await c.peers!.handle.started;
@@ -268,7 +268,7 @@ void main() {
 
     test('the same app under another account is a stranger too', () async {
       final a = await open('laptop');
-      final x = await open('stranger', env: {'APPKIT_ACCOUNT': 'someone-else'});
+      final x = await open('stranger', env: {'APP_CONTEXT_ACCOUNT': 'someone-else'});
       final b = await open('desktop');
       await until(() => a.hub.readyPeers.isNotEmpty && b.hub.readyPeers.isNotEmpty);
       a.controller.resetCountdown(durationMs: 7000);
@@ -285,7 +285,7 @@ void main() {
   test('peers not declared in app.json: the Kit refuses, and the error names the app and the Kit', () async {
     final undeclared = AppManifest.parse(File('app.json').readAsStringSync().replaceAll('"venue", "peers"', '"venue"'));
     final dir = Directory('${tmp.path}/undeclared')..createSync();
-    final ctx = await AppContext.open(undeclared, env: {'APPKIT_SCRATCH': dir.path, 'APPKIT_MODE': 'mock', 'HOME': dir.path}, announce: false);
+    final ctx = await AppContext.open(undeclared, env: {'APP_CONTEXT_SCRATCH': dir.path, 'APP_CONTEXT_MODE': 'mock', 'HOME': dir.path}, announce: false);
     expect(() => buildController(ctx, RecordingNotifier(), network: net),
         throwsA(isA<KitNotDeclared>().having((e) => e.toString(), 'message', allOf(contains('peers'), contains('dev.demo.stopwatch')))));
     // and the app still works without peers when it asks for none
@@ -298,7 +298,7 @@ void main() {
     final dir = Directory('${tmp.path}/real')..createSync();
     final blocker = File('${tmp.path}/not-a-dir')..writeAsStringSync('x');
     final ctx = await AppContext.open(manifest,
-        env: {'APPKIT_SCRATCH': dir.path, 'APPKIT_MODE': 'real', 'HOME': dir.path, 'APPKIT_PEERS_DIR': blocker.path}, announce: false);
+        env: {'APP_CONTEXT_SCRATCH': dir.path, 'APP_CONTEXT_MODE': 'real', 'HOME': dir.path, 'APP_CONTEXT_PEERS_DIR': blocker.path}, announce: false);
     final c = buildController(ctx, RecordingNotifier(), now: () => now);
     await c.peers!.handle.started;
     expect(c.peers!.handle.hub, isNull);

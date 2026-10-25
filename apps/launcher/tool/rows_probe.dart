@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 // Prints the rows the launcher would show for a roster directory (the display was off, so the window could not be read).
 //   dart run tool/rows_probe.dart <roster dir>
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 import 'package:launcher/kit_gaps/pid_alive.dart';
 import 'package:launcher/logic/launcher_controller.dart';
 

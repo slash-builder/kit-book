@@ -1,6 +1,6 @@
 # calculator
 
-A four-function calculator with no stored state. It exists to find the **least an app can ask of the Application Kit** (a provisional name): if the Kit is nearly free here, the Kit is not in the way.
+A four-function calculator with no stored state. It exists to find the **least an app can ask of the App Context Kit** (a provisional name): if the Kit is nearly free here, the Kit is not in the way.
 
 | | |
 |---|---|
@@ -12,14 +12,14 @@ A four-function calculator with no stored state. It exists to find the **least a
 
 ## What it exercises
 
-* `AppKit.run` loading `app.json` and closing the app once on window close, quit, SIGINT or SIGTERM.
+* `AppContextKit.run` loading `app.json` and closing the app once on window close, quit, SIGINT or SIGTERM.
 * `AppContextScope` supplying the app name for the title.
 * `ModeBadge` showing the mock and scratch chip.
 * `pumpKitApp` in the tests, which runs the app in mock mode under a scratch directory so no test touches real files.
 
 ## Run and test
 
-From the repository root, once: `make setup` (add `KITS=all` while the Application Kit is private).
+From the repository root, once: `make setup` (add `KITS=all` while the App Context Kit is private).
 
 ```sh
 make app APP=calculator          # debug build for this computer

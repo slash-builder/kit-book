@@ -13,9 +13,14 @@
 #               reference  a Kit documented in the book but not needed to build the apps
 #
 # To move a pin: `make lock` (see book/90-reference/make-targets.md).
-# application-kit is private for now; it must be public (or this repository must stop needing it) before this repository is.
+# app-context-kit is private for now; it must be public (or this repository must stop needing it) before this repository is.
 # The pin is the scrubbed single-commit release candidate (branch public/release-prep), the exact tree that will become public. The earlier
 # private venue-kit pin is gone: the scrubbed Rust crate no longer depends on it.
-application-kit https://github.com/slash-builder/application-kit f88d406b3d874f012ec94c89946f0bb7a1116569 private core
-# storage-kit is private for now, like application-kit; apps/notes_rust builds its Rust core against it (path dependency, so it is fetched, not tested here).
+# RENAMED AT RELEASE: the Kit is called App Context Kit (formerly Application Kit). Its public repository, slash-builder/app-context-kit, is
+# created at release time. Until then the pin is fetched from the repository that exists today, slash-builder/application-kit (private; the
+# commit is on its branch public/release-prep), so the URL below keeps the OLD slug on purpose and `make setup KITS=all` keeps working. The
+# switch is one edit: change that URL to https://github.com/slash-builder/app-context-kit and re-pin to the commit the new repository starts
+# from (make lock KIT=app-context-kit). See book/90-reference/publishing.md, "The Kit rename and the pin".
+app-context-kit https://github.com/slash-builder/application-kit cf4b8db8c3df35cc81424f8731a617ff539dc313 private core
+# storage-kit is private for now, like app-context-kit; apps/notes_rust builds its Rust core against it (path dependency, so it is fetched, not tested here).
 storage-kit https://github.com/slash-builder/storage-kit 369ba2211ff37df083b3689db7d2d0c141dd7ab1 private app-dep

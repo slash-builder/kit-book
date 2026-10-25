@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notepad/coordination/note_sync.dart';
 import 'package:notepad/coordination/notes_peers.dart';
@@ -97,7 +97,7 @@ void main() {
       {AppManifest? m, Map<String, String> env = const {}, Duration heartbeat = const Duration(seconds: 30), int partBytes = 24 * 1024, int maxNoteBytes = 2 * 1024 * 1024, String? dirName, void Function(Directory notes)? plant}) async {
     final dir = Directory('${tmp.path}/${dirName ?? device}')..createSync(recursive: true);
     final ctx = await AppContext.open(m ?? manifest,
-        env: {'APPKIT_SCRATCH': dir.path, 'APPKIT_MODE': 'mock', 'APPKIT_DEVICE': device, 'HOME': dir.path, ...env}, announce: false);
+        env: {'APP_CONTEXT_SCRATCH': dir.path, 'APP_CONTEXT_MODE': 'mock', 'APP_CONTEXT_DEVICE': device, 'HOME': dir.path, ...env}, announce: false);
     final notesDir = Directory('${ctx.dirs.data}/notes')..createSync(recursive: true);
     plant?.call(notesDir);
     var t = 0;
@@ -429,7 +429,7 @@ void main() {
       final other = AppManifest.parse(File('app.json').readAsStringSync().replaceAll('dev.demo.notepad', 'dev.demo.minesweeper'));
       final a = await open('laptop'), b = await open('desktop');
       final game = await open('laptop-game', m: other);
-      final stranger = await open('stranger', env: {'APPKIT_ACCOUNT': 'someone-else'});
+      final stranger = await open('stranger', env: {'APP_CONTEXT_ACCOUNT': 'someone-else'});
       await connected(a, b);
       a.create('Private', 'for my copies only');
       await converged([a, b]);
@@ -447,7 +447,7 @@ void main() {
     test('peers not declared in app.json: starting sync fails loudly with the Kit\'s error; the app without sync still works', () async {
       final undeclared = AppManifest.parse(File('app.json').readAsStringSync().replaceAll('"kits": ["peers"]', '"kits": []'));
       final dir = Directory('${tmp.path}/undeclared')..createSync();
-      final ctx = await AppContext.open(undeclared, env: {'APPKIT_SCRATCH': dir.path, 'APPKIT_MODE': 'mock', 'HOME': dir.path}, announce: false);
+      final ctx = await AppContext.open(undeclared, env: {'APP_CONTEXT_SCRATCH': dir.path, 'APP_CONTEXT_MODE': 'mock', 'HOME': dir.path}, announce: false);
       final host = FileHost(NoteStore('${ctx.dirs.data}/notes'));
       expect(() => NotesPeers.start(ctx, host, report: (_) {}, network: net), throwsA(isA<KitNotDeclared>()));
       await ctx.close();

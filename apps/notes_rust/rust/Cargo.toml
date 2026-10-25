@@ -10,7 +10,7 @@ edition = "2021"
 rust-version = "1.94"
 publish = false
 license = "Apache-2.0"
-description = "Notes stored as content-addressed blocks (Storage Kit) in the app's slice of a shared Application Kit context"
+description = "Notes stored as content-addressed blocks (Storage Kit) in the app's slice of a shared App Context Kit context"
 
 [lib]
 # cdylib/staticlib are what the Flutter build links (cargokit); rlib is added so `cargo test` and tests/*.rs can link the crate.
@@ -25,10 +25,10 @@ unexpected_cfgs = { level = "allow", check-cfg = ["cfg(frb_expand)"] }
 flutter_rust_bridge = "=2.12.0"
 
 # The two Kits. Path dependencies into the fetched Kits (`make setup KITS=all` puts them in .kits/).
-# The Application Kit's Rust crate: the adopt API (ContextSnapshot, AppContext::adopt). default-features = false drops the
-# optional Venue client; this app never opens a Venue session. NOTE: `adopt` is not in the Application Kit's pinned commit
-# yet; ../../../kits.override links .kits/application-kit to the branch that has it until it is merged and re-pinned.
-application-kit = { path = "../../../.kits/application-kit/rust", default-features = false }
+# The App Context Kit's Rust crate: the adopt API (ContextSnapshot, AppContext::adopt). default-features = false drops the
+# optional Venue client; this app never opens a Venue session. NOTE: `adopt` is not in the App Context Kit's pinned commit
+# yet; ../../../kits.override links .kits/app-context-kit to the branch that has it until it is merged and re-pinned.
+app-context-kit = { path = "../../../.kits/app-context-kit/rust", default-features = false }
 # The Storage Kit (private): PartitionStore, put/get, fragment trees. Its S3 and HTTP backends are always built (a Kit gap).
 storage-kit = { path = "../../../.kits/storage-kit" }
 

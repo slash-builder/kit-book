@@ -1,9 +1,9 @@
-// Runs against a real venued, and is skipped unless VENUE_TOKEN_FILE is set. Start one with tools/venued-dev.sh from the Application Kit (.kits/application-kit/tools/venued-dev.sh), then
+// Runs against a real venued, and is skipped unless VENUE_TOKEN_FILE is set. Start one with tools/venued-dev.sh from the App Context Kit (.kits/app-context-kit/tools/venued-dev.sh), then
 //   VENUE_DAEMON=http://127.0.0.1:7878 VENUE_TOKEN_FILE=/tmp/venue-spike/tokens/render-queue flutter test test/venue_real_test.dart
 // The consumer `render-queue` has maxLiveHolds 3 in tools/venued-dev.sh, which is what the assertions rely on.
 import 'dart:io';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:render_queue/bootstrap.dart';
 import 'package:render_queue/logic/fake_render.dart';
@@ -29,7 +29,7 @@ void main() {
   setUp(() async {
     tmp = Directory.systemTemp.createTempSync('rq-real-');
     final manifest = AppManifest.parse(File('app.json').readAsStringSync());
-    ctx = await AppContext.open(manifest, env: {...Platform.environment, 'APPKIT_SCRATCH': tmp.path, 'APPKIT_MODE': 'real'}, announce: false);
+    ctx = await AppContext.open(manifest, env: {...Platform.environment, 'APP_CONTEXT_SCRATCH': tmp.path, 'APP_CONTEXT_MODE': 'real'}, announce: false);
     if (skip == null) await waitForNoHolds(ctx.venue);
   });
   tearDown(() async {
@@ -82,7 +82,7 @@ void main() {
     // "the crashed run": a second session of the same consumer takes a hold and never releases it.
     final manifest = AppManifest.parse(File('app.json').readAsStringSync());
     final crashed = await AppContext.open(manifest,
-        env: {...Platform.environment, 'APPKIT_SCRATCH': '${tmp.path}/crashed', 'APPKIT_MODE': 'real'}, announce: false);
+        env: {...Platform.environment, 'APP_CONTEXT_SCRATCH': '${tmp.path}/crashed', 'APP_CONTEXT_MODE': 'real'}, announce: false);
     await crashed.venue.hold(const VenueNeed(name: 'rq-crashed-1', contractClass: 'container.run.v1'), leaseSeconds: 60);
     await crashed.close(); // closing the context does not release holds it did not take through withHold
     final q = fast();

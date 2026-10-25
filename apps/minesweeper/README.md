@@ -18,7 +18,7 @@ Minesweeper with a saved game, high scores and two settings. With the peer layer
 
 ## Run and test
 
-From the repository root, once: `make setup` (add `KITS=all` while the Application Kit is private).
+From the repository root, once: `make setup` (add `KITS=all` while the App Context Kit is private).
 
 ```sh
 make run APP=minesweeper

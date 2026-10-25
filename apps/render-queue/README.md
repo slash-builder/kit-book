@@ -18,7 +18,7 @@ A queue of jobs that each take a **hold** on a resource broker (the Venue, a pro
 
 ## Run and test
 
-From the repository root, once: `make setup` (add `KITS=all` while the Application Kit is private).
+From the repository root, once: `make setup` (add `KITS=all` while the App Context Kit is private).
 
 ```sh
 make run APP=render-queue

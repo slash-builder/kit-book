@@ -1,5 +1,5 @@
 name: render_queue
-description: "Application Kit spike demo app."
+description: "App Context Kit spike demo app."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -30,10 +30,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  application_kit:
-    path: ../../.kits/application-kit/dart/application_kit
-  application_kit_flutter:
-    path: ../../.kits/application-kit/dart/application_kit_flutter
+  app_context_kit:
+    path: ../../.kits/app-context-kit/dart/app_context_kit
+  app_context_kit_flutter:
+    path: ../../.kits/app-context-kit/dart/app_context_kit_flutter
   interface_candidates:
     path: ../../labs/interface_candidates
 

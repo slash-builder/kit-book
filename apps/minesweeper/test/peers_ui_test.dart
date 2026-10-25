@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:application_kit/application_kit.dart';
-import 'package:application_kit_flutter/testing.dart';
+import 'package:app_context_kit/app_context_kit.dart';
+import 'package:app_context_kit_flutter/testing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:minesweeper/coordination/game_peers.dart';
@@ -26,13 +26,13 @@ void main() {
   }
 
   Future<GameController> boot(WidgetTester t, FakePeerNetwork net) async {
-    kit = await pumpKitApp(t, manifest: manifestText, env: {'APPKIT_DEVICE': 'laptop'}, app: (_) => MinesweeperApp(rng: Random(3), network: net));
+    kit = await pumpKitApp(t, manifest: manifestText, env: {'APP_CONTEXT_DEVICE': 'laptop'}, app: (_) => MinesweeperApp(rng: Random(3), network: net));
     return t.widget<GameScreen>(find.byType(GameScreen)).controller;
   }
 
   Future<(AppContext, GameController, GamePeers)> other(WidgetTester t, FakePeerNetwork net) async {
     final ctx = (await t.runAsync(() => AppContext.open(AppManifest.parse(manifestText),
-        env: {'APPKIT_SCRATCH': '${kit.scratch.path}/other', 'APPKIT_MODE': 'mock', 'APPKIT_DEVICE': 'desktop', 'HOME': kit.scratch.path},
+        env: {'APP_CONTEXT_SCRATCH': '${kit.scratch.path}/other', 'APP_CONTEXT_MODE': 'mock', 'APP_CONTEXT_DEVICE': 'desktop', 'HOME': kit.scratch.path},
         announce: false)))!;
     final c = GameController(storage: GameStorage(ctx.dirs.data), settings: Settings(SessionSettings(ctx.config)), rng: Random(5));
     final p = GamePeers.start(ctx, c, network: net);
@@ -121,7 +121,7 @@ void main() {
     addTearDown(() => dir.deleteSync(recursive: true));
     final blocker = File('${dir.path}/file')..writeAsStringSync('x');
     kit = await pumpKitApp(t,
-        manifest: manifestText, env: {'APPKIT_MODE': 'real', 'APPKIT_PEERS_DIR': blocker.path}, app: (_) => MinesweeperApp(rng: Random(3)));
+        manifest: manifestText, env: {'APP_CONTEXT_MODE': 'real', 'APP_CONTEXT_PEERS_DIR': blocker.path}, app: (_) => MinesweeperApp(rng: Random(3)));
     await settleUntil(t, () => find.byKey(const ValueKey('peers-offline')).evaluate().isNotEmpty);
     expect(find.textContaining('Peers: off (peers unavailable'), findsOneWidget);
     await t.tap(find.byKey(const ValueKey('cell-4-4')));

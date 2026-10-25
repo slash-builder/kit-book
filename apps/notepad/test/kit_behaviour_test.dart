@@ -2,8 +2,8 @@
 // old defects; each assertion below is the replacement behaviour, and the workarounds they justified were deleted from lib/kit_gaps/.
 import 'dart:io';
 
-import 'package:application_kit/application_kit.dart';
-import 'package:application_kit_flutter/application_kit_flutter.dart';
+import 'package:app_context_kit/app_context_kit.dart';
+import 'package:app_context_kit_flutter/app_context_kit_flutter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -12,7 +12,7 @@ void main() {
   tearDown(() => tmp.deleteSync(recursive: true));
 
   final manifest = AppManifest.fromJson({'id': 'dev.demo.notepad', 'name': 'Notepad', 'version': '0.1.0'});
-  Map<String, String> env() => {'APPKIT_SCRATCH': tmp.path};
+  Map<String, String> env() => {'APP_CONTEXT_SCRATCH': tmp.path};
   File cfg() => File('${tmp.path}/dev.demo.notepad/config/config.json');
 
   Future<AppContext> open() => AppContext.open(manifest, env: env(), platform: 'linux', home: '/x', announce: false);
@@ -81,7 +81,7 @@ void main() {
     expect(runs, 1);
   });
 
-  test('AppContext.run still closes the moment the body returns, which is why Flutter apps use AppKit.run instead', () async {
+  test('AppContext.run still closes the moment the body returns, which is why Flutter apps use AppContextKit.run instead', () async {
     var closedWhileAppStillRunning = false;
     await AppContext.run(manifest, (ctx) async {
       ctx.onClose(() => closedWhileAppStillRunning = true);

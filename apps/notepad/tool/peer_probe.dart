@@ -11,7 +11,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 import 'package:notepad/coordination/note_sync.dart';
 import 'package:notepad/coordination/notes_peers.dart';
 import 'package:notepad/logic/note.dart';
@@ -45,7 +45,7 @@ Future<void> main(List<String> args) async {
   final manifest = AppManifest.parse(File('app.json').readAsStringSync());
   final scratch = opt('scratch');
   final ctx = await AppContext.open(manifest,
-      env: {'APPKIT_SCRATCH': scratch, 'APPKIT_MODE': 'real', 'APPKIT_PEERS_DIR': opt('peers'), 'APPKIT_DEVICE': opt('device', 'probe'), 'HOME': scratch},
+      env: {'APP_CONTEXT_SCRATCH': scratch, 'APP_CONTEXT_MODE': 'real', 'APP_CONTEXT_PEERS_DIR': opt('peers'), 'APP_CONTEXT_DEVICE': opt('device', 'probe'), 'HOME': scratch},
       announce: false);
   final store = NoteStore('${ctx.dirs.data}/notes');
   final host = FileHost(store);

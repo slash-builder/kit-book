@@ -1,7 +1,7 @@
 /// Glue between the app (note host, data directory, notice banner) and the sync engine. No Flutter.
 library;
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 
 import 'note_sync.dart';
 import 'note_sync_hook.dart';

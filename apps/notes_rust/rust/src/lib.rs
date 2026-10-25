@@ -1,4 +1,4 @@
-//! notes_core: notes stored as content-addressed blocks on the Storage Kit, inside an Application Kit context that the
+//! notes_core: notes stored as content-addressed blocks on the Storage Kit, inside an App Context Kit context that the
 //! Flutter UI opened and this crate only adopts.
 //!
 //! * [`engine::Engine`] is the whole core (plain Rust, tested alone with `cargo test`).

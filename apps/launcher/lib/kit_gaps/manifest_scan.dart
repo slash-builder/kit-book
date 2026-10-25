@@ -3,7 +3,7 @@
 // is an install registry owned by an App Store Kit or the installer, not a directory scan of a source tree.
 import 'dart:io';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 
 class ManifestScan {
   const ManifestScan(this.manifests, this.problems);

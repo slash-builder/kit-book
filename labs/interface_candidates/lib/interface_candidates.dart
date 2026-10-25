@@ -1,4 +1,4 @@
-/// CANDIDATE Interface Kit components, derived from what six Application Kit
+/// CANDIDATE Interface Kit components, derived from what six App Context Kit
 /// demo apps and a larger SlashBuilder app duplicate. See README.md for what each replaces, the
 /// theming seam, the accessibility contract and how a component is promoted.
 library;

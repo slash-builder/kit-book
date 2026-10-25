@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:application_kit/application_kit.dart';
-import 'package:application_kit_flutter/testing.dart';
+import 'package:app_context_kit/app_context_kit.dart';
+import 'package:app_context_kit_flutter/testing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:interface_candidates/interface_candidates.dart';
@@ -32,7 +32,7 @@ void main() {
     core = with_ ?? FakeNotesCore(device: 'laptop', clock: () => clock += 1000);
     kit = await pumpKitApp(t,
         manifest: manifestText,
-        env: {'APPKIT_DEVICE': 'laptop'},
+        env: {'APP_CONTEXT_DEVICE': 'laptop'},
         scratch: scratch,
         app: (_) => NotesApp(
               openCore: (_) async => core,

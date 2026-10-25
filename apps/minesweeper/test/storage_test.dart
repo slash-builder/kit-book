@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:minesweeper/logic/game.dart';
 import 'package:minesweeper/logic/scores.dart';
@@ -71,7 +71,7 @@ void main() {
 
   group('settings through the Kit', () {
     final manifest = AppManifest.fromJson({'id': 'dev.demo.minesweeper', 'name': 'Minesweeper', 'version': '0.1.0', 'envPrefix': 'MINES'});
-    Map<String, String> env() => {'APPKIT_SCRATCH': tmp.path, 'MINES_MODE': 'mock'};
+    Map<String, String> env() => {'APP_CONTEXT_SCRATCH': tmp.path, 'MINES_MODE': 'mock'};
 
     test('difficulty and question marks persist across opens', () async {
       var ctx = await AppContext.open(manifest, env: env(), platform: 'linux', home: '/x', announce: false);

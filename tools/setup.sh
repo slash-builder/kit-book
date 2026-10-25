@@ -50,10 +50,10 @@ fetched_kits core | while read -r name dir; do dart_packages_in "$dir"; done > "
 if [ ! -s "$KITS_DIR/.pkgs" ]; then
   say "  (no Kit is fetched, so the demo apps cannot resolve their dependencies; run make setup KITS=all while the Kits are private)"
 fi
-HAVE_APPKIT=0; [ -d "$KITS_DIR/application-kit" ] && HAVE_APPKIT=1
+HAVE_APP_CONTEXT_KIT=0; [ -d "$KITS_DIR/app-context-kit" ] && HAVE_APP_CONTEXT_KIT=1
 while read -r kind dir; do
   case "$dir" in
-    "$ROOT"/apps/*) if [ "$HAVE_APPKIT" = 0 ]; then printf '  %-9s %s  (skipped: application-kit not fetched)\n' "$kind" "${dir#"$ROOT"/}"; continue; fi ;;
+    "$ROOT"/apps/*) if [ "$HAVE_APP_CONTEXT_KIT" = 0 ]; then printf '  %-9s %s  (skipped: app-context-kit not fetched)\n' "$kind" "${dir#"$ROOT"/}"; continue; fi ;;
   esac
   pub_get "$kind" "$dir" || FAIL=1
 done < "$KITS_DIR/.pkgs.all"

@@ -70,7 +70,7 @@ make publish-site PUBLISH=1    # pushes gh-pages, but only if the repository is 
 * **This repository is public.** Do not put internal hostnames, ticket ids, local file paths that contain a user name, notes-vault paths, or the names of people (other than the author in the credit line) in any file. `make check-public` finds the common cases; it cannot find them all, so read your own diff.
 * **Do not describe security-relevant defects of other systems.** If you found one, report it to the owners of that system privately.
 * **Say where a number came from** (what was run, on what, when). Say "not tested" when something was not tested.
-* **Names that are provisional stay marked.** The Application Kit and the Venue (a resource broker) are provisional names; say so once where they first appear on a page.
+* **Names that are provisional stay marked.** The App Context Kit and the Venue (a resource broker) are provisional names; say so once where they first appear on a page.
 * **Page names are stable.** Link to sections by their headings. `make docs` checks the links.
 * **Code samples copied from a file** can be marked with `copied-from=<path>` after the language on the opening fence; `make docs` then checks the sample still matches the file.
 

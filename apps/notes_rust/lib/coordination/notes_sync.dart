@@ -1,6 +1,6 @@
 /// The transport half of sync. The Rust core holds the blocks and does every check that needs them (`missingBlocks`,
 /// `exportBlocks`, `importBlocks` with hash verification, `applyHeads`, conflicts); this file only carries bytes over the
-/// Application Kit's peer layer and applies the app's policy. Pure Dart (no Flutter).
+/// App Context Kit's peer layer and applies the app's policy. Pure Dart (no Flutter).
 ///
 /// ## The protocol
 ///  * **hello** carries the core's heads digest (one hash of every note's head). Equal digests: nothing to do.
@@ -24,7 +24,7 @@ library;
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:application_kit/application_kit.dart';
+import 'package:app_context_kit/app_context_kit.dart';
 
 import '../core/notes_core.dart';
 import '../kit_gaps/blob_pull.dart';

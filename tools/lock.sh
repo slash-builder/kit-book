@@ -3,7 +3,7 @@
 # you have seen the difference and said yes.
 #
 #   tools/lock.sh                  every Kit
-#   tools/lock.sh application-kit  one Kit
+#   tools/lock.sh app-context-kit  one Kit
 #   LOCK_YES=1 tools/lock.sh       do not ask (for scripts; the difference is still printed)
 #
 # The newest commit is the tip of the Kit's default branch, read from the GitHub API (through gh when it is
