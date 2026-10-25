@@ -90,7 +90,7 @@ Re-run when this page was written: 53 passed, 0 failed (with the 90-second idle-
 | Whether `seq` is per link, restarting at 1 (the Dart core), or one counter per sender (the Rust prototype). | The App Context Kit's maintainers (a specification decision) |
 | Whether `kind` is a closed enum (Rust prototype) or `kit.`-prefixed strings (Dart core). | The App Context Kit's maintainers (a specification decision) |
 | The remote-provider seam gaps, an error code for an app-level refusal, an unreachable-endpoint code, and a caller-chosen socket path. | The protocol owners |
-| Not tested: a real Hearth hub behind the provider, real LAN discovery, release builds. | The App Context Kit's maintainers |
+| Not tested: a real Hearth hub behind the provider, real LAN discovery, signed or packaged release builds. | The App Context Kit's maintainers |
 
 ## Storage Kit
 

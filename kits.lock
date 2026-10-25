@@ -21,6 +21,6 @@
 # commit is on its branch public/release-prep), so the URL below keeps the OLD slug on purpose and `make setup KITS=all` keeps working. The
 # switch is one edit: change that URL to https://github.com/slash-builder/app-context-kit and re-pin to the commit the new repository starts
 # from (make lock KIT=app-context-kit). See book/90-reference/publishing.md, "The Kit rename and the pin".
-app-context-kit https://github.com/slash-builder/application-kit 518ca2070dbff35e75ae9dda9a83efedea6d477d private core
+app-context-kit https://github.com/slash-builder/application-kit d252416c0b2503b2449e2709af0962096de27669 private core
 # storage-kit is private for now, like app-context-kit; apps/notes_rust builds its Rust core against it (path dependency, so it is fetched, not tested here).
 storage-kit https://github.com/slash-builder/storage-kit 369ba2211ff37df083b3689db7d2d0c141dd7ab1 private app-dep

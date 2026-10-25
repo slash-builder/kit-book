@@ -41,7 +41,7 @@ The Kits are not copied into this repository and are not git submodules. A scrip
 
 A calculator, minesweeper, a notepad, a stopwatch, a render queue, a launcher and notes_rust, the one with a Rust core. The calculator is the floor: it barely needs the App Context Kit and says so. The notepad is the ceiling: it syncs notes between copies of itself and resolves conflicts. [The demo apps guide](book/20-guides/demo-apps.md) has the measurements and the walkthroughs.
 
-What the demos do not cover is said plainly there: **only `notes_rust` has a Rust core**, built and run on macOS only, and its transport is still Dart. The other six are Flutter on a Dart core.
+What the demos do not cover is said plainly there: **only `notes_rust` has a Rust core**, run on macOS and, like the other six, built in release mode and launched headless in a Linux container (never on a real Linux desktop), and its transport is still Dart. The other six are Flutter on a Dart core.
 
 ## About the book
 

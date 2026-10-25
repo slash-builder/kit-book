@@ -54,7 +54,7 @@ The book is a skeleton at the moment. It says what is written and what is still 
 * Page names are stable; sections are linked by their headings. `make docs` checks every relative link and heading anchor.
 * Code blocks are checked against the repository where they say `copied-from=`. Where a block is illustrative, it says so.
 * "Verified" means a test, a command or a measurement was run for that page. Anything else is labelled as reasoned or reported.
-* Numbers come with what they were measured on (macOS debug builds, loopback, a throwaway local broker). They are not benchmarks.
+* Numbers come with what they were measured on (macOS debug builds, Linux release builds launched headless in a container, loopback, a throwaway local broker). They are not benchmarks.
 * The names App Context Kit and Venue (a resource broker) are provisional.
 
 ---

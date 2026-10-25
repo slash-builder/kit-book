@@ -40,11 +40,11 @@ This runs every fetched Kit's own tests, the components in `labs/`, and the test
 
 ```sh
 make app APP=calculator    # a debug build for this computer
-make run APP=calculator    # run it (macOS or Linux desktop)
+make run APP=calculator    # run it (tried on macOS; on Linux the apps build and launch headless in a container, a real desktop has not been tried)
 make apps                  # build all seven
 ```
 
-The apps are Flutter desktop apps. On macOS this needs the full Xcode app, not only the command line tools; on Linux it needs a few packages (`make doctor` lists them). Windows is not covered.
+The apps are Flutter desktop apps. On macOS this needs the full Xcode app, not only the command line tools; on Linux it needs a few packages (`make doctor` lists them); the [demo apps guide](20-guides/demo-apps.md#linux-smoke-test) says what the Linux test did and did not show. Windows is not covered.
 
 To see two copies of an app find each other, follow [run two copies and watch them find each other](20-guides/demo-apps.md#run-two-copies-and-watch-them-find-each-other).
 
