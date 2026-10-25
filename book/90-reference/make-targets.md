@@ -15,7 +15,7 @@ The scripts behind the targets are in [`tools/`](../../tools/). They are plain P
 | `LOCK_YES` | `lock` | `1` skips the y/N question before `kits.lock` is rewritten (the difference is still printed) |
 | `GITHUB_TOKEN` | `fetch`, `lock` | A token that can read private Kits, used when the GitHub CLI is not logged in |
 | `VENUE_TOKEN_FILE` | `test`, `test-integration` | A resource-broker token file. When set, the render-queue tests that need a running broker run for real instead of skipping |
-| `CHECK_PUBLIC_STRICT` | `check-public` | `1` also fails while `kits.lock` lists private Kits |
+| `CHECK_PUBLIC_STRICT` | `check-public` | `1` also fails while `kits.lock` lists a private Kit with role `core`. A private `app-dep` Kit only prints a warning that names the apps that will be skipped for a stranger. `go-public-check` sets it |
 | `REGISTRY` | `docs-catalog` | Maintainers only: the path of the Kit registry file (`kits.yaml`). If empty, `KITS_REGISTRY` from the environment is used. With neither, `docs-catalog` stops with a message |
 | `KITS_REGISTRY` | `docs-catalog` | The same path, from the environment, for people who regenerate often |
 | `REGISTRY_COMMIT` | `docs-catalog` | The commit of the registry the catalog is generated from; the catalog index prints it as "Generated from registry commit abc1234" |
@@ -29,6 +29,11 @@ The scripts behind the targets are in [`tools/`](../../tools/). They are plain P
 | `SITE_INDEXABLE` | `site`, `site-check`, `publish-site` | `0` (default) puts `<meta name="robots" content="noindex">` on every page; `1` leaves it out so search engines may index the site (mdBook keeps noindex on its own `print.html` and `toc.html`). Set `1` only when the site is meant to be found |
 | `PUBLISH` | `publish-site` | `1` allows the push to the `gh-pages` branch, and only if the repository behind `origin` is public. Anything else is a dry run |
 | `MDBOOK` | `site` | The path of the `mdbook` program to use. Otherwise `mdbook` on the `PATH`, then `~/.cache/mdbook/mdbook` |
+| `STRANGER_REPO_URL` | `stranger-test` | The repository to clone (default `https://github.com/slash-builder/kit-book`; a local path works for a rehearsal) |
+| `STRANGER_DRY` | `stranger-test` | `1` prints the plan and what would be removed from the environment, and clones nothing |
+| `STRANGER_STEPS` | `stranger-test` | Which steps to run after the clone, in order (default `doctor setup test-fast`) |
+| `STRANGER_KEEP` | `stranger-test` | `1` keeps the temporary clone and prints where it is |
+| `GO_PUBLIC_OFFLINE` | `go-public-check` | `1` skips the checks that need the network and ends INCOMPLETE (exit 3), never a pass |
 | `NO_COLOR` | all | Turns off colours in the output |
 | `KITS_LOCK` | the scripts in `tools/` | Read a different lock file (used for testing the fetch script) |
 
@@ -46,13 +51,13 @@ What CI runs: `lint`, then `test-fast`, then `build`.
 
 Checks the toolchain and prints a table: tool, whether it is required, status, the version found and the version wanted. For each missing or too-old tool it prints the install command for your system (Homebrew on macOS, `apt` on Debian and Ubuntu). It installs **nothing** and exits non-zero only when a **required** tool is missing or too old.
 
-* **Required:** Flutter and Dart (the minimum Dart is read from the apps' `pubspec.yaml` files), Rust and Cargo (the minimum is the highest `rust-version` among the Kits' crates and the apps' Rust cores), `curl`, `tar`, Python 3, and on macOS the Xcode command line tools. **`flutter_rust_bridge_codegen` is required while an app with a Rust core (`apps/notes_rust`) is in the tree**, at exactly the version that app pins in its `pubspec.yaml` (`flutter_rust_bridge: 2.12.0` today); it is looked for on `PATH` and in `~/.cargo/bin`, where `cargo install` puts it.
+* **Required:** Flutter and Dart (the minimum Dart is read from the apps' `pubspec.yaml` files), Rust and Cargo (the minimum is the highest `rust-version` among the Kits' crates and the apps' Rust cores), `curl`, `tar`, Python 3, and on macOS the Xcode command line tools. **`flutter_rust_bridge_codegen` is required only when an app with a Rust core (`apps/notes_rust`) is one that can be built here**, at exactly the version that app pins in its `pubspec.yaml` (`flutter_rust_bridge: 2.12.0` today); it is looked for on `PATH` and in `~/.cargo/bin`, where `cargo install` puts it. An app that is [skipped](#kitsneed) (its Kit is not fetched) adds no requirement: not this tool, not its Rust version, not CocoaPods; `doctor` lists the skipped apps under the table.
 * **For apps:** needed only to build and run the demo apps. On macOS, the full Xcode app, and CocoaPods when an app has a native plugin (the Rust core's build glue is one). On Linux, `clang`, `cmake`, `ninja`, `pkg-config` and the GTK 3 development files. `make apps` requires them; `make test-fast` does not.
 * **Optional:** Docker (for the Linux container checks), `redis-server`, `protoc`, `flutter_rust_bridge_codegen` (optional only when no app in the tree needs it), the GitHub CLI (`gh`, for private Kits) and `mdbook` (for `make site`).
 
 ### `setup`
 
-Runs `doctor`, then `fetch`, then `flutter pub get` or `dart pub get` for every app and package, then `cargo fetch` for each Kit's Rust crate and for each app's own Rust core. Safe to run again. `KITS=all` also fetches private Kits. `SETUP_INSTALL=1` offers to run the install commands for missing required tools; the default never installs.
+Runs `doctor`, then `fetch`, then `flutter pub get` or `dart pub get` for every app and package, then `cargo fetch` for each Kit's Rust crate and for each app's own Rust core. An app whose Kit is not fetched is skipped with a one-line reason (see [`kits.need`](#kitsneed)); that is never an error. Safe to run again. `KITS=all` also fetches private Kits. `SETUP_INSTALL=1` offers to run the install commands for missing required tools; the default never installs.
 
 ### `fetch`
 
@@ -64,7 +69,7 @@ Shows how the pins would move: for each Kit it asks GitHub for the newest commit
 
 ### `test`
 
-Runs every fetched Kit's own test suite, then `labs/interface_candidates`, then every demo app (an app with a Rust core runs its `cargo test` first and then `flutter test`, which uses an in-memory stand-in for the core, so it needs no native build), then the integration suites that can run on this computer. A Kit with a `Makefile` is tested with its own `make test-fast` (or `make test`); a Kit without one is tested with its native commands (`dart test`, `flutter test`, `cargo test`). Prints a table with each suite's passed, failed and skipped counts and its seconds; logs are in `build/test-logs/`. Exits non-zero when any suite that ran has a failure.
+Runs every fetched Kit's own test suite, then `labs/interface_candidates`, then every demo app (an app with a Rust core runs its `cargo test` first and then `flutter test`, which uses an in-memory stand-in for the core, so it needs no native build), then the integration suites that can run on this computer. A Kit with a `Makefile` is tested with its own `make test-fast` (or `make test`); a Kit without one is tested with its native commands (`dart test`, `flutter test`, `cargo test`). Prints a table with each suite's passed, failed and skipped counts and its seconds; logs are in `build/test-logs/`. An app whose Kit is not fetched is skipped whole, with a line such as `skipped apps/notes_rust: needs storage-kit (private; fetch with KITS=all)` and one row in the table that says so. Exits non-zero when any suite that ran has a failure; a skip is not one.
 
 ### `test-fast`
 
@@ -83,19 +88,19 @@ Only the suites that need Docker, Redis or a daemon. Each one skips with a clear
 
 ### `apps`
 
-Builds every demo app in debug mode for this computer (macOS or Linux desktop). Needs the "for apps" tools from `doctor` and a fetched App Context Kit.
+Builds every demo app in debug mode for this computer (macOS or Linux desktop). Needs the "for apps" tools from `doctor` and a fetched App Context Kit. An app whose [Kit is not fetched](#kitsneed) is skipped with a one-line reason, and the others are built.
 
 ### `app`
 
-Builds one app: `make app APP=notepad`.
+Builds one app: `make app APP=notepad`. If you name an app whose [Kit is not fetched](#kitsneed), it says which Kit and what to run (`make setup KITS=all` for a private one) and exits non-zero, because the app you asked for was not built.
 
 ### `run`
 
-Runs one app on this computer: `make run APP=notepad`.
+Runs one app on this computer: `make run APP=notepad`. Like `app`, it stops with the fix if the app's [Kit is not fetched](#kitsneed).
 
 ### `frb`
 
-Regenerates the Flutter-to-Rust bridge (`flutter_rust_bridge_codegen generate`) for every app that has a `flutter_rust_bridge.yaml`, which is `apps/notes_rust` today. Run it after changing the bridge layer (`rust/src/api/*.rs`) and commit the result: the generated files are committed so that `make app` works without this tool. It refuses to run with a codegen whose version differs from the one the app pins.
+Regenerates the Flutter-to-Rust bridge (`flutter_rust_bridge_codegen generate`) for every app that has a `flutter_rust_bridge.yaml`, which is `apps/notes_rust` today. Run it after changing the bridge layer (`rust/src/api/*.rs`) and commit the result: the generated files are committed so that `make app` works without this tool. It refuses to run with a codegen whose version differs from the one the app pins. An app that is [skipped](#kitsneed) is passed over with a one-line reason.
 
 ### `build`
 
@@ -178,6 +183,7 @@ It **refuses to run** if `.kits/<name>/.fetched` is not exactly the commit `kits
 
 * the catalog generator, `tools/tests/test_gen_catalog.py`: sanitising, idempotence, the public/private link rule, the missing-repository note, status grouping, the rewrite of the `SUMMARY.md` block and the listing of pulled reference pages on the cards. They need PyYAML and skip themselves with a message when it is missing;
 * the reference-docs puller, `tools/tests/test_pull_docs.py`: each class of link rewrite, the banner, anchors, idempotence, the pin refusal and `--check`. They need nothing beyond Python 3;
+* the launch tooling: `tools/tests/test_go_public_check.py` (every check of `go-public-check`, with `curl` and `gh` replaced by stand-ins), `tools/tests/test_stranger_env.py` (the sanitised environment of `stranger-test` and its dry run), `tools/tests/test_app_needs.py` (the per-app Kit requirements: the gate, `test-run.sh` and `frb.sh` in a throwaway repository with stand-in `flutter` and `cargo`), `tools/tests/test_render_community.py` and `tools/tests/test_gen_third_party_notices.py`. They need nothing beyond Python 3;
 * the website tools: `tools/tests/test_site_stage.py` (the link rewrite and the README rename), `tools/tests/test_site_check.py` (the checks of `site-check`) and `tools/tests/test_publish_site.py` (the dry run and the push guard, against a local bare repository and a stub `gh`; needs `git`). They need nothing beyond Python 3.
 
 Plain `python3 -m unittest` from the repository root runs the same tests.
@@ -190,7 +196,8 @@ Builds the book as a website with [mdBook](https://rust-lang.github.io/mdBook/) 
 2. **Build with mdBook.** The configuration is generated into `build/mdbook/`, so there is no `book.toml` to keep in step. The site is served at `/`, search is on, every page has an "edit this page" link, and there is a `404.html`. The default favicon is kept.
 3. **Diagrams.** The `mermaid` code blocks of the pulled Kit pages are drawn in the browser by a pinned copy of mermaid that is committed in `tools/site/vendor/` and copied into the site; nothing is loaded from another host. The page's light or dark theme decides the diagram colours.
 4. **Robots.** Every page gets `<meta name="robots" content="noindex">` unless `SITE_INDEXABLE=1`.
-5. **Publish staging.** `build/site-publish/` is `build/site/` plus a `CNAME` file holding exactly `SITE_DOMAIN` and an empty `.nojekyll`. That folder is what `publish-site` commits.
+5. **Third-party notices.** `THIRD-PARTY-NOTICES.md` is copied into the site root, because the vendored diagram script is a bundle of other people's code and their licences ask for the notice to travel with it.
+6. **Publish staging.** `build/site-publish/` is `build/site/` plus a `CNAME` file holding exactly `SITE_DOMAIN` and an empty `.nojekyll`. That folder is what `publish-site` commits.
 
 Preview it with `python3 -m http.server -d build/site 8000`. The first line of output says how many pages were built. `make docs` does not need mdBook and is unchanged.
 
@@ -202,6 +209,7 @@ Checks the site that `make site` built (it stops with a message if there is none
 * **Publish folder:** `build/site-publish/` has a `CNAME` that holds exactly `SITE_DOMAIN`, an empty `.nojekyll`, an `index.html`, and the same pages as `build/site/`.
 * **Robots:** with `SITE_INDEXABLE=0` every page carries the noindex tag; with `SITE_INDEXABLE=1` none does, except `print.html` and `toc.html`, which mdBook always marks noindex itself.
 * **Diagrams:** the vendored `tools/site/vendor/mermaid.min.js`, the copy in the site and the copy in the publish folder all match the sha256 recorded in `tools/site/vendor/README.md`, the licence file is there, and every page with a diagram loads the init script.
+* **Notices:** `THIRD-PARTY-NOTICES.md` is in the site root and in the publish folder, byte for byte the one at the repository root.
 
 Exits non-zero on any failure.
 
@@ -218,6 +226,37 @@ Undo the local branch with `git branch -D gh-pages`.
 ### `check-public`
 
 Scans every file in the tree except `.kits/` and build output for anything that must not be public: internal hostnames, ticket ids, local paths that contain a user name (except the invented user name `ada` that the Kits' reference pages use in examples), notes-vault paths, references to agent instruction files, repository URLs that are not public Kits in `kits.lock` or on the card of a Kit that `tools/kit-visibility.tsv` marks public, people named in credits or licence text other than the author, and secret patterns. The generator `tools/gen-catalog.py` and its tests are not scanned, because they spell the patterns out; what they generate, including `tools/kit-visibility.tsv`, is. This repository's own address (`github.com/slash-builder/kit-book`, which the website links to) is allowed. One more file is skipped: the vendored `tools/site/vendor/mermaid.min.js`, third-party minified JavaScript that nobody here edits. It is skipped only while its sha256 equals the one recorded in `tools/site/vendor/README.md`; if the file changes it is scanned like everything else, and the README and licence next to it are always scanned. It prints `file:line` for every hit and exits non-zero on any. While `kits.lock` lists private Kits it also prints a note that each must become public (or stop being needed) before this repository is made public.
+
+With `CHECK_PUBLIC_STRICT=1` it also fails while `kits.lock` lists a private Kit with role `core`. A private `app-dep` Kit is only a warning that names the apps that will be skipped for a stranger. `THIRD-PARTY-NOTICES.md` is exempt from the rule about people named in credits (it exists to name the copyright holders that third-party licences require); every other rule scans it.
+
+### `community`
+
+**For maintainers.** Renders `CODE_OF_CONDUCT.md` and `SECURITY.md` at the repository root from the templates in `tools/community/` and the two contacts in `tools/contacts.conf` (`CONDUCT_CONTACT`, `SECURITY_CONTACT`), with `tools/render-community.py`. The Code of Conduct is the Contributor Covenant 2.1, unmodified except for the enforcement contact; the template records the sha256 of the official text it was made from. An empty contact is written as the visible marker `[CONTACT NOT SET]` with a draft banner at the top of the file, and the tool prints a warning; `python3 tools/render-community.py --final` fails instead, and `--check` fails if the committed files are not a fresh render. Edit the template or `contacts.conf`, never the rendered file.
+
+### `go-public-check`
+
+**For maintainers.** The launch gate: a single read-only run that prints a checklist table, one row per check, `ok`, `warn` or `FAIL`, and exits 1 if any row is `FAIL` (a `warn` says what to do and does not fail it). It writes nothing to the working tree (the website is built in a temporary copy), changes no GitHub setting and touches no DNS. It takes about a minute.
+
+| # | Check |
+|---|---|
+| a | `CHECK_PUBLIC_STRICT=1 make check-public` passes; a private `app-dep` Kit is a warning that names the apps that will be skipped |
+| b | `kits.lock`: each URL ends in a repository named like the Kit; no `RENAMED AT RELEASE` comment; no `application-kit`, `application_kit` or `appkit`; every pin is 40 hex characters |
+| c | every `core` Kit's repository answers HTTP 200 to a plain `curl` with no token, and `github.com/<org>/<repo>/commit/<sha>` of its pin answers 200 (a redirect is not a 200) |
+| d | `make docs`, `make docs-pull-check`, and `make site` and `make site-check` with `SITE_INDEXABLE=1` pass |
+| e | `LICENSE` and `LICENSE-docs` exist; `THIRD-PARTY-NOTICES.md` exists and names the vendored mermaid version and sha256 recorded in `tools/site/vendor/README.md` |
+| f | `tools/contacts.conf` has both contacts (else: `set CONDUCT_CONTACT and SECURITY_CONTACT in tools/contacts.conf`); `CODE_OF_CONDUCT.md` and `SECURITY.md` exist, carry no placeholder (`[CONTACT NOT SET]`, `[INSERT`, `{{`) and are a fresh render |
+| g | no tracked file spells an old Kit name (`appkit`, `application_kit`, `application-kit`) except where `tools/go-public-allow.txt` allows it (never `kits.lock`) |
+| h | this repository's own visibility, from `gh repo view --json visibility`: `PRIVATE` is a warning, "make the repo public, then re-run" |
+| i | the built site's `CNAME` equals `SITE_DOMAIN` |
+| j | the working tree is clean and on `main` (a warning), and every `apps/<app>/kits.need` names a Kit that `kits.lock` lists |
+
+`GO_PUBLIC_OFFLINE=1` skips the two network checks (c, h) and ends `INCOMPLETE` with exit 3, never a pass. The pure parts of the checks have unit tests (`tools/tests/test_go_public_check.py`). What to do with the result, and in which order, is in [Publishing the website](publishing.md#before-you-publish).
+
+### `stranger-test`
+
+**For maintainers, after the repository is public.** Does what a newcomer with no GitHub account would do, and shows what they would see: clones `STRANGER_REPO_URL` into a fresh temporary folder, then runs `make doctor`, `make setup` (with `KITS=public`, the default) and `make test-fast` in the clone. Everything runs in a sanitised environment (`tools/stranger-env.py`): the GitHub token variables are removed, git may not ask for a password and has no credential helper (`-c credential.helper=`, `GIT_TERMINAL_PROMPT=0`), and `gh` is not on `PATH`, so a step that needs a login cannot quietly use yours. A fetch that skips for want of a login does not make `make setup` fail, so afterwards the script checks that every `core` Kit in `kits.lock` is public and was fetched at its pinned commit, and fails loudly if not (`A STRANGER COULD NOT GET ...`). It ends with a table of steps and exits non-zero if anything failed.
+
+`STRANGER_DRY=1 make stranger-test` prints the plan and the names (never the values) of the environment variables it would remove, and clones nothing. `STRANGER_STEPS="doctor setup"` runs fewer steps; `STRANGER_KEEP=1` keeps the clone. Apps that need a Kit that is still private are skipped with a message, which is the expected result; see [`kits.need`](#kitsneed).
 
 ### `clean`
 
@@ -246,3 +285,15 @@ name  repo-url  commit  visibility  role
 ## `kits.override`
 
 Optional. One line per Kit, `name  path`, with the path relative to the repository root; lines starting with `#` are comments. For a Kit named here, `make fetch` and `make setup` link `.kits/<name>/` to that local checkout instead of downloading the pin in `kits.lock`, and say so in their output, because the pin is then not what you are building against. The file exists for a Kit change that is not merged yet. It is not meant to stay: the steps for removing a line are in the file's own header comment.
+
+## `kits.need`
+
+Optional, one per app, at `apps/<app>/kits.need`. The Kits the app needs **besides the App Context Kit**, one name from `kits.lock` per line; `#` starts a comment. Today only `apps/notes_rust/kits.need` exists, and it lists `storage-kit`, which is private for now.
+
+An app whose needed Kit is not in `.kits/` is **skipped, never failed**, by `setup`, `test`, `test-fast`, `test-integration`, `apps`, `frb` and `doctor`. Each prints one line such as
+
+```text
+skipped apps/notes_rust: needs storage-kit (private; fetch with KITS=all)
+```
+
+and the test table shows the app as skipped, so a stranger who runs `make setup && make test-fast` with only public Kits gets a green run that says plainly what it left out. `doctor` also drops everything that app alone required (`flutter_rust_bridge_codegen`, its Rust version, CocoaPods). `make app APP=<app>` and `make run APP=<app>`, which name one app, say which Kit is missing and what to run, and exit non-zero. With `KITS=all` (and a GitHub login) nothing is skipped and every test runs as before. `make go-public-check` fails if a `kits.need` names a Kit that `kits.lock` does not list.

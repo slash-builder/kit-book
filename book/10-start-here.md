@@ -26,7 +26,7 @@ While some Kits are private, fetch them too. This needs a GitHub login: install 
 make setup KITS=all
 ```
 
-Without a login, private Kits are skipped with a one-line explanation, and the demo apps (which need the App Context Kit) cannot be built or tested.
+Without a login, private Kits are skipped with a one-line explanation. A demo app that needs a Kit that was skipped is skipped too, with a line that says which (for example `skipped apps/notes_rust: needs storage-kit (private; fetch with KITS=all)`); everything else still sets up and tests. The demo apps all need the App Context Kit, so while that is private they cannot be built or tested without a login.
 
 ## 3. Run the tests
 
@@ -55,6 +55,7 @@ To see two copies of an app find each other, follow [run two copies and watch th
 | `make doctor` says a tool is `MISSING` or `TOO OLD` | The tool is not installed or is older than the apps need | Run the command listed under "What to do", then `make doctor` again |
 | `skipped (private Kit; run: make setup KITS=all)` | That Kit is not public yet | Log in with `gh auth login`, then `make setup KITS=all` |
 | `skipped (no GitHub login ...)` | You asked for private Kits without a login | Same as above, or set `GITHUB_TOKEN` |
+| `skipped apps/<app>: needs <kit> (...)` | That app needs a Kit that is not fetched (it lists it in its `kits.need`). Skipping is not a failure | Nothing, or `make setup KITS=all` if the Kit is private and you have access |
 | `app-context-kit is not fetched` | The demo apps need the App Context Kit | `make setup KITS=all` |
 | `cargo ... skipped: could not resolve` | The Rust crate needs a Kit that is not fetched | `make setup KITS=all` |
 | A test fails | Something real, or a changed Kit pin | Read the log named under the table (`build/test-logs/`); see [Make targets](90-reference/make-targets.md) |

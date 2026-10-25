@@ -17,6 +17,7 @@ You need a computer with `make`, [Flutter](https://docs.flutter.dev/get-started/
 ```sh
 make doctor     # check your tools; it tells you what to install and installs nothing
 make setup      # fetch the Kits and each project's packages (make setup KITS=all while some Kits are private)
+                # an app that needs a Kit you do not have is skipped with a one-line reason, never failed
 make test-fast  # run every test
 make run APP=calculator
 ```
@@ -32,6 +33,7 @@ make run APP=calculator
 | [`labs/interface_candidates`](labs/interface_candidates/README.md) | Components proposed for the shared UI Kit, built from what the demo apps duplicate. Plain Material |
 | [`tools/`](tools/) | The scripts behind the Makefile (POSIX `sh` and Python 3 only; the maintainer-only catalog generator also needs PyYAML) |
 | [`kits.lock`](kits.lock) | Which Kits the apps use, each pinned to one commit. `make setup` downloads them into `.kits/` |
+| [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md), [`SECURITY.md`](SECURITY.md), [`THIRD-PARTY-NOTICES.md`](THIRD-PARTY-NOTICES.md) | How to behave here, how to report a vulnerability, and the licences of the one third-party file |
 
 The Kits are not copied into this repository and are not git submodules. A script downloads each one at its pinned commit as a plain archive, so nothing here asks you to run a recursive git command.
 
@@ -49,10 +51,13 @@ The book is meant to be read in order the first time and used as a reference aft
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Before you send a change, run `make docs`, `make check-public` and `make test-fast`.
 
+Please read the [Code of Conduct](CODE_OF_CONDUCT.md) (the Contributor Covenant 2.1). To report a vulnerability, follow [SECURITY.md](SECURITY.md): privately, never in a public issue.
+
 ## Licence
 
 * **Documentation** is licensed under [Creative Commons Attribution 4.0 (CC BY 4.0)](LICENSE-docs). That covers `book/`, this README, [CONTRIBUTING.md](CONTRIBUTING.md) and every `README.md` inside `apps/` and `labs/`.
 * **Code and tooling** is licensed under the [Apache License 2.0](LICENSE). That covers the Makefile, `tools/`, `apps/` and `labs/` (including the sample code in them).
 * `kits.lock` is configuration and falls under Apache-2.0. The Kits that `make setup` downloads into `.kits/` keep their own licences.
+* The diagram script vendored in `tools/site/vendor/` is third-party code (mermaid, MIT, and the packages bundled into it). Its licences and the one that asks for a notice are in [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md), which is published with the website.
 
 Attribution: SlashBuilder / Douglas Lockamy.

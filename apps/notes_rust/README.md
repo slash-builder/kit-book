@@ -10,7 +10,7 @@ A notes app whose core is Rust. The Flutter interface is a facade; the notes liv
 | Runners | macOS (built and run) and Linux (runner generated; **not built or run**) |
 | Tests | `cargo test` 29, `flutter test` 19 (no native library), `integration_test` 10 (the real library inside the app) |
 
-> **One temporary thing you will meet.** The Storage Kit is private, so fetching it needs a GitHub login: `make setup KITS=all`. The App Context Kit's `adopt` API is in the Kit's pinned release candidate (`kits.lock`); [`kits.override`](../../kits.override) is empty.
+> **One temporary thing you will meet.** The Storage Kit is private, so fetching it needs a GitHub login: `make setup KITS=all`. Without it this app is skipped, not failed: `make setup`, `make test`, `make apps` and `make doctor` print `skipped apps/notes_rust: needs storage-kit (private; fetch with KITS=all)` and carry on (the Kit is named in [`kits.need`](kits.need)); `make app APP=notes_rust` and `make run APP=notes_rust` say what to run. The App Context Kit's `adopt` API is in the Kit's pinned release candidate (`kits.lock`); [`kits.override`](../../kits.override) is empty.
 
 ## Run and test
 

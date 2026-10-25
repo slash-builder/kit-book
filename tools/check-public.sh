@@ -96,7 +96,9 @@ grep -v '^kits\.lock$' "$FILES" | tr '\n' '\0' |
 
 # People named in credit or licence text. In Markdown files, lines under a Credits/Authors/Licence heading and lines
 # that start "By " or "Author"; in LICENSE files, lines starting "Copyright". Only the author may be named.
-for f in $(grep -E '(\.md$|^LICENSE)' "$FILES"); do
+# THIRD-PARTY-NOTICES.md is exempt from this one rule: its whole purpose is to name the copyright holders of third-party code, which
+# their licences require. Every other rule above still scans it.
+for f in $(grep -E '(\.md$|^LICENSE)' "$FILES" | grep -v -x 'THIRD-PARTY-NOTICES\.md'); do
   awk -v F="$f" '
     function strip(s) {
       gsub(/Douglas Lockamy/, "", s); gsub(/Slash[ ]?Builder/, "", s); gsub(/Lockamy Studios/, "", s)
@@ -128,6 +130,20 @@ priv=$(lock_lines | awk '$4=="private" {print $1}' | tr '\n' ' ')
 if [ -n "$priv" ]; then
   say "note: kits.lock lists private Kit(s): $priv"
   say "      They are only fetched with KITS=all. Each must be made public, or no longer needed, before this repository is made public."
-  if [ "${CHECK_PUBLIC_STRICT:-0}" = 1 ]; then warn "CHECK_PUBLIC_STRICT=1: failing because of private Kits in kits.lock"; exit 1; fi
+  # CHECK_PUBLIC_STRICT=1 (the go-public gate): only a private Kit with role core is a failure, because the book documents it and
+  # make test runs it. A private app-dep (a Kit an app builds against) is a warning that names the apps that will then be skipped
+  # for a stranger (the apps list their Kits in apps/<app>/kits.need); a private reference Kit is only a note.
+  if [ "${CHECK_PUBLIC_STRICT:-0}" = 1 ]; then
+    corepriv=$(lock_lines | awk '$4=="private" && $5=="core" {print $1}' | tr '\n' ' ')
+    lock_lines | awk '$4=="private" && $5=="app-dep" {print $1}' | while read -r k; do
+      apps=""
+      for a in "$ROOT"/apps/*/; do
+        a=${a%/}
+        for n in $(app_needs "$a"); do [ "$n" = "$k" ] && apps="${apps:+$apps, }apps/$(basename "$a")"; done
+      done
+      warn "warn: $k is a private app-dep: ${apps:-no app lists it in kits.need} will be skipped for a stranger (make setup skips an app whose Kit is not fetched)"
+    done
+    if [ -n "$corepriv" ]; then warn "CHECK_PUBLIC_STRICT=1: failing because core Kit(s) in kits.lock are private: $corepriv"; exit 1; fi
+  fi
 fi
 exit 0

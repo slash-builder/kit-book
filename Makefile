@@ -35,6 +35,12 @@ export SITE_DOMAIN SITE_TITLE SITE_REPO_URL SITE_REPO_BRANCH SITE_REWRITE_REPO_L
 # publish-site pushes the gh-pages branch only when PUBLISH=1 and the repository is public; otherwise it is a dry run.
 PUBLISH ?=
 export PUBLISH
+# stranger-test (after release): the repository to clone, whether to only print the plan, which steps to run, and whether to keep the clone.
+STRANGER_REPO_URL ?= https://github.com/slash-builder/kit-book
+STRANGER_DRY ?=
+STRANGER_STEPS ?=
+STRANGER_KEEP ?=
+export STRANGER_REPO_URL STRANGER_DRY STRANGER_STEPS STRANGER_KEEP
 
 # flutter_rust_bridge_codegen is usually installed by `cargo install`, which puts it in ~/.cargo/bin; that folder is often not on
 # PATH in a make shell (Homebrew's Rust does not add it). Look there too.
@@ -51,7 +57,8 @@ endif
 APPS := $(notdir $(patsubst %/,%,$(wildcard apps/*/)))
 
 .PHONY: help all build lint fmt doctor setup fetch lock test test-fast test-integration apps app run frb \
-        docs docs-catalog docs-pull docs-pull-check test-tools site site-check publish-site check-public clean clean-all
+        docs docs-catalog docs-pull docs-pull-check test-tools site site-check publish-site check-public community \
+        go-public-check stranger-test clean clean-all
 
 help: ## Show this list (the default)
 	@echo "$(BOOK_NAME): make targets"
@@ -86,13 +93,13 @@ test-integration: ## Only the suites that need Docker, Redis or a daemon (skips 
 
 apps: ## Build every demo app for this computer in debug mode
 	@sh tools/doctor.sh --require-apps >/dev/null || { sh tools/doctor.sh --require-apps; exit 1; }
-	@set -e; for a in $(APPS); do $(MAKE) --no-print-directory app APP=$$a; done
+	@set -e; for a in $(APPS); do if sh tools/app-gate.sh $$a; then $(MAKE) --no-print-directory app APP=$$a; fi; done
 
 app: ## Build one demo app: make app APP=notepad
 	@test -n "$(APP)" || { echo "Say which app: make app APP=<$(APPS)>"; exit 2; }
 	@test -d apps/$(APP) || { echo "No such app: $(APP). Choose from: $(APPS)"; exit 2; }
 	@test -d .kits/app-context-kit || { echo "The App Context Kit is not fetched. Run: make setup (KITS=all while it is private)"; exit 2; }
-	@test ! -d apps/$(APP)/rust || test -d .kits/storage-kit || { echo "apps/$(APP) has a Rust core that builds against the Storage Kit, which is not fetched. Run: make setup KITS=all"; exit 2; }
+	@sh tools/app-gate.sh --direct $(APP)
 	@echo "==> building apps/$(APP) for $(FLUTTER_DEVICE) (debug)"
 	@cd apps/$(APP) && flutter pub get >/dev/null && flutter build $(FLUTTER_DEVICE) --debug
 
@@ -100,6 +107,7 @@ run: ## Run one demo app on this computer: make run APP=notepad
 	@test -n "$(APP)" || { echo "Say which app: make run APP=<$(APPS)>"; exit 2; }
 	@test -d apps/$(APP) || { echo "No such app: $(APP). Choose from: $(APPS)"; exit 2; }
 	@test -d .kits/app-context-kit || { echo "The App Context Kit is not fetched. Run: make setup (KITS=all while it is private)"; exit 2; }
+	@sh tools/app-gate.sh --direct $(APP)
 	@cd apps/$(APP) && flutter pub get >/dev/null && flutter run -d $(FLUTTER_DEVICE)
 
 frb: ## Regenerate the Flutter-to-Rust bridge of every app that has one (flutter_rust_bridge_codegen)
@@ -149,6 +157,15 @@ publish-site: ## Maintainers: build and check the site, commit it to a local gh-
 
 check-public: ## Scan the whole tree for anything that must not be public (names, paths, ids, secrets)
 	@sh tools/check-public.sh
+
+community: ## Maintainers: render CODE_OF_CONDUCT.md and SECURITY.md from tools/community/ and the contacts in tools/contacts.conf
+	@python3 tools/render-community.py
+
+go-public-check: ## Maintainers: the launch gate. A read-only checklist (ok / warn / FAIL) of everything to settle before going public; exits 1 on a FAIL
+	@sh tools/go-public-check.sh
+
+stranger-test: ## Maintainers, AFTER release: clone the public repository with no GitHub login and run doctor, setup, test-fast (STRANGER_DRY=1 prints the plan)
+	@sh tools/stranger-test.sh
 
 clean: ## Remove build output, test logs and the website (keeps the fetched Kits)
 	@rm -rf build
