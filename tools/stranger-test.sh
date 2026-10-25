@@ -98,7 +98,7 @@ fi
 
 say ""
 say "Stranger test summary ($URL)"
-awk -F'|' 'BEGIN { printf "  %-44s %-14s %s\n", "Step", "Result", "Time" } { printf "  %-44s %-14s %s\n", $1, $2, $3 }' "$SUMMARY"
+awk -F'|' 'BEGIN { printf "  %-62s %-14s %s\n", "Step", "Result", "Time" } { printf "  %-62s %-14s %s\n", $1, $2, $3 }' "$SUMMARY"
 if [ "$FAILED" = 1 ]; then
   say ""
   say "${C_RED}FAILED: a stranger would not get a working checkout. Read the output above; fix it before announcing.${C_OFF}"
