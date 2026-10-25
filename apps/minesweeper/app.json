@@ -1,5 +1,5 @@
 {
-  "id": "dev.demo.minesweeper",
+  "id": "com.slashbuilder.demo.minesweeper",
   "name": "Minesweeper",
   "version": "0.1.0",
   "kits": ["peers"],

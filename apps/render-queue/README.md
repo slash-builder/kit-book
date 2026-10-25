@@ -1,10 +1,10 @@
 # render-queue
 
-A queue of jobs that each take a **hold** on a resource broker (the Venue, a provisional name), run, and release it. It tests what an app does when the broker refuses, makes it wait, or loses the app: a killed app keeps its hold until the lease runs out.
+A queue of jobs that each take a **hold** on a resource broker (Venue), run, and release it. It tests what an app does when the broker refuses, makes it wait, or loses the app: a killed app keeps its hold until the lease runs out.
 
 | | |
 |---|---|
-| Manifest id | `dev.demo.render-queue` |
+| Manifest id | `com.slashbuilder.demo.render-queue` |
 | Kits in `app.json` | `venue` |
 | Tests | 38 passed, 5 skipped |
 | `lib/main.dart` | 11 lines |

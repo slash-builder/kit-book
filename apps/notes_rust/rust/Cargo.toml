@@ -25,10 +25,9 @@ unexpected_cfgs = { level = "allow", check-cfg = ["cfg(frb_expand)"] }
 flutter_rust_bridge = "=2.12.0"
 
 # The two Kits. Path dependencies into the fetched Kits (`make setup KITS=all` puts them in .kits/).
-# The App Context Kit's Rust crate: the adopt API (ContextSnapshot, AppContext::adopt). default-features = false drops the
-# optional Venue client; this app never opens a Venue session. NOTE: `adopt` is not in the App Context Kit's pinned commit
-# yet; ../../../kits.override links .kits/app-context-kit to the branch that has it until it is merged and re-pinned.
-app-context-kit = { path = "../../../.kits/app-context-kit/rust", default-features = false }
+# The App Context Kit's Rust crate (crates.io package slashbuilder-app-context-kit, library app_context_kit): the adopt API
+# (ContextSnapshot, AppContext::adopt). The package is renamed back to its library name here so the source does not change.
+app-context-kit = { package = "slashbuilder-app-context-kit", path = "../../../.kits/app-context-kit/rust" }
 # The Storage Kit (private): PartitionStore, put/get, fragment trees. Its S3 and HTTP backends are always built (a Kit gap).
 storage-kit = { path = "../../../.kits/storage-kit" }
 

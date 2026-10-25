@@ -62,7 +62,7 @@ class FakeNotesCore implements NotesCore {
   FakeNotesCore({
     this.device = 'fake',
     this.account = 'local',
-    this.appId = 'dev.demo.notes-rust',
+    this.appId = 'com.slashbuilder.demo.notes-rust',
     this.instance = 'f4k3f4k3',
     int Function()? clock,
     this.chunkBytes = 4096,

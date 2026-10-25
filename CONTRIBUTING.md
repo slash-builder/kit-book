@@ -70,7 +70,7 @@ make publish-site PUBLISH=1    # pushes gh-pages, but only if the repository is 
 ```
 
 * **Preview, not publish.** While the repository is private, preview locally. The links from the book into `apps/` and `labs/` point at GitHub and answer 404 for people without access until the repository is public.
-* **No workflows.** The site is published from the `gh-pages` branch, by hand, with `make publish-site`. The `CNAME` file in that branch holds the domain; the tool writes it.
+* **No workflows in this repository.** (The Kits' own repositories have them.) The site is published from the `gh-pages` branch, by hand, with `make publish-site`. The `CNAME` file in that branch holds the domain; the tool writes it.
 * **Indexing.** Every page is `noindex` by default. Publish with `SITE_INDEXABLE=1` when the site should be found.
 * **The vendored diagram library** in `tools/site/vendor/` is pinned with its version, licence and checksum. Upgrade it by following that folder's README; never fetch it at build time.
 * **Going public:** follow [the go-public checklist](book/90-reference/publishing.md#going-public-in-order). The order matters, and the DNS record is added last. Nothing in this repository does any of it for you.
@@ -81,7 +81,7 @@ make publish-site PUBLISH=1    # pushes gh-pages, but only if the repository is 
 * **This repository is public.** Do not put internal hostnames, ticket ids, local file paths that contain a user name, notes-vault paths, or the names of people (other than the author in the credit line) in any file. `make check-public` finds the common cases; it cannot find them all, so read your own diff.
 * **Do not describe security-relevant defects of other systems.** If you found one, report it to the owners of that system privately.
 * **Say where a number came from** (what was run, on what, when). Say "not tested" when something was not tested.
-* **Names that are provisional stay marked.** The App Context Kit and the Venue (a resource broker) are provisional names; say so once where they first appear on a page.
+* **Say which Kits are public.** A Kit that is not public yet is marked as such where it first appears on a page. The names App Context Kit and Venue are final.
 * **Page names are stable.** Link to sections by their headings. `make docs` checks the links.
 * **Code samples copied from a file** can be marked with `copied-from=<path>` after the language on the opening fence; `make docs` then checks the sample still matches the file.
 

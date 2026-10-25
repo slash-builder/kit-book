@@ -248,7 +248,7 @@ void main() {
 
   group('scope isolation', () {
     test('another app on the same network never receives the timer, and never appears as a peer', () async {
-      final other = AppManifest.parse(File('app.json').readAsStringSync().replaceAll('dev.demo.stopwatch', 'dev.demo.notepad'));
+      final other = AppManifest.parse(File('app.json').readAsStringSync().replaceAll('com.slashbuilder.demo.stopwatch', 'com.slashbuilder.demo.notepad'));
       final a = await open('laptop');
       final o = await open('laptop-notes', m: other);
       final b = await open('desktop');
@@ -287,7 +287,7 @@ void main() {
     final dir = Directory('${tmp.path}/undeclared')..createSync();
     final ctx = await AppContext.open(undeclared, env: {'APP_CONTEXT_SCRATCH': dir.path, 'APP_CONTEXT_MODE': 'mock', 'HOME': dir.path}, announce: false);
     expect(() => buildController(ctx, RecordingNotifier(), network: net),
-        throwsA(isA<KitNotDeclared>().having((e) => e.toString(), 'message', allOf(contains('peers'), contains('dev.demo.stopwatch')))));
+        throwsA(isA<KitNotDeclared>().having((e) => e.toString(), 'message', allOf(contains('peers'), contains('com.slashbuilder.demo.stopwatch')))));
     // and the app still works without peers when it asks for none
     final solo = buildController(ctx, RecordingNotifier(), peers: false, network: net);
     expect(solo.peers, isNull);

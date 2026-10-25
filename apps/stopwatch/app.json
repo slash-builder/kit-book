@@ -1,5 +1,5 @@
 {
-  "id": "dev.demo.stopwatch",
+  "id": "com.slashbuilder.demo.stopwatch",
   "name": "Stopwatch",
   "version": "0.1.0",
   "kits": ["venue", "peers"],

@@ -69,42 +69,42 @@ mod tests {
 
     #[test]
     fn deterministic_and_separated() {
-        let a = Namespace::new("home", "dev.demo.notes-rust").unwrap();
+        let a = Namespace::new("home", "com.slashbuilder.demo.notes-rust").unwrap();
         assert_eq!(
             a.partition(),
-            Namespace::new("home", "dev.demo.notes-rust")
+            Namespace::new("home", "com.slashbuilder.demo.notes-rust")
                 .unwrap()
                 .partition()
         );
         assert_ne!(
             a.partition(),
-            Namespace::new("work", "dev.demo.notes-rust")
+            Namespace::new("work", "com.slashbuilder.demo.notes-rust")
                 .unwrap()
                 .partition()
         );
         assert_ne!(
             a.partition(),
-            Namespace::new("home", "dev.demo.notepad")
+            Namespace::new("home", "com.slashbuilder.demo.notepad")
                 .unwrap()
                 .partition()
         );
         // a prefix of an id is another app, not a sub-namespace
         assert_ne!(
-            Namespace::new("home", "dev.demo.notes")
+            Namespace::new("home", "com.slashbuilder.demo.notes")
                 .unwrap()
                 .partition(),
             a.partition()
         );
     }
 
-    /// Pins the derivation for account "00000000-0000-0000-0000-000000000001" and app "dev.demo.notepad", and recomputes it
+    /// Pins the derivation for account "00000000-0000-0000-0000-000000000001" and app "com.slashbuilder.demo.notepad", and recomputes it
     /// directly with BLAKE3 so the pin and the code cannot drift together. Changing the domain string or the layout would
     /// re-home every user's data, so it must fail a test.
     #[test]
     fn partition_derivation_is_pinned_and_matches_a_direct_blake3() {
-        let a = Namespace::new("00000000-0000-0000-0000-000000000001", "dev.demo.notepad").unwrap();
-        assert_eq!(a.partition().to_hex(), "37fdbe1f9dabded5c230efdc5cfb39e4");
-        let s = "slash-builder/app-context-kit/storage-partition/v1\n00000000-0000-0000-0000-000000000001\ndev.demo.notepad";
+        let a = Namespace::new("00000000-0000-0000-0000-000000000001", "com.slashbuilder.demo.notepad").unwrap();
+        assert_eq!(a.partition().to_hex(), "b45a03ace6fb786076a9887d7608e90c");
+        let s = "slash-builder/app-context-kit/storage-partition/v1\n00000000-0000-0000-0000-000000000001\ncom.slashbuilder.demo.notepad";
         let full = storage_kit::Hash::of(s.as_bytes());
         assert_eq!(a.partition().as_bytes(), &full.as_bytes()[..16]);
     }
@@ -112,7 +112,7 @@ mod tests {
     #[test]
     fn accounts_that_would_break_the_separator_are_refused() {
         for bad in ["", "a\nb", "tab\there", &"x".repeat(65)] {
-            assert!(Namespace::new(bad, "dev.demo.x").is_err(), "{bad:?}");
+            assert!(Namespace::new(bad, "com.slashbuilder.demo.x").is_err(), "{bad:?}");
         }
     }
 }

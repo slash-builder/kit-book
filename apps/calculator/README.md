@@ -1,10 +1,10 @@
 # calculator
 
-A four-function calculator with no stored state. It exists to find the **least an app can ask of the App Context Kit** (a provisional name): if the Kit is nearly free here, the Kit is not in the way.
+A four-function calculator with no stored state. It exists to find the **least an app can ask of the App Context Kit**: if the Kit is nearly free here, the Kit is not in the way.
 
 | | |
 |---|---|
-| Manifest id | `dev.demo.calc` |
+| Manifest id | `com.slashbuilder.demo.calc` |
 | Kits in `app.json` | none |
 | Tests | 32 |
 | `lib/main.dart` | 5 lines |

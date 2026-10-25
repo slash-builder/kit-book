@@ -70,15 +70,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "330a5ed07fa54e4702c9d6c4174f74427fc0ef6e214bbd677ae50a5099946470"
 
 [[package]]
-name = "app-context-kit"
-version = "0.0.0"
-dependencies = [
- "chrono",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "arc-swap"
 version = "1.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1853,10 +1844,10 @@ dependencies = [
 name = "notes_core"
 version = "0.1.0"
 dependencies = [
- "app-context-kit",
  "flutter_rust_bridge",
  "serde",
  "serde_json",
+ "slashbuilder-app-context-kit",
  "storage-kit",
  "tempfile",
 ]
@@ -2582,6 +2573,15 @@ name = "slab"
 version = "0.4.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0c790de23124f9ab44544d7ac05d60440adc586479ce501c1d6d7da3cd8c9cf5"
+
+[[package]]
+name = "slashbuilder-app-context-kit"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "serde",
+ "serde_json",
+]
 
 [[package]]
 name = "smallvec"

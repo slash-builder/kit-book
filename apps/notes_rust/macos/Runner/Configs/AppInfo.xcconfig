@@ -8,7 +8,7 @@
 PRODUCT_NAME = notes_rust
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = dev.demo.notes-rust
+PRODUCT_BUNDLE_IDENTIFIER = com.slashbuilder.demo.notes-rust
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 dev.demo. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 SlashBuilder. All rights reserved.

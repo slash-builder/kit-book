@@ -8,7 +8,7 @@
 PRODUCT_NAME = render_queue
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = dev.demo.renderQueue
+PRODUCT_BUNDLE_IDENTIFIER = com.slashbuilder.demo.renderQueue
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 SlashBuilder / Douglas Lockamy. Licensed under Apache-2.0.

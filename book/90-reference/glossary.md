@@ -1,12 +1,12 @@
 # Glossary
 
-The words these pages use, in alphabetical order. The names *App Context Kit* and *Venue* are provisional.
+The words these pages use, in alphabetical order.
 
 **Admit.** The hook method that decides whether a peer may join an app's coordination: accept, accept read-only, or reject.
 
-**App id.** An app's reverse-DNS name, such as `dev.demo.notepad`, set in its manifest.
+**App id.** An app's reverse-DNS name, such as `com.slashbuilder.demo.notepad`, set in its manifest.
 
-**App Context Kit.** The Kit that is the root namespace for one running app: identity, directories, settings, modes, a roster entry, a session with a resource broker, and an opt-in way to find other copies of the app. The name is provisional.
+**App Context Kit.** The Kit that is the root namespace for one running app: identity, directories, settings, modes, a roster entry, a session with a resource broker, and an opt-in way to find other copies of the app.
 
 **Candidate.** A UI component proposed for the shared interface Kit, built from what several apps duplicate. See [`labs/interface_candidates`](../../labs/interface_candidates/README.md). A candidate marked **THIN** has fewer than three real users.
 
@@ -38,4 +38,4 @@ The words these pages use, in alphabetical order. The names *App Context Kit* an
 
 **Roster.** The set of presence files, one per running copy of an app, that lets apps (and the launcher demo) see who else is running on the machine.
 
-**Venue.** The resource broker: a daemon that grants and tracks holds on a machine's resources. The name is provisional.
+**Venue.** The resource broker: a daemon that grants and tracks holds on a machine's resources.

@@ -15,10 +15,10 @@ apps = sys.argv[2:]
 
 # What "state persisted" means per app: the file (relative to the scratch directory) the app writes when a person uses it.
 STATE = {
-    "stopwatch": "dev.demo.stopwatch/state/state.json",
-    "minesweeper": "dev.demo.minesweeper/data/game.json",
-    "notepad": "dev.demo.notepad/data/notes/*.json",
-    "notes_rust": "dev.demo.notes-rust/data/heads-*.json",
+    "stopwatch": "com.slashbuilder.demo.stopwatch/state/state.json",
+    "minesweeper": "com.slashbuilder.demo.minesweeper/data/game.json",
+    "notepad": "com.slashbuilder.demo.notepad/data/notes/*.json",
+    "notes_rust": "com.slashbuilder.demo.notes-rust/data/heads-*.json",
 }
 GTK = re.compile(r"(Gtk|Gdk|GLib|Pango|GdkPixbuf|GLib-GObject)[A-Za-z-]*-(WARNING|CRITICAL|ERROR)|\*\* \(.*\): (WARNING|CRITICAL)|-CRITICAL|-WARNING")
 A11Y = re.compile(r"AT-SPI|atk_socket_embed")

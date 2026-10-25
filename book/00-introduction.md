@@ -4,7 +4,6 @@
 
 A **Kit** is a focused piece of SlashBuilder's platform that owns one job and says plainly what it will not do. The App Context Kit owns an app's identity, its folders for files and settings, test and scratch modes, and a presence entry other apps can read. The Venue (a resource broker) owns machine time on a shared computer. A storage Kit owns where bytes live; an identity Kit owns who is allowed to do what. Each Kit lives in its own repository with its own tests and documentation, and an app is built by composing the ones it needs.
 
-The names *App Context Kit* and *Venue* are provisional; they may change.
 
 ## What this repository is
 

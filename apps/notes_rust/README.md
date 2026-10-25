@@ -4,7 +4,7 @@ A notes app whose core is Rust. The Flutter interface is a facade; the notes liv
 
 | | |
 |---|---|
-| Manifest id | `dev.demo.notes-rust` (macOS bundle id the same; Linux application id `dev.demo.notes_rust`) |
+| Manifest id | `com.slashbuilder.demo.notes-rust` (macOS bundle id the same; Linux application id `com.slashbuilder.demo.notes_rust`) |
 | Kits | App Context Kit (Dart: `AppContextKit.run`, peers; Rust: the `adopt` API) and Storage Kit (Rust: `PartitionStore`, fragment trees) |
 | Kits in `app.json` | `peers` |
 | Runners | macOS (built and run) and Linux (built and launched headless in a container; see [Linux](#linux)) |
@@ -43,7 +43,7 @@ This was the open question: if the Dart side opens an App Context Kit context an
 3. Rust calls `ContextSnapshot::parse` (strict: unknown schema, missing field or relative path is a typed error that reaches Dart as `bad_snapshot`) and `AppContext::adopt`. An adopter announces nothing, starts no heartbeat, never writes `config.json`, and may create directories under `data` and `state` only. It reads settings through a reader that refuses writes (the core reads `maxNoteBytes` that way).
 4. **One owner per file.** The Rust side owns what it creates under `data`: `blocks/` (the Storage Kit store), `heads-<partition>.json` (which version is current for each note) and `conflicts-<partition>.json`.
 
-What was observed with both halves running (`integration_test/notes_rust_test.dart`, a test that mounts the real app on the real library): exactly one roster file, `dev.demo.notes-rust@<instance>.json`, written by Dart; the core reports the **same instance id** as the Dart context; `config.json` holds what Dart wrote and is byte-for-byte unchanged by core operations; a setting Dart changes (`maxNoteBytes`) is seen by the core on its next call; the roster entry is withdrawn on quit. The same test is what proves it, not this paragraph.
+What was observed with both halves running (`integration_test/notes_rust_test.dart`, a test that mounts the real app on the real library): exactly one roster file, `com.slashbuilder.demo.notes-rust@<instance>.json`, written by Dart; the core reports the **same instance id** as the Dart context; `config.json` holds what Dart wrote and is byte-for-byte unchanged by core operations; a setting Dart changes (`maxNoteBytes`) is seen by the core on its next call; the roster entry is withdrawn on quit. The same test is what proves it, not this paragraph.
 
 What is awkward: the snapshot has no **account** or **device**, which the Rust side needs (the Storage Kit partition is derived from `(account, app id)`), so Dart passes `ctx.peerAccount` and `ctx.peerDevice` next to it. And an adopter has no way to ask the owner to change a setting.
 
@@ -107,7 +107,7 @@ Not measured: runtime speed of the core against a Dart one, memory, and anything
 `make linux-smoke-image` then `make linux-smoke LINUX_SMOKE_APPS=notes_rust` builds and runs it in an Ubuntu 24.04 container (`linux/arm64`, Flutter 3.41.9, Rust 1.98.1), under Xvfb, so it is **headless**: no real desktop, no window manager, no real GPU. Run on 2026-10-24:
 
 * `flutter build linux --release`: 54 s clean (it compiles the Rust core, cargokit, on the way); the bundle is 54 MB with `libnotes_core.so` beside `libflutter_linux_gtk.so`.
-* Launched with `APP_CONTEXT_SCRATCH`, `NOTES_RUST_SEED=3` and mock mode: a 1280x720 window with the three sample notes and the line "Rust core: 3 notes, 6 blocks, shares this app's context (instance ...)". Still running at 10 s; one roster file, `dev.demo.notes-rust@<instance>.json`; `blocks/<partition>/active/active.pack` of 1,240 bytes (the macOS smoke test saw the same size) and `heads-<partition>.json` under `data`; SIGTERM exit code 143 and the roster file withdrawn.
+* Launched with `APP_CONTEXT_SCRATCH`, `NOTES_RUST_SEED=3` and mock mode: a 1280x720 window with the three sample notes and the line "Rust core: 3 notes, 6 blocks, shares this app's context (instance ...)". Still running at 10 s; one roster file, `com.slashbuilder.demo.notes-rust@<instance>.json`; `blocks/<partition>/active/active.pack` of 1,240 bytes (the macOS smoke test saw the same size) and `heads-<partition>.json` under `data`; SIGTERM exit code 143 and the roster file withdrawn.
 * A second launch on the same folders showed the same three notes.
 * On Linux there is no sandbox, so `APP_CONTEXT_SCRATCH` can be any path.
 * **Not done on Linux:** the sync between two copies, the `integration_test` suite, `cargo test`, a click on the window's close button, anything on a real desktop or another architecture.

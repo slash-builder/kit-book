@@ -1,5 +1,5 @@
 {
-  "id": "dev.demo.notes-rust",
+  "id": "com.slashbuilder.demo.notes-rust",
   "name": "Notes (Rust core)",
   "version": "0.1.0",
   "kits": ["peers"],

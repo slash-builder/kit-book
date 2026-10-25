@@ -16,7 +16,7 @@ Preview it locally with `python3 -m http.server -d build/site 8000`.
 
 ## How it is published
 
-Publishing is **a branch, not a workflow**. This project does not use GitHub Actions. `make publish-site` builds and checks the site, then commits the built files as a single new commit with no history to a branch named `gh-pages`, and GitHub Pages serves that branch ("Deploy from a branch"). The commit is made without checking anything out, so `main` and your working tree are never touched.
+Publishing is **a branch, not a workflow**. The book does not use GitHub Actions (the Kits' own repositories do: each public Kit runs its tests there). `make publish-site` builds and checks the site, then commits the built files as a single new commit with no history to a branch named `gh-pages`, and GitHub Pages serves that branch ("Deploy from a branch"). The commit is made without checking anything out, so `main` and your working tree are never touched.
 
 Two files are added to every published commit:
 

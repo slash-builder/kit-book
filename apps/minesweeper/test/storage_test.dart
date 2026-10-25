@@ -70,7 +70,7 @@ void main() {
   });
 
   group('settings through the Kit', () {
-    final manifest = AppManifest.fromJson({'id': 'dev.demo.minesweeper', 'name': 'Minesweeper', 'version': '0.1.0', 'envPrefix': 'MINES'});
+    final manifest = AppManifest.fromJson({'id': 'com.slashbuilder.demo.minesweeper', 'name': 'Minesweeper', 'version': '0.1.0', 'envPrefix': 'MINES'});
     Map<String, String> env() => {'APP_CONTEXT_SCRATCH': tmp.path, 'MINES_MODE': 'mock'};
 
     test('difficulty and question marks persist across opens', () async {
@@ -89,7 +89,7 @@ void main() {
     });
 
     test('an unknown difficulty in the file falls back to beginner', () async {
-      final dir = Directory('${tmp.path}/dev.demo.minesweeper/config')..createSync(recursive: true);
+      final dir = Directory('${tmp.path}/com.slashbuilder.demo.minesweeper/config')..createSync(recursive: true);
       File('${dir.path}/config.json').writeAsStringSync('{"difficulty":"nightmare","questionMarks":"yes"}');
       final ctx = await AppContext.open(manifest, env: env(), platform: 'linux', home: '/x', announce: false);
       final s = Settings(SessionSettings(ctx.config));
@@ -99,7 +99,7 @@ void main() {
     });
 
     test('a damaged config.json is reported and left exactly as it was', () async {
-      final dir = Directory('${tmp.path}/dev.demo.minesweeper/config')..createSync(recursive: true);
+      final dir = Directory('${tmp.path}/com.slashbuilder.demo.minesweeper/config')..createSync(recursive: true);
       final f = File('${dir.path}/config.json')..writeAsStringSync('{broken');
       final ctx = await AppContext.open(manifest, env: env(), platform: 'linux', home: '/x', announce: false);
       expect(ctx.noteTexts.any((n) => n.startsWith('Settings:')), isTrue);
@@ -113,7 +113,7 @@ void main() {
     });
 
     test('a config.json that is not text does not stop the app starting, and is left exactly as it was', () async {
-      final dir = Directory('${tmp.path}/dev.demo.minesweeper/config')..createSync(recursive: true);
+      final dir = Directory('${tmp.path}/com.slashbuilder.demo.minesweeper/config')..createSync(recursive: true);
       final f = File('${dir.path}/config.json')..writeAsBytesSync([0xff, 0xfe, 0x80]);
       // Round 1 needed a pre-flight (kit_gaps/survivable_open.dart) for this: the Kit threw FileSystemException. Now it opens.
       final ctx = await AppContext.open(manifest, env: env(), platform: 'linux', home: '/x', announce: false);
@@ -128,7 +128,7 @@ void main() {
     });
 
     test('the Kit itself refuses to write over a damaged config.json (DamagedConfigError)', () async {
-      final dir = Directory('${tmp.path}/dev.demo.minesweeper/config')..createSync(recursive: true);
+      final dir = Directory('${tmp.path}/com.slashbuilder.demo.minesweeper/config')..createSync(recursive: true);
       final f = File('${dir.path}/config.json')..writeAsStringSync('{broken');
       final ctx = await AppContext.open(manifest, env: env(), platform: 'linux', home: '/x', announce: false);
       expect(() => ctx.config.set('difficulty', 'expert'), throwsA(isA<DamagedConfigError>()));

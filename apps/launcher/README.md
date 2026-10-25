@@ -4,7 +4,7 @@ Lists the apps that are running on this machine, which tests whether **a file-ba
 
 | | |
 |---|---|
-| Manifest id | `dev.demo.launcher` |
+| Manifest id | `com.slashbuilder.demo.launcher` |
 | Kits in `app.json` | `venue` |
 | Tests | 24 |
 | `lib/main.dart` | 9 lines |

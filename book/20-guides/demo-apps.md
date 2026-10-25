@@ -1,18 +1,18 @@
 # Demo apps
 
-Seven small Flutter desktop apps in `apps/` that use the App Context Kit (the name is provisional; so is the name of the resource broker the Kit talks to, Venue). They were written to measure the Kit: what it removes from an app, what it still leaves for the app to write, and where it falls short.
+Seven small Flutter desktop apps in `apps/` that use the App Context Kit (the resource broker the Kit talks to is Venue). They were written to measure the Kit: what it removes from an app, what it still leaves for the app to write, and where it falls short.
 
 One rule shaped them: **an app does not edit the Kit.** If an app needs something the Kit lacks, it writes it under `lib/kit_gaps/` with a `// KIT GAP:` comment. The line count of those directories is the measurement of what the Kit is missing. When the Kit absorbs a gap, the app deletes its copy.
 
 | App | Manifest id | Exercises | Kits in `app.json` | Tests | `main.dart` lines | Gap lines left | `lib/coordination` lines |
 |---|---|---|---|---|---|---|---|
-| [calculator](#calculator) | `dev.demo.calc` | The least an app can ask of the Kit | none | 32 | 5 | 0 | none |
-| [minesweeper](#minesweeper) | `dev.demo.minesweeper` | Saved game state; handing a game to another copy | `peers` | 86 | 5 | 0 | 329 |
-| [notepad](#notepad) | `dev.demo.notepad` | Files on disk, autosave, damaged files; syncing notes between copies | `peers` | 63 | 5 | 79 | 619 |
-| [stopwatch](#stopwatch) | `dev.demo.stopwatch` | State that survives restart; a shared countdown and a signal between copies | `venue`, `peers` | 49 | 10 | 35 | 332 |
-| [render-queue](#render-queue) | `dev.demo.render-queue` | A session with a resource broker: holds, refusals, waiting | `venue` | 38 passed, 5 skipped | 11 | 0 | none |
-| [launcher](#launcher) | `dev.demo.launcher` | The roster: who is running on this machine | `venue` | 24 | 9 | 50 | none |
-| [notes_rust](#notes_rust) | `dev.demo.notes-rust` | A Flutter UI over a **Rust core** that uses the Storage Kit and shares one App Context Kit context with the UI; sync with the blocks and checks in Rust | `peers` | 29 `cargo test` + 19 + 10 integration | 35 | 81 | 416 |
+| [calculator](#calculator) | `com.slashbuilder.demo.calc` | The least an app can ask of the Kit | none | 32 | 5 | 0 | none |
+| [minesweeper](#minesweeper) | `com.slashbuilder.demo.minesweeper` | Saved game state; handing a game to another copy | `peers` | 86 | 5 | 0 | 329 |
+| [notepad](#notepad) | `com.slashbuilder.demo.notepad` | Files on disk, autosave, damaged files; syncing notes between copies | `peers` | 63 | 5 | 79 | 619 |
+| [stopwatch](#stopwatch) | `com.slashbuilder.demo.stopwatch` | State that survives restart; a shared countdown and a signal between copies | `venue`, `peers` | 49 | 10 | 35 | 332 |
+| [render-queue](#render-queue) | `com.slashbuilder.demo.render-queue` | A session with a resource broker: holds, refusals, waiting | `venue` | 38 passed, 5 skipped | 11 | 0 | none |
+| [launcher](#launcher) | `com.slashbuilder.demo.launcher` | The roster: who is running on this machine | `venue` | 24 | 9 | 50 | none |
+| [notes_rust](#notes_rust) | `com.slashbuilder.demo.notes-rust` | A Flutter UI over a **Rust core** that uses the Storage Kit and shares one App Context Kit context with the UI; sync with the blocks and checks in Rust | `peers` | 29 `cargo test` + 19 + 10 integration | 35 | 81 | 416 |
 
 How the numbers were taken for the first six apps, on 2026-10-24 with Flutter 3.41.9 and Dart 3.11.5 on macOS (Apple silicon): tests are the result of `flutter test` in each app directory; `main.dart` and gap lines are `wc -l` (raw lines, comments and blanks included) of `lib/main.dart` and `lib/kit_gaps/*.dart`; coordination lines are `wc -l` of `lib/coordination/*.dart`. The five skipped render-queue tests need a running resource-broker daemon and skip themselves when no token is set. The `venue` entry in `kits` is a label: only `peers` is checked against the `kits` list today (see the App Context Kit's architecture guide, section 1).
 
@@ -49,7 +49,7 @@ Details are in the App Context Kit's specification (`spec/APP-CONTEXT.md` in tha
 
 **The macOS sandbox rule.** Three apps have the macOS App Sandbox on: calculator, minesweeper and notepad. The other three (launcher, render-queue, stopwatch) have it off. A sandboxed app can only write inside its own container, `~/Library/Containers/<bundle id>/Data/`, and that container also has its own `HOME` and `TMPDIR`. Two things follow:
 
-- A path outside the container, such as `/tmp/...`, in `APP_CONTEXT_SCRATCH` or `APP_CONTEXT_PEERS_DIR` does not work for a sandboxed app. With `APP_CONTEXT_SCRATCH` the app cannot create its directories: the companion shows its startup error screen (the calculator's first version, before the companion package, crashed with an unhandled `PathAccessException`). With `APP_CONTEXT_PEERS_DIR` the process stays up and works alone, and the footer says "Peers: off (peers unavailable: ...)" (asserted in a widget test, not seen). Use a path under the container instead, for example `~/Library/Containers/dev.demo.notepad/Data/tmp/ak-scratch`. The bundle ids are `dev.demo.calc`, `dev.demo.minesweeper` and `dev.demo.notepad`.
+- A path outside the container, such as `/tmp/...`, in `APP_CONTEXT_SCRATCH` or `APP_CONTEXT_PEERS_DIR` does not work for a sandboxed app. With `APP_CONTEXT_SCRATCH` the app cannot create its directories: the companion shows its startup error screen (the calculator's first version, before the companion package, crashed with an unhandled `PathAccessException`). With `APP_CONTEXT_PEERS_DIR` the process stays up and works alone, and the footer says "Peers: off (peers unavailable: ...)" (asserted in a widget test, not seen). Use a path under the container instead, for example `~/Library/Containers/com.slashbuilder.demo.notepad/Data/tmp/ak-scratch`. The bundle ids are `com.slashbuilder.demo.calc`, `com.slashbuilder.demo.minesweeper` and `com.slashbuilder.demo.notepad`.
 - The default roster and peers directories are inside the container too. Two copies of one sandboxed app share the container and find each other with no variables set. Two different sandboxed apps have different containers, so they are not expected to share a roster (reasoned, not tested).
 
 The sandboxed apps that use peers, notepad and minesweeper, also need the `com.apple.security.network.client` and `com.apple.security.network.server` entitlements; both projects have them in Debug and Release. With only the server entitlement, two copies listen but never connect, and nothing is logged. That observation was recorded in the apps' development notes (not published) and was not repeated for this page.
@@ -64,7 +64,7 @@ Everything about the sandbox is macOS-specific, and the entitlement files are na
 |---|---|
 | Release build, `linux/arm64` | All seven built in 8 to 10 s each (54 s for `notes_rust`, which also compiles its Rust core); bundles 49 to 54 MB |
 | Launch | All seven were still running at 10 s and drew a real window with content (screenshots read by eye: calculator, stopwatch, minesweeper, notepad, notes_rust, render-queue, launcher, and two copies side by side) |
-| SIGTERM | Exit code 143 for every app, in 0.1 s; the roster entry (`<manifest id>@<instance>.json`) appeared and was withdrawn, for `render-queue` too, so the manifest id `dev.demo.render-queue` against the Linux application id `dev.demo.render_queue` does not stop it from launching |
+| SIGTERM | Exit code 143 for every app, in 0.1 s; the roster entry (`<manifest id>@<instance>.json`) appeared and was withdrawn, for `render-queue` too, so the manifest id `com.slashbuilder.demo.render-queue` against the Linux application id `com.slashbuilder.demo.render_queue` does not stop it from launching |
 | Input | xdotool clicks reached the Flutter window (the calculator showed 42 after 7 x 6 =) and typing reached the notepad |
 | State survives a relaunch | stopwatch (`state.json`; the second launch showed the running stopwatch at 13.9 s), minesweeper (`game.json`; the second launch showed a half-played board with the timer at 012), notepad (a note typed in the first launch was listed in the second), notes_rust (the three seeded notes and `heads-<partition>.json` in the second, "Rust core: 3 notes, 6 blocks") |
 | Two copies, one `APP_CONTEXT_PEERS_DIR` | stopwatch and notepad, real mode, devices `smoke-a` and `smoke-b`: each announced, the two processes held a TCP connection to each other on 127.0.0.1, each footer read `Peers: 1` with the other copy's name, and a note written into copy A's folder arrived in copy B's folder. Both announcements were withdrawn on exit |
@@ -252,7 +252,7 @@ The launcher is not sandboxed. It sees an app only if that app writes its presen
 ```sh
 mkdir -p /tmp/ak-roster
 NOW=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-echo "{\"id\":\"dev.demo.stopwatch\",\"instance\":\"a0000001\",\"name\":\"Stopwatch\",\"version\":\"0.1.0\",\"pid\":$$,\"startedAt\":\"$NOW\",\"heartbeatAt\":\"$NOW\"}" > /tmp/ak-roster/dev.demo.stopwatch@a0000001.json
+echo "{\"id\":\"com.slashbuilder.demo.stopwatch\",\"instance\":\"a0000001\",\"name\":\"Stopwatch\",\"version\":\"0.1.0\",\"pid\":$$,\"startedAt\":\"$NOW\",\"heartbeatAt\":\"$NOW\"}" > /tmp/ak-roster/com.slashbuilder.demo.stopwatch@a0000001.json
 echo '{broken' > /tmp/ak-roster/junk.json
 cd apps/launcher && dart run tool/rows_probe.dart /tmp/ak-roster
 ```
@@ -260,7 +260,7 @@ cd apps/launcher && dart run tool/rows_probe.dart /tmp/ak-roster
 It printed, on 2026-10-24 (the pid is your shell's):
 
 ```text
-running  Stopwatch  dev.demo.stopwatch copy=a0000001 pid=70742 
+running  Stopwatch  com.slashbuilder.demo.stopwatch copy=a0000001 pid=70742 
 unreadable: junk.json
 ```
 
@@ -367,14 +367,14 @@ laptop:  1792850583538 STATE duration=6000 running=true remaining=5998 phase=run
 laptop:  1792850589540 NOTIFY Timer finished: 00:06 countdown finished on desktop #efe5
 ```
 
-Read it like this. The desktop probe started and saw the laptop as `found` 2 ms later and `ready` 15 ms after it started. The countdown the desktop started was running on the laptop 12 ms after the desktop's command. When it ended, the desktop, as the writer of the current state, announced; the laptop said where it finished. While both ran, `ls /tmp/ak-demo/peers/local/dev.demo.stopwatch/` showed one announcement file for each copy, named `DEVICE@INSTANCE.json`: the directory is `<peers dir>/<account>/<app id>/`, and the account is `local` because nothing set one.
+Read it like this. The desktop probe started and saw the laptop as `found` 2 ms later and `ready` 15 ms after it started. The countdown the desktop started was running on the laptop 12 ms after the desktop's command. When it ended, the desktop, as the writer of the current state, announced; the laptop said where it finished. While both ran, `ls /tmp/ak-demo/peers/local/com.slashbuilder.demo.stopwatch/` showed one announcement file for each copy, named `DEVICE@INSTANCE.json`: the directory is `<peers dir>/<account>/<app id>/`, and the account is `local` because nothing set one.
 
 ### See a crash
 
 Start the two probes as above, but give the first `--for 20`, the second `--for 30`, and leave out `--start-after-ready`. Find its process id in its announcement file and kill it hard:
 
 ```sh
-kill -9 "$(python3 -c "import json,glob; print(json.load(open(glob.glob('/tmp/ak-demo/peers/local/dev.demo.stopwatch/desktop@*.json')[0]))['pid'])")"
+kill -9 "$(python3 -c "import json,glob; print(json.load(open(glob.glob('/tmp/ak-demo/peers/local/com.slashbuilder.demo.stopwatch/desktop@*.json')[0]))['pid'])")"
 ```
 
 The surviving probe (the laptop) printed this on 2026-10-24, `TICK` lines removed:
@@ -403,6 +403,6 @@ APP_CONTEXT_DEVICE=desktop APP_CONTEXT_SCRATCH=/tmp/ak-demo/win-desktop APP_CONT
 
 Each window's footer should read "This copy: laptop #xxxx" and "Peers: 1" with one chip for the other copy. Start the countdown in one window and the other follows. Give each copy its own `APP_CONTEXT_SCRATCH` as well as its own `APP_CONTEXT_DEVICE`: copies that share a config directory share a generated device id. The peers directory is the one thing they share, which is why it is set with `APP_CONTEXT_PEERS_DIR`. If `APP_CONTEXT_SCRATCH` were the only variable, each copy would announce in `<its scratch>/roster-peers` and never see the other.
 
-For the sandboxed apps (notepad, minesweeper), the same recipe works with every path under `~/Library/Containers/<bundle id>/Data/tmp/`, for example `APP_CONTEXT_SCRATCH=~/Library/Containers/dev.demo.notepad/Data/tmp/ak/laptop` and `APP_CONTEXT_PEERS_DIR=~/Library/Containers/dev.demo.notepad/Data/tmp/ak/peers`, with the binary at `build/macos/Build/Products/Debug/notepad.app/Contents/MacOS/notepad`. A copy that cannot reach the peers directory keeps working alone and its footer says why. That route was recorded in the apps' development notes (not published) and was not repeated for this page.
+For the sandboxed apps (notepad, minesweeper), the same recipe works with every path under `~/Library/Containers/<bundle id>/Data/tmp/`, for example `APP_CONTEXT_SCRATCH=~/Library/Containers/com.slashbuilder.demo.notepad/Data/tmp/ak/laptop` and `APP_CONTEXT_PEERS_DIR=~/Library/Containers/com.slashbuilder.demo.notepad/Data/tmp/ak/peers`, with the binary at `build/macos/Build/Products/Debug/notepad.app/Contents/MacOS/notepad`. A copy that cannot reach the peers directory keeps working alone and its footer says why. That route was recorded in the apps' development notes (not published) and was not repeated for this page.
 
 See also: the App Context Kit's own getting-started, coordination, platforms and design-decisions guides, which ship with the Kit (after `make setup` they are under `.kits/app-context-kit/docs/`), and [Fitting the App Context Kit to other Kits](fitting-the-app-context-kit-to-other-kits.md) for how it meets its neighbours.

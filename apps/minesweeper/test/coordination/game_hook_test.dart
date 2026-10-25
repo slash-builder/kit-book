@@ -375,7 +375,7 @@ void main() {
 
   group('scope', () {
     test('another app on the same network, or another account, never sees the game or the offers', () async {
-      final other = AppManifest.parse(File('app.json').readAsStringSync().replaceAll('dev.demo.minesweeper', 'dev.demo.notepad'));
+      final other = AppManifest.parse(File('app.json').readAsStringSync().replaceAll('com.slashbuilder.demo.minesweeper', 'com.slashbuilder.demo.notepad'));
       final (a, b) = await pair();
       final notes = await open('laptop-notes', m: other);
       final stranger = await open('stranger', env: {'APP_CONTEXT_ACCOUNT': 'someone-else'});

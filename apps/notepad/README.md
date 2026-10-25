@@ -4,7 +4,7 @@ One JSON file per note in the data directory, autosave 600 ms after the last key
 
 | | |
 |---|---|
-| Manifest id | `dev.demo.notepad` |
+| Manifest id | `com.slashbuilder.demo.notepad` |
 | Kits in `app.json` | `peers` |
 | Tests | 63 |
 | `lib/main.dart` | 5 lines |

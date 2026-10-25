@@ -78,7 +78,7 @@ void main() {
 
       final ctx = kit.ctx;
       final roster = Directory(ctx.resolved.roster).listSync().whereType<File>().map((f) => f.uri.pathSegments.last).toList();
-      expect(roster, ['dev.demo.notes-rust@${ctx.instance}.json'], reason: 'one roster file, written by the Dart side');
+      expect(roster, ['com.slashbuilder.demo.notes-rust@${ctx.instance}.json'], reason: 'one roster file, written by the Dart side');
       final entries = ctx.roster.scan();
       expect(entries, hasLength(1));
       expect(entries.single.entry!.instance, ctx.instance);
@@ -111,7 +111,7 @@ void main() {
     test('opening the core with a snapshot that is not absolute is a typed error, not a crash', () async {
       final bad = <String, Object?>{
         'schema': 1,
-        'appId': 'dev.demo.notes-rust',
+        'appId': 'com.slashbuilder.demo.notes-rust',
         'instance': '0a1b2c3d',
         'mode': 'real',
         'scratch': false,

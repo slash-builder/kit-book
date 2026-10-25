@@ -150,7 +150,7 @@ void main() {
 
   testWidgets('a damaged saved game is set aside, reported, and a fresh game starts', (t) async {
     final scratch = plantedScratch();
-    final dataDir = Directory('${scratch.path}/dev.demo.minesweeper/data')..createSync(recursive: true);
+    final dataDir = Directory('${scratch.path}/com.slashbuilder.demo.minesweeper/data')..createSync(recursive: true);
     File('${dataDir.path}/game.json').writeAsStringSync('{"difficulty": "beginner", "status": "pla');
     final c = await boot(t, scratch: scratch);
     expect(c.game.status, GameStatus.ready);
@@ -165,7 +165,7 @@ void main() {
 
   testWidgets('a damaged config.json is reported and never overwritten, even after changing a setting', (t) async {
     final scratch = plantedScratch();
-    final cfgDir = Directory('${scratch.path}/dev.demo.minesweeper/config')..createSync(recursive: true);
+    final cfgDir = Directory('${scratch.path}/com.slashbuilder.demo.minesweeper/config')..createSync(recursive: true);
     final cfg = File('${cfgDir.path}/config.json')..writeAsStringSync('{"difficulty": ');
     await boot(t, scratch: scratch);
     expect(find.textContaining('Settings: config.json is not valid UTF-8 JSON'), findsOneWidget);

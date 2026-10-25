@@ -4,7 +4,7 @@ Minesweeper with a saved game, high scores and two settings. With the peer layer
 
 | | |
 |---|---|
-| Manifest id | `dev.demo.minesweeper` |
+| Manifest id | `com.slashbuilder.demo.minesweeper` |
 | Kits in `app.json` | `peers` |
 | Tests | 86 |
 | `lib/main.dart` | 5 lines |

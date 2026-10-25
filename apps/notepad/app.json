@@ -1,5 +1,5 @@
 {
-  "id": "dev.demo.notepad",
+  "id": "com.slashbuilder.demo.notepad",
   "name": "Notepad",
   "version": "0.1.0",
   "kits": ["peers"],

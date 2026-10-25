@@ -30,21 +30,21 @@ void main() {
     // The apps directory has to exist before the context opens, so it is made next to where the scratch dir will be.
     final apps = Directory.systemTemp.createTempSync('launcher-apps-').path;
     addTearDown(() => Directory(apps).deleteSync(recursive: true));
-    writeManifest(apps, 'stopwatch', manifestJson('dev.demo.stopwatch', 'Stopwatch'));
-    writeManifest(apps, 'notepad', manifestJson('dev.demo.notepad', 'Notepad'));
+    writeManifest(apps, 'stopwatch', manifestJson('com.slashbuilder.demo.stopwatch', 'Stopwatch'));
+    writeManifest(apps, 'notepad', manifestJson('com.slashbuilder.demo.notepad', 'Notepad'));
     writeManifest(apps, 'broken', {'id': 'BAD', 'name': 'x', 'version': '1.0.0'});
     final kit = await open(t, env: {'LAUNCHER_APPS_DIR': apps});
     final now = DateTime.now().toUtc();
     final roster = kit.ctx.roster.dir;
-    writeRoster(roster, 'dev.demo.stopwatch', name: 'Stopwatch', version: '0.1.0', pid: 111, started: now.subtract(const Duration(minutes: 3, seconds: 5)), heartbeat: now);
-    writeRoster(roster, 'dev.demo.crashed', name: 'Crashed', pid: 222, started: now, heartbeat: now.subtract(const Duration(minutes: 2)));
+    writeRoster(roster, 'com.slashbuilder.demo.stopwatch', name: 'Stopwatch', version: '0.1.0', pid: 111, started: now.subtract(const Duration(minutes: 3, seconds: 5)), heartbeat: now);
+    writeRoster(roster, 'com.slashbuilder.demo.crashed', name: 'Crashed', pid: 222, started: now, heartbeat: now.subtract(const Duration(minutes: 2)));
 
     await show(kit, refreshEvery: const Duration(seconds: 3));
     await t.pump();
 
-    expect(status(t, 'dev.demo.stopwatch'), 'running');
-    expect(status(t, 'dev.demo.crashed'), 'stale');
-    expect((t.widget(find.byKey(const Key('status-dev.demo.notepad'))) as Text).data, 'not running');
+    expect(status(t, 'com.slashbuilder.demo.stopwatch'), 'running');
+    expect(status(t, 'com.slashbuilder.demo.crashed'), 'stale');
+    expect((t.widget(find.byKey(const Key('status-com.slashbuilder.demo.notepad'))) as Text).data, 'not running');
     expect(find.text('111'), findsOneWidget);
     expect(find.text('3m 05s'), findsOneWidget);
     expect(find.textContaining('heartbeat 120 s old'), findsOneWidget);
@@ -55,10 +55,10 @@ void main() {
     expect(find.text('mock + scratch'), findsOneWidget); // ModeBadge
 
     // the stopwatch quits: its file is withdrawn; the next refresh shows "gone"
-    File('$roster/dev.demo.stopwatch@$defaultInstance.json').deleteSync();
+    File('$roster/com.slashbuilder.demo.stopwatch@$defaultInstance.json').deleteSync();
     await t.pump(const Duration(seconds: 3));
     await t.pump();
-    expect(status(t, 'dev.demo.stopwatch'), 'gone');
+    expect(status(t, 'com.slashbuilder.demo.stopwatch'), 'gone');
 
     await kit.quit();
   });
@@ -67,32 +67,32 @@ void main() {
     final kit = await open(t);
     final now = DateTime.now().toUtc();
     final roster = kit.ctx.roster.dir;
-    writeRoster(roster, 'dev.demo.stopwatch', name: 'Stopwatch', pid: 111, instance: 'aaaaaaaa', started: now, heartbeat: now);
-    writeRoster(roster, 'dev.demo.stopwatch', name: 'Stopwatch', pid: 222, instance: 'bbbbbbbb', started: now, heartbeat: now);
+    writeRoster(roster, 'com.slashbuilder.demo.stopwatch', name: 'Stopwatch', pid: 111, instance: 'aaaaaaaa', started: now, heartbeat: now);
+    writeRoster(roster, 'com.slashbuilder.demo.stopwatch', name: 'Stopwatch', pid: 222, instance: 'bbbbbbbb', started: now, heartbeat: now);
     await show(kit, refreshEvery: const Duration(seconds: 3));
     await t.pump();
 
     expect(find.text('Stopwatch'), findsNWidgets(2));
-    expect(status(t, 'dev.demo.stopwatch', 'aaaaaaaa'), 'running');
-    expect(status(t, 'dev.demo.stopwatch', 'bbbbbbbb'), 'running');
+    expect(status(t, 'com.slashbuilder.demo.stopwatch', 'aaaaaaaa'), 'running');
+    expect(status(t, 'com.slashbuilder.demo.stopwatch', 'bbbbbbbb'), 'running');
     expect(find.text('aaaaaaaa'), findsOneWidget);
     expect(find.text('bbbbbbbb'), findsOneWidget);
 
-    File('$roster/dev.demo.stopwatch@aaaaaaaa.json').deleteSync();
+    File('$roster/com.slashbuilder.demo.stopwatch@aaaaaaaa.json').deleteSync();
     await t.pump(const Duration(seconds: 3));
     await t.pump();
-    expect(status(t, 'dev.demo.stopwatch', 'aaaaaaaa'), 'gone');
-    expect(status(t, 'dev.demo.stopwatch', 'bbbbbbbb'), 'running');
+    expect(status(t, 'com.slashbuilder.demo.stopwatch', 'aaaaaaaa'), 'gone');
+    expect(status(t, 'com.slashbuilder.demo.stopwatch', 'bbbbbbbb'), 'running');
     await kit.quit();
   });
 
   testWidgets('no apps directory set: only announced apps, and the banner says how to set it', (t) async {
     final kit = await open(t);
     final now = DateTime.now().toUtc();
-    writeRoster(kit.ctx.roster.dir, 'dev.demo.a', name: 'A', started: now, heartbeat: now);
+    writeRoster(kit.ctx.roster.dir, 'com.slashbuilder.demo.a', name: 'A', started: now, heartbeat: now);
     await show(kit);
     await t.pump();
-    expect(status(t, 'dev.demo.a'), 'running');
+    expect(status(t, 'com.slashbuilder.demo.a'), 'running');
     expect(find.textContaining('Apps directory: not set'), findsOneWidget);
     await kit.quit();
   });
@@ -100,13 +100,13 @@ void main() {
   testWidgets('the apps directory can come from the settings file instead of the environment', (t) async {
     final apps = Directory.systemTemp.createTempSync('launcher-apps-').path;
     addTearDown(() => Directory(apps).deleteSync(recursive: true));
-    writeManifest(apps, 'notepad', manifestJson('dev.demo.notepad', 'Notepad'));
+    writeManifest(apps, 'notepad', manifestJson('com.slashbuilder.demo.notepad', 'Notepad'));
     final kit = await open(t);
     kit.ctx.config.set('appsDir', apps);
     await show(kit);
     await t.pump();
-    expect(find.byKey(const Key('status-dev.demo.notepad')), findsOneWidget);
-    expect((t.widget(find.byKey(const Key('status-dev.demo.notepad'))) as Text).data, 'not running');
+    expect(find.byKey(const Key('status-com.slashbuilder.demo.notepad')), findsOneWidget);
+    expect((t.widget(find.byKey(const Key('status-com.slashbuilder.demo.notepad'))) as Text).data, 'not running');
     await kit.quit();
   });
 

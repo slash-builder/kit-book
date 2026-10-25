@@ -12,8 +12,8 @@ import 'package:notepad/ui/notes_controller.dart';
 void main() {
   late KitTestContext kit;
 
-  Directory notesDir() => Directory('${kit.scratch.path}/dev.demo.notepad/data/notes');
-  Directory configDir() => Directory('${kit.scratch.path}/dev.demo.notepad/config');
+  Directory notesDir() => Directory('${kit.scratch.path}/com.slashbuilder.demo.notepad/data/notes');
+  Directory configDir() => Directory('${kit.scratch.path}/com.slashbuilder.demo.notepad/config');
   File configFile() => File('${configDir().path}/config.json');
 
   NotesController controller(WidgetTester t) => t.widget<NotepadScreen>(find.byType(NotepadScreen)).controller;
@@ -247,7 +247,7 @@ void main() {
 
     testWidgets('a corrupt config.json is reported and never overwritten, and the app still works', (t) async {
       final scratch = plantedScratch();
-      final cfg = File('${scratch.path}/dev.demo.notepad/config/config.json')..createSync(recursive: true);
+      final cfg = File('${scratch.path}/com.slashbuilder.demo.notepad/config/config.json')..createSync(recursive: true);
       cfg.writeAsStringSync('{"fontSize": 22, "other": "keep me", ');
       final before = cfg.readAsStringSync();
       final c = await boot(t, scratch: scratch);
@@ -267,7 +267,7 @@ void main() {
 
     testWidgets('a config.json that is not even text does not stop the app starting and is left exactly as it was', (t) async {
       final scratch = plantedScratch();
-      final cfg = File('${scratch.path}/dev.demo.notepad/config/config.json')..createSync(recursive: true);
+      final cfg = File('${scratch.path}/com.slashbuilder.demo.notepad/config/config.json')..createSync(recursive: true);
       cfg.writeAsBytesSync([0xff, 0xfe, 0x80, 0x00]);
       // Round 1: the Kit threw FileSystemException here and the app renamed the file aside before opening. Now the Kit opens,
       // reports it, and the file stays where it is.

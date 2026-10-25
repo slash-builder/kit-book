@@ -1,6 +1,6 @@
 # Fitting the App Context Kit to other Kits
 
-The App Context Kit (the name is provisional) is the root namespace for one running app: identity, directories, settings, a session with a resource broker (the Venue, also a provisional name), and a way for copies of the same app to find each other. It is not the only Kit an app touches. During its first round of work, six neighbours were probed to find out where the App Context Kit's design meets theirs.
+The App Context Kit is the root namespace for one running app: identity, directories, settings, a session with a resource broker (Venue), and a way for copies of the same app to find each other. It is not the only Kit an app touches. During its first round of work, six neighbours were probed to find out where the App Context Kit's design meets theirs.
 
 This page records, for each one: the question, what was built, what it showed, what the App Context Kit does about it, and what is still open and with whom.
 

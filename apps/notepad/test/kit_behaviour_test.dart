@@ -11,9 +11,9 @@ void main() {
   setUp(() => tmp = Directory.systemTemp.createTempSync('notepad-kit-'));
   tearDown(() => tmp.deleteSync(recursive: true));
 
-  final manifest = AppManifest.fromJson({'id': 'dev.demo.notepad', 'name': 'Notepad', 'version': '0.1.0'});
+  final manifest = AppManifest.fromJson({'id': 'com.slashbuilder.demo.notepad', 'name': 'Notepad', 'version': '0.1.0'});
   Map<String, String> env() => {'APP_CONTEXT_SCRATCH': tmp.path};
-  File cfg() => File('${tmp.path}/dev.demo.notepad/config/config.json');
+  File cfg() => File('${tmp.path}/com.slashbuilder.demo.notepad/config/config.json');
 
   Future<AppContext> open() => AppContext.open(manifest, env: env(), platform: 'linux', home: '/x', announce: false);
 

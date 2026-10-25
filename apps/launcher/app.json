@@ -1,5 +1,5 @@
 {
-  "id": "dev.demo.launcher",
+  "id": "com.slashbuilder.demo.launcher",
   "name": "Launcher",
   "version": "0.1.0",
   "kits": ["venue"],

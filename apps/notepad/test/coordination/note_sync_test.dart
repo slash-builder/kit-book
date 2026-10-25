@@ -426,7 +426,7 @@ void main() {
 
   group('scope', () {
     test('another app on the same network, or the same app under another account, never receives a note or appears as a peer', () async {
-      final other = AppManifest.parse(File('app.json').readAsStringSync().replaceAll('dev.demo.notepad', 'dev.demo.minesweeper'));
+      final other = AppManifest.parse(File('app.json').readAsStringSync().replaceAll('com.slashbuilder.demo.notepad', 'com.slashbuilder.demo.minesweeper'));
       final a = await open('laptop'), b = await open('desktop');
       final game = await open('laptop-game', m: other);
       final stranger = await open('stranger', env: {'APP_CONTEXT_ACCOUNT': 'someone-else'});

@@ -14,7 +14,7 @@ SECONDS_RUN=${1:-10}
 HERE=$(cd "$(dirname "$0")/.." && pwd)
 APP="$HERE/build/macos/Build/Products/Debug/notes_rust.app"
 BIN="$APP/Contents/MacOS/notes_rust"
-BUNDLE=dev.demo.notes-rust
+BUNDLE=com.slashbuilder.demo.notes-rust
 [ -x "$BIN" ] || { echo "no built app at $APP; run: make app APP=notes_rust" >&2; exit 2; }
 [ "$(uname -s)" = Darwin ] || { echo "this smoke test is for macOS" >&2; exit 2; }
 
@@ -35,7 +35,7 @@ echo "started pid $PID, scratch $SCRATCH"
 sleep "$SECONDS_RUN"
 kill -0 "$PID" 2>/dev/null || { echo "FAIL: the app exited early"; cat "$LOG"; exit 1; }
 
-ID=dev.demo.notes-rust
+ID=com.slashbuilder.demo.notes-rust
 ROSTER=$(ls "$SCRATCH/roster" 2>/dev/null || true)
 echo "roster files while running: $ROSTER"
 [ "$(printf '%s\n' "$ROSTER" | grep -c .)" = 1 ] || { echo "FAIL: expected exactly one roster file"; exit 1; }

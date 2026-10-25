@@ -9,7 +9,7 @@ use notes_core::Engine;
 use serde_json::json;
 use tempfile::TempDir;
 
-pub const APP: &str = "dev.demo.notes-rust";
+pub const APP: &str = "com.slashbuilder.demo.notes-rust";
 
 /// A scratch directory standing in for one running copy: its own data/config/state/cache/runtime and roster.
 pub struct Copy {

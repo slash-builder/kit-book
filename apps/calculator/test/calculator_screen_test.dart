@@ -64,7 +64,7 @@ void main() {
 
   testWidgets('it announces itself in the roster while open and withdraws on close', (t) async {
     await boot(t, announce: true);
-    expect(kit.ctx.roster.running().map((e) => e.id), ['dev.demo.calc']);
+    expect(kit.ctx.roster.running().map((e) => e.id), ['com.slashbuilder.demo.calc']);
     await kit.close();
     expect(kit.ctx.roster.running(), isEmpty);
   });

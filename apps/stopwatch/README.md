@@ -4,7 +4,7 @@ A stopwatch with laps and a countdown. Its state is a point in time plus banked 
 
 | | |
 |---|---|
-| Manifest id | `dev.demo.stopwatch` |
+| Manifest id | `com.slashbuilder.demo.stopwatch` |
 | Kits in `app.json` | `venue`, `peers` (`venue` is a label; only `peers` is checked today) |
 | Tests | 49 |
 | `lib/main.dart` | 10 lines |

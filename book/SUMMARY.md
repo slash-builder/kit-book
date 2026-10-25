@@ -39,7 +39,7 @@
 # Kit reference
 
 <!-- docs-pull:start -->
-- [App Context Kit reference (provisional name)](30-kits/app-context-kit/index.md)
+- [App Context Kit reference](30-kits/app-context-kit/index.md)
   - [Overview](30-kits/app-context-kit/overview.md)
   - [Getting started](30-kits/app-context-kit/getting-started.md)
   - [Context guide](30-kits/app-context-kit/context-guide.md)
