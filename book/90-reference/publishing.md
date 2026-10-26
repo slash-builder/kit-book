@@ -74,14 +74,14 @@ The order matters. Nothing before step 5 changes what the public sees.
 
 ## The Kit rename and the pin
 
-The Application Kit was renamed **App Context Kit** before going public. Its public repository, `slash-builder/app-context-kit`, does not exist yet; it is created at release time from the reviewed release candidate. Until then [`kits.lock`](../../kits.lock) names the Kit `app-context-kit` but keeps the address of the repository that exists today, `slash-builder/application-kit` on GitHub (private; the pinned commit is on its branch `public/release-prep`). That is deliberate: it keeps `make setup KITS=all` working now, and it is the only place that still says the old slug.
+The Application Kit was renamed **App Context Kit** before going public. Its repository, `slash-builder/app-context-kit`, was created from the reviewed release candidate: the candidate is one commit with no parents, pushed as it is, so the commit id the repository starts from is the commit id this book already pinned. [`kits.lock`](../../kits.lock) names that repository and that commit. Until the repository is public the line is marked `private`.
 
 At release, before step 3 above:
 
-1. Create `slash-builder/app-context-kit` from the release-candidate commit and make it public.
-2. In `kits.lock`, change the address on the `app-context-kit` line to the new repository, `slash-builder/app-context-kit`, delete the `RENAMED AT RELEASE` comment, and re-pin to the commit the new repository starts from (`make lock KIT=app-context-kit`). The commit id changes because the new repository is a new history. Mark the line `public`.
+1. Make `slash-builder/app-context-kit` public, then switch on what a private repository on the free plan cannot have: private vulnerability reporting, branch protection on `main`, and required reviewers on the `release` environment.
+2. In `kits.lock`, mark the `app-context-kit` line `public`. If the release candidate had to change, re-pin (`make lock KIT=app-context-kit`) to the commit the repository starts from.
 3. Run `make clean-all && make setup`, `make docs-pull`, `make docs` and `make check-public`. `make docs-catalog` then records the new repository's visibility.
-4. Run `make go-public-check`. Rows `b1` to `b4` and `c1`, `c2` are the check for this switch: they refuse a `kits.lock` URL that does not end in the Kit's name, a leftover rename comment, an old spelling, and a Kit whose repository or pinned commit does not answer HTTP 200 without a login. `tools/go-public-allow.txt` may never allow `kits.lock`.
+4. Run `make go-public-check`. Rows `b1` to `b4` and `c1`, `c2` check this switch: they refuse a `kits.lock` URL that does not end in the Kit's name, a leftover rename comment, an old spelling, and a Kit whose repository or pinned commit does not answer HTTP 200 without a login. `tools/go-public-allow.txt` may never allow `kits.lock`.
 
 ## What is manual
 

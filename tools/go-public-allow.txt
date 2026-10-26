@@ -5,8 +5,6 @@
 # An entry allows that text on lines of that file only, so a new use elsewhere in the same file still fails if it is another line.
 # kits.lock may NOT be listed: its URL line must be switched to the new repository name at release (the gate rejects such an entry).
 
-# The page that explains the rename names the old repository once, on purpose (what existed before, where the pin came from).
-book/90-reference/publishing.md :: slash-builder/application-kit
 # The catalog generator's sanitiser lists names of private repositories it must never link; one of them has the old spelling.
 tools/gen-catalog.py :: application-kit-probes
 # The table that explains check g of the gate names the three spellings it looks for.
