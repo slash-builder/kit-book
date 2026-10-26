@@ -1,0 +1,647 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Context guide - The Kit Book</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-e0dd22bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-ce6d682b.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kit Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book/edit/main/book/30-kits/app-context-kit/context-guide.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <!-- Generated by tools/pull-docs.py from app-context-kit at 4797e81 (docs/CONTEXT-GUIDE.md). Do not edit by hand: edit it in the Kit, then run make docs-pull. -->
+<h1 id="context-guide"><a class="header" href="#context-guide">Context guide</a></h1>
+<blockquote>
+<p>Reference page pulled from app-context-kit at commit 4797e81. Edit it in the Kit, not here.</p>
+</blockquote>
+<p>Reference for the <code>AppContext</code> and everything it is built from. It describes the Dart core (<code>app_context_kit</code>) and the Flutter companion (<code>app_context_kit_flutter</code>), and says where the Rust crate differs. The contract these rules come from is <a href="spec/app-context.html"><code>spec/APP-CONTEXT.md</code></a>; this guide links to its sections instead of repeating them, and adds what the code does that the spec leaves open. If the guide and a fixture in <code>spec/conformance/</code> disagree, the fixture is right.</p>
+<p>To build something, start with <a href="getting-started.html">Getting started</a>.</p>
+<p>Contents: <a href="#the-manifest">the manifest</a> · <a href="#directories">directories</a> · <a href="#environment-variables">environment variables</a> · <a href="#modes">modes</a> · <a href="#the-config-store">the config store</a> · <a href="#appjsonfile-and-ctxdatajson"><code>AppJsonFile</code> and <code>ctx.dataJson</code></a> · <a href="#sessionsettings"><code>SessionSettings</code></a> · <a href="#notes">notes</a> · <a href="#the-venue-session">the Venue session</a> · <a href="#lifecycle">lifecycle</a> · <a href="#what-the-flutter-companion-adds">what the Flutter companion adds</a> · <a href="#the-roster">the roster</a> · <a href="#peers">peers</a> · <a href="#errors">errors</a> · <a href="#the-rust-crate">the Rust crate</a></p>
+<h2 id="the-manifest"><a class="header" href="#the-manifest">The manifest</a></h2>
+<p><code>app.json</code> is parsed by <code>AppManifest.parse(text)</code> (JSON text) or <code>AppManifest.fromJson(value)</code> (an already-decoded value). Both throw <code>ManifestError</code>, whose <code>code</code> is the <strong>first</strong> rule that failed, checked in the order below. A field that is present but <code>null</code> is present and invalid. Every pattern must match the whole string, so a trailing newline fails. Spec: <a href="spec/app-context.html">section 1</a>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Type</th><th>Rule</th><th>Default</th><th>Error code</th></tr>
+</thead>
+<tbody>
+<tr><td>(the source)</td><td>text</td><td>valid JSON (<code>parse</code> only)</td><td></td><td><code>not-json</code></td></tr>
+<tr><td>(the value)</td><td>object</td><td>a JSON object</td><td></td><td><code>not-object</code></td></tr>
+<tr><td><code>id</code></td><td>string, required</td><td><code>^[a-z][a-z0-9-]*(\.[a-z][a-z0-9-]*)+$</code></td><td></td><td><code>bad-id</code></td></tr>
+<tr><td><code>name</code></td><td>string, required</td><td>not empty after removing space, tab, CR and LF. Other characters, including U+FEFF, count as content</td><td></td><td><code>bad-name</code></td></tr>
+<tr><td><code>version</code></td><td>string, required</td><td><code>^\d+\.\d+\.\d+$</code> (ASCII digits; no pre-release suffix)</td><td></td><td><code>bad-version</code></td></tr>
+<tr><td><code>kits</code></td><td>list of strings</td><td>each name matches <code>^[a-z][a-z0-9-]*$</code></td><td><code>[]</code></td><td><code>bad-kits</code></td></tr>
+<tr><td><code>kits</code></td><td></td><td>no name twice, checked only once every name is valid</td><td></td><td><code>duplicate-kit</code></td></tr>
+<tr><td><code>envPrefix</code></td><td>string</td><td><code>^[A-Z][A-Z0-9_]*$</code></td><td>derived from <code>id</code>, see <a href="#environment-variables">environment variables</a></td><td><code>bad-prefix</code></td></tr>
+<tr><td><code>venue</code></td><td>object</td><td>an object</td><td><code>{}</code></td><td><code>bad-venue</code></td></tr>
+<tr><td><code>venue.mode</code></td><td>string</td><td><code>auto</code>, <code>on</code> or <code>off</code></td><td><code>auto</code></td><td><code>bad-venue</code></td></tr>
+<tr><td><code>venue.consumer</code></td><td>string</td><td><code>^[a-z][a-z0-9-]*$</code></td><td>the last segment of <code>id</code></td><td><code>bad-venue</code></td></tr>
+</tbody>
+</table>
+</div>
+<p><code>AppManifest</code> exposes <code>id</code>, <code>name</code>, <code>version</code>, <code>kits</code> (unmodifiable), <code>envPrefix</code> (nullable: only what the file says) and <code>venue</code> (<code>VenueSettings</code>: <code>mode</code>, <code>consumer</code>). Unknown fields are ignored.</p>
+<p><code>kits</code> is checked in one place today: <code>ctx.peerHub</code> and <code>ctx.startPeers</code> throw <code>KitNotDeclared</code> unless it contains <code>"peers"</code>. A Venue session is opened whether or not <code>kits</code> lists <code>"venue"</code>.</p>
+<h2 id="directories"><a class="header" href="#directories">Directories</a></h2>
+<p><code>resolve(manifest:, platform:, home:, env:)</code> is a pure function: it reads no files and touches no disk. <code>AppContext.open</code> calls it and then creates every directory with <code>createSync(recursive: true)</code>. Spec: <a href="spec/app-context.html">section 2</a>.</p>
+<p><code>ID</code> is the manifest id. Paths are joined with <code>/</code> on Linux and macOS and with <code>\</code> on Windows, whatever the host is.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Kind</th><th>Linux</th><th>macOS</th><th>Windows</th></tr>
+</thead>
+<tbody>
+<tr><td><code>data</code></td><td><code>$XDG_DATA_HOME/ID</code>, else <code>~/.local/share/ID</code></td><td><code>~/Library/Application Support/ID/data</code></td><td><code>%LOCALAPPDATA%\ID\data</code></td></tr>
+<tr><td><code>config</code></td><td><code>$XDG_CONFIG_HOME/ID</code>, else <code>~/.config/ID</code></td><td><code>~/Library/Preferences/ID</code></td><td><code>%APPDATA%\ID</code></td></tr>
+<tr><td><code>state</code></td><td><code>$XDG_STATE_HOME/ID</code>, else <code>~/.local/state/ID</code></td><td><code>~/Library/Application Support/ID/state</code></td><td><code>%LOCALAPPDATA%\ID\state</code></td></tr>
+<tr><td><code>cache</code></td><td><code>$XDG_CACHE_HOME/ID</code>, else <code>~/.cache/ID</code></td><td><code>~/Library/Caches/ID</code></td><td><code>%LOCALAPPDATA%\ID\cache</code></td></tr>
+<tr><td><code>runtime</code></td><td><code>$XDG_RUNTIME_DIR/ID</code>; if that is unset, the default state directory plus <code>/run</code></td><td><code>$TMPDIR/ID</code>, else <code>/tmp/ID</code></td><td><code>%TEMP%\ID</code></td></tr>
+<tr><td><code>roster</code></td><td><code>$XDG_RUNTIME_DIR/app-context-roster</code>, else <code>/tmp/app-context-roster</code></td><td><code>$TMPDIR/app-context-roster</code>, else <code>/tmp/app-context-roster</code></td><td><code>%TEMP%\app-context-roster</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>The roster is one directory shared by every app for the user, so it has no <code>ID</code> in its path.</p>
+<p>A trailing separator on a base such as <code>TMPDIR=/var/T/</code> is dropped before joining, using the target platform’s separators only. A base that is only a separator (<code>/</code>) is not reduced to nothing: <code>/</code> and <code>ID</code> join to <code>/ID</code>.</p>
+<p>On Windows, a missing <code>LOCALAPPDATA</code>, <code>APPDATA</code> or <code>TEMP</code> is the error <code>missing-env</code>, but only if a default that needs it is actually used. A directory fixed by an override or by scratch needs none.</p>
+<p><strong>Overrides</strong>, highest priority first, for each of <code>data</code>, <code>config</code>, <code>state</code>, <code>cache</code> and <code>runtime</code>:</p>
+<ol>
+<li><code>&lt;PREFIX&gt;_&lt;KIND&gt;_DIR</code> (for example <code>HELLO_DATA_DIR</code>): used exactly as given. No id is appended and nothing is trimmed.</li>
+<li>Scratch: if <code>APP_CONTEXT_SCRATCH=S</code> is set, the directory is <code>S/ID/&lt;kind&gt;</code> and the roster is <code>S/roster</code>. Scratch always joins with <code>/</code>, on every platform.</li>
+<li>The platform default.</li>
+</ol>
+<p><code>APP_CONTEXT_ROSTER_DIR</code> overrides the roster directory and beats scratch.</p>
+<p><code>AppContext.hostPlatform()</code> returns <code>macos</code> on macOS, <code>windows</code> on Windows, and <code>linux</code> on every other host, including Android and iOS. The home directory is <code>HOME</code>, else <code>USERPROFILE</code>, else <code>/</code>.</p>
+<h2 id="environment-variables"><a class="header" href="#environment-variables">Environment variables</a></h2>
+<p>Every variable the Kit reads. An empty value counts as unset for all of them except <code>HOME</code> and <code>USERPROFILE</code> in the Dart core, where an empty <code>HOME</code> is used as it is (the Rust crate skips an empty one). <code>&lt;PREFIX&gt;</code> is <code>envPrefix</code>, or the last segment of the id upper-cased with each character outside <code>A-Z0-9</code> replaced by <code>_</code> (<code>com.slashbuilder.demo.render-queue</code> gives <code>RENDER_QUEUE</code>).</p>
+<p>By default the Kit reads the process environment. <code>AppContext.open(manifest, env: {...})</code> replaces it with a map you supply, and then nothing from the real environment is read. That is how the tests in the App Context Kit repository stay isolated.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Name</th><th>Meaning</th><th>Default</th><th>Example</th></tr>
+</thead>
+<tbody>
+<tr><td><code>APP_CONTEXT_SCRATCH</code></td><td>Root of a throwaway tree. Every directory becomes <code>&lt;S&gt;/&lt;id&gt;/&lt;kind&gt;</code> and the roster <code>&lt;S&gt;/roster</code></td><td>unset</td><td><code>/tmp/app-context-demo</code></td></tr>
+<tr><td><code>APP_CONTEXT_MODE</code></td><td>Mode for every app: <code>real</code> or <code>mock</code></td><td><code>real</code></td><td><code>mock</code></td></tr>
+<tr><td><code>&lt;PREFIX&gt;_MODE</code></td><td>Mode for one app. Wins over <code>APP_CONTEXT_MODE</code></td><td>unset</td><td><code>CALC_MODE=mock</code></td></tr>
+<tr><td><code>&lt;PREFIX&gt;_DATA_DIR</code>, <code>_CONFIG_DIR</code>, <code>_STATE_DIR</code>, <code>_CACHE_DIR</code>, <code>_RUNTIME_DIR</code></td><td>Exact directory for one kind. Wins over scratch</td><td>unset</td><td><code>HELLO_DATA_DIR=/srv/hello</code></td></tr>
+<tr><td><code>APP_CONTEXT_ROSTER_DIR</code></td><td>Exact roster directory. Wins over scratch</td><td>unset</td><td><code>/tmp/roster</code></td></tr>
+<tr><td><code>HOME</code>, <code>USERPROFILE</code></td><td>The home directory (<code>AppContext.open</code> only; <code>resolve</code> takes <code>home</code> as a parameter)</td><td><code>/</code></td><td><code>/home/ada</code></td></tr>
+<tr><td><code>XDG_DATA_HOME</code>, <code>XDG_CONFIG_HOME</code>, <code>XDG_STATE_HOME</code>, <code>XDG_CACHE_HOME</code></td><td>Base directories on Linux</td><td><code>~/.local/share</code>, <code>~/.config</code>, <code>~/.local/state</code>, <code>~/.cache</code></td><td><code>/x/data</code></td></tr>
+<tr><td><code>XDG_RUNTIME_DIR</code></td><td>Runtime and roster base on Linux</td><td>see <a href="#directories">directories</a></td><td><code>/run/user/1000</code></td></tr>
+<tr><td><code>TMPDIR</code></td><td>Runtime and roster base on macOS</td><td><code>/tmp</code></td><td><code>/var/folders/ab/T/</code></td></tr>
+<tr><td><code>LOCALAPPDATA</code>, <code>APPDATA</code>, <code>TEMP</code></td><td>Windows bases. Needed only if a default that uses them is used</td><td>none (error <code>missing-env</code>)</td><td><code>C:\Users\ada\AppData\Local</code></td></tr>
+<tr><td><code>VENUE_DAEMON</code></td><td>URL of the Venue daemon</td><td><code>http://127.0.0.1:7878</code></td><td><code>https://venue.example:7878</code></td></tr>
+<tr><td><code>VENUE_TOKEN</code></td><td>The Venue token itself</td><td>unset</td><td></td></tr>
+<tr><td><code>VENUE_TOKEN_FILE</code></td><td>A file holding the token. If set, a missing, unreadable or empty file is an error and the lookup does not go on to the next source</td><td>unset</td><td><code>/run/secrets/venue-token</code></td></tr>
+<tr><td><code>VENUE_DAEMON_FINGERPRINT</code></td><td>Pin the daemon’s TLS certificate by SHA-256. Accepts <code>sha256:</code> or not, with or without colons, any case</td><td>unset (system trust)</td><td><code>sha256:ab12...</code> (64 hex digits)</td></tr>
+<tr><td><code>APP_CONTEXT_ACCOUNT</code></td><td>Account for <a href="#peers">peers</a></td><td>config <code>account</code>, else <code>local</code></td><td><code>household-1</code></td></tr>
+<tr><td><code>APP_CONTEXT_DEVICE</code></td><td>Device name for peers</td><td>config <code>device</code>, else generated once</td><td><code>laptop</code></td></tr>
+<tr><td><code>APP_CONTEXT_PEERS_DIR</code></td><td>Where the loopback peers provider announces copies</td><td>the roster directory plus <code>-peers</code></td><td><code>/tmp/peers</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>The fake Venue’s capacity is not an environment variable. It is the <code>fakeCapacity</code> parameter of <code>AppContext.open</code> (default 1). The Rust tests confirm that <code>&lt;PREFIX&gt;_FAKE_CAPACITY</code>, <code>APP_CONTEXT_FAKE_CAPACITY</code> and <code>VENUE_FAKE_CAPACITY</code> have no effect.</p>
+<p>Token lookup, in order: <code>VENUE_TOKEN</code>; the file named by <code>VENUE_TOKEN_FILE</code>; <code>&lt;config&gt;/venue-token</code>. See spec <a href="spec/app-context.html">section 5, item 2</a>.</p>
+<h2 id="modes"><a class="header" href="#modes">Modes</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Mode</th><th>Set by</th><th>Venue session</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td><code>real</code></td><td>default</td><td>local, remote or none, from <code>venue.mode</code> and the token</td><td></td></tr>
+<tr><td><code>mock</code></td><td><code>&lt;PREFIX&gt;_MODE=mock</code> or <code>APP_CONTEXT_MODE=mock</code></td><td>always <code>FakeVenue</code>, whatever <code>venue.mode</code> says</td><td>peers use an in-memory fake network</td></tr>
+</tbody>
+</table>
+</div>
+<p>Any other value is <code>ResolveError('bad-mode')</code>. Only the variable that wins is checked: a garbage <code>APP_CONTEXT_MODE</code> is ignored when <code>&lt;PREFIX&gt;_MODE</code> is set. <code>bad-mode</code> is reported before <code>missing-env</code>.</p>
+<p><strong>Scratch is separate from mode.</strong> <code>APP_CONTEXT_SCRATCH</code> moves the files; <code>mock</code> swaps the services. They are independent, and tests normally set both. <code>ctx.mode</code>, <code>ctx.isMock</code> and <code>ctx.scratch</code> report what was resolved; <code>ModeBadge</code> shows it.</p>
+<h2 id="the-config-store"><a class="header" href="#the-config-store">The config store</a></h2>
+<p><code>ctx.config</code> is a <code>ConfigStore</code> over <code>&lt;config&gt;/config.json</code>. It is a flat JSON object that you read and write by key.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Member</th><th>Behaviour</th></tr>
+</thead>
+<tbody>
+<tr><td><code>get&lt;T&gt;(key, fallback)</code></td><td>The value if it is a <code>T</code>, otherwise <code>fallback</code>. A whole JSON number reads as <code>double</code> (<code>3</code> is <code>3.0</code>). Decoded lists are <code>List&lt;dynamic&gt;</code>, so <code>get&lt;List&lt;int&gt;&gt;</code> always returns the fallback; ask for <code>List&lt;dynamic&gt;</code></td></tr>
+<tr><td><code>ctx.config[key]</code></td><td>The raw value or <code>null</code></td></tr>
+<tr><td><code>all</code></td><td>An unmodifiable copy of every key</td></tr>
+<tr><td><code>set(key, value)</code></td><td>Sets the key and saves at once. <code>null</code> removes the key. Throws <code>DamagedConfigError</code> first, changing nothing, if the file is damaged</td></tr>
+<tr><td><code>save()</code></td><td>Writes the whole file. Throws <code>DamagedConfigError</code> if damaged</td></tr>
+<tr><td><code>problem</code>, <code>isDamaged</code></td><td>Why the file could not be read, if it could not</td></tr>
+<tr><td><code>setAsideCorrupt()</code></td><td>See below</td></tr>
+</tbody>
+</table>
+</div>
+<p>Writes are atomic: the content goes to <code>config.json.tmp</code>, which is then renamed over <code>config.json</code>. The file is pretty-printed JSON.</p>
+<p><strong>A missing file is an empty store, not a problem.</strong> <strong>A damaged file</strong> is one that is not valid UTF-8, not valid JSON, not a JSON object, or cannot be read. <code>AppContext.open</code> still succeeds, <code>problem</code> says why, a warning note is added, and every write is refused until you decide what to do. The file is never replaced silently (spec <a href="spec/app-context.html">section 5, item 3</a>).</p>
+<p><code>setAsideCorrupt()</code> is that decision. It renames the file to <code>config.json.corrupt</code> (replacing an older <code>.corrupt</code> copy), empties the store, clears <code>problem</code> and returns the new <code>File</code>. It returns <code>null</code> when nothing was damaged. The damaged content is kept, never deleted. If you want the person to choose, show them <code>problem</code> and call it from a button.</p>
+<p>Each copy of an app keeps its own in-memory values and rewrites the whole file on <code>set</code>. Two copies running at once can overwrite each other’s keys, and the Kit takes no lock. This follows from reading the code; there is no test for it.</p>
+<h2 id="appjsonfile-and-ctxdatajson"><a class="header" href="#appjsonfile-and-ctxdatajson"><code>AppJsonFile</code> and <code>ctx.dataJson</code></a></h2>
+<p><code>ConfigStore</code> is for the one settings file. <code>AppJsonFile</code> does the same careful handling for any JSON file your app owns, usually under <code>ctx.dirs.data</code>. <code>ctx.dataJson('notes.json')</code> returns the <code>AppJsonFile</code> for that name under the data directory, and <code>AppJsonFile(file)</code> wraps any <code>File</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Member</th><th>Behaviour</th></tr>
+</thead>
+<tbody>
+<tr><td><code>read()</code></td><td>Returns an <code>AppJsonRead</code>; never throws for a missing or damaged file</td></tr>
+<tr><td><code>write(json)</code></td><td>Creates the directory, writes <code>&lt;name&gt;.tmp</code> with a flush, renames it over the target. Throws <code>FileSystemException</code> if the disk refuses</td></tr>
+<tr><td><code>quarantine()</code></td><td>Renames a damaged file to <code>&lt;name&gt;.damaged-&lt;UTC milliseconds&gt;</code> and returns the new <code>File</code>. Never deletes</td></tr>
+<tr><td><code>delete()</code></td><td>Removes the file; a missing file is fine</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>AppJsonRead</code> has <code>exists</code>, <code>value</code>, <code>problem</code> and <code>ok</code> (true when <code>problem</code> is null, which includes the file not existing). The three outcomes:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Outcome</th><th><code>exists</code></th><th><code>ok</code></th><th><code>value</code></th><th><code>problem</code></th></tr>
+</thead>
+<tbody>
+<tr><td>no such file</td><td><code>false</code></td><td><code>true</code></td><td><code>null</code></td><td><code>null</code></td></tr>
+<tr><td>read fine</td><td><code>true</code></td><td><code>true</code></td><td>the decoded JSON</td><td><code>null</code></td></tr>
+<tr><td>damaged or unreadable</td><td><code>true</code></td><td><code>false</code></td><td><code>null</code></td><td><code>not valid JSON: ...</code> or <code>could not be read: ...</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>A file that contains the JSON literal <code>null</code> is <code>exists: true, ok: true, value: null</code>; check <code>exists</code> to tell it from a missing file.</p>
+<h2 id="sessionsettings"><a class="header" href="#sessionsettings"><code>SessionSettings</code></a></h2>
+<p><code>SessionSettings(ctx.config)</code> wraps a <code>ConfigStore</code> for UI code that should not throw when the file is damaged.</p>
+<ul>
+<li>While the file is healthy it is the store: <code>set</code> saves, <code>get</code> reads the file’s values.</li>
+<li>While the file is damaged, <code>set</code> keeps the value in memory for this session only and never touches the file. <code>get</code> returns that session value, then the file’s value, then the fallback. <code>readOnly</code> is <code>true</code>, so you can tell the person their change will not be kept.</li>
+<li>After <code>setAsideCorrupt()</code> on the store, <code>readOnly</code> is <code>false</code> and writes reach the file again. Values set during the damage are not written then.</li>
+</ul>
+<p><code>SessionSettings.set</code> never throws <code>DamagedConfigError</code>. It can still throw <code>FileSystemException</code> if the disk refuses a write.</p>
+<h2 id="notes"><a class="header" href="#notes">Notes</a></h2>
+<p><code>ctx.notes</code> is a <code>List&lt;AppNote&gt;</code>; each has a <code>severity</code> (<code>NoteSeverity.info</code>, <code>warning</code> or <code>error</code>) and <code>text</code>. <code>ctx.noteTexts</code> gives the texts only. Notes are plain data: adding one notifies nobody.</p>
+<p><code>AppContext.open</code> adds these:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>When</th><th>Severity</th><th>Text</th></tr>
+</thead>
+<tbody>
+<tr><td><code>config.json</code> is damaged</td><td>warning</td><td><code>Settings: &lt;problem&gt;. They will not be saved until the file is set aside.</code></td></tr>
+<tr><td>Venue, in <code>mock</code> mode</td><td>info</td><td><code>Venue: fake (mock mode)</code></td></tr>
+<tr><td>Venue, <code>venue.mode</code> is <code>off</code></td><td>info</td><td><code>Venue: local (Venue is off for this app)</code></td></tr>
+<tr><td>Venue, no token anywhere</td><td>info</td><td><code>Venue: local (Venue not configured)</code></td></tr>
+<tr><td>Venue, <code>VENUE_TOKEN_FILE</code> set but unusable</td><td>warning</td><td><code>Venue: local (VENUE_TOKEN_FILE is set to &lt;path&gt; but &lt;reason&gt;)</code></td></tr>
+<tr><td>Venue, token found but the daemon did not answer <code>/healthz</code> within 2 seconds</td><td>warning</td><td><code>Venue: local (Venue did not answer at &lt;url&gt;)</code></td></tr>
+<tr><td>Venue connected</td><td>info</td><td><code>Venue: connected to &lt;url&gt; as &lt;consumer&gt;</code></td></tr>
+</tbody>
+</table>
+</div>
+<p><code>AppContext.run</code> adds an <code>error</code> note if closing fails after your function threw (see <a href="#lifecycle">lifecycle</a>). Your app can add its own; the notepad demo app adds a warning when a note file is damaged.</p>
+<h2 id="the-venue-session"><a class="header" href="#the-venue-session">The Venue session</a></h2>
+<p><code>ctx.venue</code> is a <code>VenueSession</code>. Its <code>kind</code> is <code>local</code>, <code>fake</code> or <code>venue</code>; <code>isConnected</code> is true only for <code>venue</code>; <code>description</code> is one sentence. The same calls work for all three, so app code does not branch. The wire details (the daemon’s HTTP API) belong to Venue, not to this Kit; spec <a href="spec/app-context.html">section 3</a> and <a href="spec/app-context.html">section 5, items 2, 6 and 7</a>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Call</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>hold(need, {leaseSeconds: 300})</code></td><td>Ask for something. A <code>VenueNeed</code> has <code>name</code>, <code>contractClass</code> and <code>parameters</code>. Returns a <code>VenueHold</code></td></tr>
+<tr><td><code>start(hold)</code>, <code>renew(hold)</code>, <code>release(hold)</code></td><td>The hold’s life cycle</td></tr>
+<tr><td><code>holds()</code></td><td>This consumer’s own live holds, for finding orphans after a crash</td></tr>
+<tr><td><code>nodes()</code></td><td>The nodes Venue knows about</td></tr>
+<tr><td><code>withHold(need, body, {leaseSeconds, onLeaseLost, renewEvery})</code></td><td>Hold, start, renew in the background while <code>body</code> runs, then release, also on error. <code>renewEvery</code> defaults to a third of the lease. A renewal failure sets <code>hold.leaseLost</code> and calls <code>onLeaseLost</code> once; the body keeps running. A failing release never replaces the body’s result: it is recorded in <code>hold.releaseError</code></td></tr>
+<tr><td><code>withHoldWaiting(need, body, {required maxWait, retryEvery, cancel, onWaiting, ...})</code></td><td>Like <code>withHold</code>, but retries a refusal until <code>maxWait</code> has been spent in naps of <code>retryEvery</code>. <code>maxWait: Duration.zero</code> is <code>withHold</code>. Completing <code>cancel</code> ends the wait with <code>HoldWaitCancelled</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Refusals are typed. <code>VenueRefused</code> carries a <code>kind</code>: <code>doesNotFit</code> (HTTP 409; retrying later can succeed) or <code>forbidden</code> (HTTP 403). <code>VenueRefused.retryable</code> is true only for <code>doesNotFit</code>, and <code>plainReason</code> unwraps the daemon’s JSON error message. <code>VenueUnavailable</code> is everything else: a transport failure, a timeout, 401, 5xx. It carries the HTTP <code>status</code> when there was an answer.</p>
+<p><code>withHoldWaiting</code> retries <code>forbidden</code> only while <code>holds()</code> shows this consumer still has live holds, because the daemon uses the same status for “over your live-hold limit” and for “no grant”. This is a heuristic and the spec records its known failure: a consumer that holds something and lacks a grant waits the full <code>maxWait</code> for nothing. See spec <a href="spec/app-context.html">section 7</a>.</p>
+<p><strong>The three sessions:</strong></p>
+<ul>
+<li><code>LocalVenue(why)</code>: no Venue. Work still runs. Holds exist in this process only, so two apps can both “hold” the same thing, and a second hold with the same name in one process is refused as <code>doesNotFit</code>.</li>
+<li><code>FakeVenue({capacity: 1})</code>: in memory, one node. It refuses a hold when <code>capacity</code> holds are live, keeps a <code>log</code> of calls (<code>hold &lt;name&gt;</code>, <code>start &lt;name&gt;</code>, <code>renew &lt;name&gt;</code>, <code>release &lt;name&gt;</code>), and <code>refuseNext(n, {kind})</code> makes the next <code>n</code> holds refuse. Use it in tests.</li>
+<li><code>RemoteVenue</code> (Dart only): the daemon over HTTP with a bearer token. <code>IoTransport</code> does the HTTP; with <code>VENUE_DAEMON_FINGERPRINT</code> it trusts exactly one certificate and no authority. A fingerprint that is not 32 bytes of hex, or a certificate that does not match, is reported as <code>VenueUnavailable</code> with an explanation. Pass your own <code>DaemonTransport</code> to <code>AppContext.open(transport: ...)</code> to supply replies without a socket.</li>
+</ul>
+<h2 id="lifecycle"><a class="header" href="#lifecycle">Lifecycle</a></h2>
+<h3 id="open"><a class="header" href="#open">Open</a></h3>
+<p><code>AppContext.open(manifest, {env, platform, home, transport, announce, heartbeat, fakeCapacity})</code> does these steps in this order:</p>
+<ol>
+<li>Resolve (may throw <code>ResolveError</code>).</li>
+<li>Create the five directories (may throw <code>FileSystemException</code>).</li>
+<li>Open the settings; add a warning note if damaged.</li>
+<li>Open the Venue session; add its note. In <code>venue.mode: on</code>, this step throws <code>VenueUnavailable</code> if Venue cannot be used. Nothing has been announced yet, so nothing is left behind.</li>
+<li>Draw this copy’s instance id: eight random lower-case hex digits.</li>
+<li>Write the roster entry and start the heartbeat, unless <code>announce: false</code>. If that fails, Venue is closed and the error is rethrown.</li>
+</ol>
+<p><code>announce: false</code> is for tests and tools that should not appear in the roster. <code>heartbeat</code> (default 5 seconds) is how often the roster entry is refreshed.</p>
+<h3 id="run"><a class="header" href="#run">Run</a></h3>
+<p><code>AppContext.run(manifest, body, {...})</code> is open, then <code>body(ctx)</code>, then close, also when <code>body</code> throws. If <code>body</code> throws, that error is what you get; a failure while closing is recorded as an <code>error</code> note instead of replacing it. If <code>body</code> returns and closing fails, <code>run</code> throws the <code>AppCloseError</code>.</p>
+<p><code>run</code> closes the moment <code>body</code> returns. That suits a command-line tool. It does not suit a Flutter app, where <code>runApp</code> returns at once; use <code>AppContextKit.run</code> there.</p>
+<h3 id="close"><a class="header" href="#close">Close</a></h3>
+<p><code>ctx.close()</code> does these steps in this order and always does all of them:</p>
+<ol>
+<li>Stop the heartbeat and delete this copy’s own roster entry (only that file).</li>
+<li>Run every <code>ctx.onClose</code> hook, <strong>last added first</strong>. A hook may be async; each is awaited. Peer hubs made by <code>ctx.peerHub</code> or <code>ctx.startPeers</code> are closed by a hook of their own, so they follow the same order.</li>
+<li>Close Venue, last, so a hook can still use it.</li>
+</ol>
+<p>If any step threw, the errors are raised together afterwards as one <code>AppCloseError</code> (its <code>errors</code> and <code>stackTraces</code> lists hold every failure). A failing hook never stops a later hook or the Venue close.</p>
+<p><code>close()</code> is idempotent. A second call, even a concurrent one, runs nothing again and returns when the first has finished. Only the first caller sees an <code>AppCloseError</code>.</p>
+<p>Register hooks with <code>ctx.onClose(() async { ... })</code>. Typical uses are flushing unsaved edits and closing your own resources. The notepad demo app registers its flush hook after starting peers, so on quit the last keystrokes are saved and announced while the hub is still open.</p>
+<h2 id="what-the-flutter-companion-adds"><a class="header" href="#what-the-flutter-companion-adds">What the Flutter companion adds</a></h2>
+<p><code>import 'package:app_context_kit_flutter/app_context_kit_flutter.dart';</code> gives you everything below. Widget-test helpers are in <code>package:app_context_kit_flutter/testing.dart</code>, kept apart so a release build does not link <code>flutter_test</code>.</p>
+<h3 id="appcontextkitrun"><a class="header" href="#appcontextkitrun"><code>AppContextKit.run</code></a></h3>
+<pre><code class="language-dart">Future&lt;AppContextKitSession&gt; AppContextKit.run({
+  required String manifestAsset,
+  required Widget Function(AppContext ctx) app,
+  // passed to AppContext.open:
+  Map&lt;String, String&gt;? env, String? platform, String? home, DaemonTransport? transport,
+  bool announce = true, Duration heartbeat = const Duration(seconds: 5), int fakeCapacity = 1,
+  // for tests:
+  AssetBundle? bundle, bool handleSignals = true, void Function(int code)? exitProcess,
+  void Function(String message)? report,
+  String errorTitle = 'This app could not start',
+})
+</code></pre>
+<p>It ensures the Flutter binding, loads and validates the manifest from the bundle, opens the context, mounts <code>AppContextScope(ctx:, child: app(ctx))</code> and wires the exit coordinator. If anything before that point fails, it mounts the startup error screen and returns a session whose <code>error</code> is set. If your <code>app</code> builder throws, the context is closed (so no roster entry is left) and the screen shows <code>app-build-failed</code>.</p>
+<p>Other static members: <code>AppContextKit.quit()</code> (for a Quit button: closes once, then ends the process), <code>AppContextKit.loadManifest(asset, {bundle})</code>, <code>AppContextKit.openContext(...)</code> (the first half of <code>run</code>, without the lifecycle wiring) and <code>AppContextKit.buildRoot(ctx, app)</code>.</p>
+<h3 id="appcontextscope"><a class="header" href="#appcontextscope"><code>AppContextScope</code></a></h3>
+<p>An <code>InheritedWidget</code> holding the context. <code>AppContextScope.of(context)</code> returns it or throws a <code>FlutterError</code> saying how to fix it; <code>maybeOf</code> returns <code>null</code>. Dependents rebuild only if a different context is swapped in, which happens in tests that relaunch.</p>
+<h3 id="the-exit-coordinator"><a class="header" href="#the-exit-coordinator">The exit coordinator</a></h3>
+<p><code>ExitCoordinator</code> funnels every way an app can end into one shutdown that calls <code>ctx.close()</code> at most once.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Event</th><th>What happens</th><th>Process exit code</th></tr>
+</thead>
+<tbody>
+<tr><td>Window close, or quit from the menu (the lifecycle’s exit request)</td><td>closes, then agrees to exit</td><td>by the platform</td></tr>
+<tr><td>Quit through <code>AppContextKit.quit()</code></td><td>closes, then ends the process</td><td>0, or 1 if the close failed</td></tr>
+<tr><td>SIGINT</td><td>closes, then ends the process</td><td>130, or 1 if the close failed</td></tr>
+<tr><td>SIGTERM</td><td>closes, then ends the process</td><td>143, or 1 if the close failed</td></tr>
+<tr><td><code>onDetach</code> (the only event mobile platforms give)</td><td>closes; does not exit</td><td></td></tr>
+</tbody>
+</table>
+</div>
+<p>Nothing exits before the close has finished. A failing close never blocks the exit: the error is written to stderr, in full. There is no timeout and no “second signal forces it”; a hung <code>onClose</code> hook is a bug, and <code>SIGKILL</code> is the way out. A platform that cannot watch a signal (Windows has no SIGTERM) is skipped. On mobile, the <code>onDetach</code> close is best effort; the OS may not give it time. With SIGTERM and SIGINT sent to a built macOS app, the roster entry was gone afterwards. The exit paths are otherwise tested through injected sources, not through a real window close.</p>
+<h3 id="widgets"><a class="header" href="#widgets">Widgets</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Widget</th><th>What it shows</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ModeBadge.forContext(ctx)</code> (or <code>ModeBadge(isMock:, scratch:)</code>)</td><td>Nothing in <code>real</code> mode with no scratch; otherwise a chip: <code>mock</code>, <code>scratch</code> or <code>mock + scratch</code>, with a tooltip and a semantics label</td></tr>
+<tr><td><code>NotesBanner.forContext(ctx)</code> (or <code>NotesBanner(notes:)</code>)</td><td>Warnings and errors, each with an icon, the word “Warning” or “Error”, and its own colours. Info notes are hidden unless <code>showInfo: true</code>. <code>dismissible: true</code> adds a close button; <code>onDismissed</code> is told which note, and the list is not edited. <code>NotesBanner.visibleOf(notes)</code> returns what would be shown. It reads the list when built, so rebuild it after adding a note</td></tr>
+<tr><td><code>PeersIndicator.forHandle(handle)</code> (or <code>PeersIndicator(hub:, offlineReason:)</code>)</td><td>“This copy: laptop #3fa2”, “Peers: N”, a chip per connected copy, “(K connecting)”, or “Peers: off (peers unavailable: …)”. One live region for screen readers. <code>extra:</code> adds a line of your own. It is exported from the main library and from <code>package:app_context_kit_flutter/peers.dart</code></td></tr>
+<tr><td><code>StartupErrorScreen(error:)</code></td><td>A full <code>MaterialApp</code> showing the failure: a title, what happened, what to do, and <code>Error code: &lt;code&gt;</code></td></tr>
+<tr><td><code>StartupErrorBody(error:)</code></td><td>The same content without the <code>MaterialApp</code>, for an app that has its own</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="the-startup-error-screen-and-its-codes"><a class="header" href="#the-startup-error-screen-and-its-codes">The startup error screen and its codes</a></h3>
+<p><code>AppContextKitStartupError</code> has a stable <code>code</code>, a <code>message</code> (what happened), a <code>hint</code> (what to do) and the original <code>cause</code>. <code>AppContextKitStartupError.from(error)</code> sorts any failure into one:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Code</th><th>Cause</th><th>What to do</th></tr>
+</thead>
+<tbody>
+<tr><td><code>manifest-asset-missing</code></td><td>the asset could not be loaded from the bundle</td><td>list <code>app.json</code> under <code>flutter: assets:</code> in <code>pubspec.yaml</code> and rebuild</td></tr>
+<tr><td><code>not-json</code>, <code>not-object</code>, <code>bad-id</code>, <code>bad-name</code>, <code>bad-version</code>, <code>bad-kits</code>, <code>duplicate-kit</code>, <code>bad-prefix</code>, <code>bad-venue</code></td><td>the manifest’s own code, from <a href="#the-manifest">the table above</a></td><td>fix <code>app.json</code> and rebuild</td></tr>
+<tr><td><code>bad-mode</code></td><td><code>APP_CONTEXT_MODE</code> or <code>&lt;PREFIX&gt;_MODE</code> is not <code>real</code> or <code>mock</code></td><td>set it to <code>real</code> or <code>mock</code>, or unset it</td></tr>
+<tr><td><code>missing-env</code></td><td>a Windows directory default needed <code>LOCALAPPDATA</code>, <code>APPDATA</code> or <code>TEMP</code></td><td>set it, or set <code>APP_CONTEXT_SCRATCH</code></td></tr>
+<tr><td><code>venue-required</code></td><td><code>venue.mode</code> is <code>on</code> and Venue could not be used (no token, or no answer from the daemon)</td><td>provide a token and start Venue, or run with <code>APP_CONTEXT_MODE=mock</code></td></tr>
+<tr><td><code>open-failed</code></td><td>a <code>FileSystemException</code> creating or reading the folders, or any other error from <code>open</code></td><td>check the folder is writable, or set <code>APP_CONTEXT_SCRATCH</code></td></tr>
+<tr><td><code>app-build-failed</code></td><td>your <code>app</code> builder threw</td><td>a bug in the app; run from a terminal for the stack trace</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="sharing-one-context-with-a-rust-core"><a class="header" href="#sharing-one-context-with-a-rust-core">Sharing one context with a Rust core</a></h2>
+<p>A Flutter app with a Rust core must not open the context twice: it would be in the roster twice, under two instance ids, and two code paths would write one <code>config.json</code>. The Dart side opens the context (<code>AppContextKit.run</code>) and hands the Rust side a snapshot; the Rust side adopts it. The full rule is <a href="spec/app-context.html#8-sharing-one-context-between-a-dart-ui-and-a-rust-core">spec section 8</a>.</p>
+<p><strong>Dart, the owner.</strong> <code>ctx.snapshot()</code> returns a map <code>{schema, appId, instance, mode, scratch, dirs: {data, config, state, cache, runtime}, roster}</code> you can <code>jsonEncode</code> and pass over the bridge. It has no secrets and no handles, and asking for it announces nothing.</p>
+<p><strong>Rust, the adopter.</strong></p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let snapshot = ContextSnapshot::parse(&amp;json_from_dart)?;   // strict: unknown schema, missing field, relative path are errors
+let ctx = AppContext::adopt(&amp;snapshot);                    // no roster entry, no heartbeat, no config.json written
+let blocks = ctx.create_data_dir("blocks")?;               // directories under data and state only
+let file = ctx.data_file("heads.json")?;                   // a path under data (no `..`, nothing created)
+let theme: String = ctx.settings().get_or("theme", "light".into());  // read-only: `set` and `save` return Err(ReadOnly)
+<span class="boring">}</span></code></pre>
+<p><strong>One owner per file.</strong> The owner (the side that opened the context) owns <code>config.json</code> and the roster entry. The adopter reads settings, never writes them, and owns the files it creates under <code>data</code> and <code>state</code>. A setting the Rust core wants changed is a request to the Dart side. After the owner changes a setting, <code>ReadOnlySettings::reload()</code> shows it.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Dart</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ctx.snapshot()</code>, <code>contextSnapshot(...)</code></td><td><code>ContextSnapshot::parse</code>, <code>from_value</code>, <code>to_json</code>; <code>AppContext::snapshot()</code></td></tr>
+<tr><td>(the owner)</td><td><code>AppContext::adopt(&amp;snapshot)</code> gives an <code>AdoptedContext</code>: <code>app_id()</code>, <code>instance()</code>, <code>mode()</code>, <code>dirs()</code>, <code>roster_dir()</code>, <code>data_file</code>, <code>state_file</code>, <code>create_data_dir</code>, <code>create_state_dir</code>, <code>settings()</code></td></tr>
+<tr><td><code>ctx.config</code> (read and write)</td><td><code>ReadOnlySettings</code> (read only)</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="the-roster"><a class="header" href="#the-roster">The roster</a></h2>
+<p>The roster answers “who is running?”. Each running copy writes one JSON file into the shared roster directory (see <a href="#directories">directories</a>) and refreshes it.</p>
+<ul>
+<li><strong>File name:</strong> <code>&lt;ID&gt;@&lt;INSTANCE&gt;.json</code>, for example <code>com.slashbuilder.demo.calc@1a2b3c4d.json</code>. The instance is eight lower-case hex digits, drawn at random per opened context.</li>
+<li><strong>Content:</strong> <code>id</code>, <code>instance</code>, <code>name</code>, <code>version</code>, <code>pid</code>, <code>startedAt</code> and <code>heartbeatAt</code> (UTC, ISO 8601). <code>ctx.instance</code> is this copy’s instance id.</li>
+<li><strong>Heartbeat:</strong> the file is rewritten every 5 seconds (<code>heartbeat:</code>), through a temporary file and a rename. A failed heartbeat is recorded in <code>RosterAnnouncement.lastError</code> and does not stop the app.</li>
+<li><strong>Two copies of one app</strong> are two files. Withdrawing one removes only its own.</li>
+<li><strong>Stale:</strong> an entry whose <code>heartbeatAt</code> is more than 15 seconds old (<code>staleAfter:</code>) is stale. A copy that exited cleanly deletes its file. A copy that crashed leaves it behind, and the Kit never deletes it.</li>
+</ul>
+<p>Reading it, on <code>ctx.roster</code> (or <code>Roster(dir)</code>):</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Call</th><th>Returns</th></tr>
+</thead>
+<tbody>
+<tr><td><code>running()</code></td><td><code>RosterEntry</code> for every live entry. Stale and unreadable files are skipped, not deleted</td></tr>
+<tr><td><code>scan()</code></td><td>A <code>RosterRecord</code> for every <code>*.json</code> file, sorted by id then instance, with a <code>status</code>: <code>live</code>, <code>stale</code> or <code>unreadable</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>A <code>RosterRecord</code> has <code>file</code>, <code>status</code>, <code>entry</code> (null when unreadable), <code>id</code> and <code>instance</code>. For an unreadable file, <code>id</code> and <code>instance</code> come from the file name, so it can still be attributed. Use <code>scan()</code> to tell a crash (<code>stale</code>) from “never ran” (no record) from a damaged file (<code>unreadable</code>). A file named <code>&lt;ID&gt;.json</code> with no instance part, from before instance ids existed, has a <code>null</code> instance. <code>parseRosterFileName(name)</code> splits a name; the id contains dots, so it splits at the last <code>@</code>.</p>
+<p>The PID in an entry means something only on the same machine and for the same user. The roster does not check that the process is alive; it trusts the heartbeat.</p>
+<p>Spec: <a href="spec/app-context.html">section 4</a> and <a href="spec/app-context.html">section 5, item 5</a>. The spec asks whether the roster belongs in the Kit, in Venue or nowhere; the Kit keeps the smallest version so that use can answer.</p>
+<h2 id="peers"><a class="header" href="#peers">Peers</a></h2>
+<p>Peers are other running copies of the same app for the same account. They are opt-in: list <code>"peers"</code> in <code>kits</code>, or <code>ctx.peerHub</code> and <code>ctx.startPeers</code> throw <code>KitNotDeclared</code>. This guide covers only how the context supplies them; the design is in spec <a href="spec/app-context.html">sections 6 and 7</a>.</p>
+<ul>
+<li><strong>Who this copy is:</strong> <code>ctx.peerAccount</code> (<code>APP_CONTEXT_ACCOUNT</code>, else config <code>account</code>, else <code>local</code>), <code>ctx.peerDevice</code> (<code>APP_CONTEXT_DEVICE</code>, else config <code>device</code>; generated once as <code>d-</code> and eight hex digits and saved, or kept for this run only if the settings file is damaged) and <code>ctx.instance</code>. The first call to <code>ctx.peerDevice</code> writes <code>device</code> to the config file.</li>
+<li><strong>Provider by mode:</strong> an explicit provider if you pass one to <code>peerHub</code>; in <code>mock</code> mode, an in-memory fake network (pass one <code>FakePeerNetwork</code> to several contexts to make them see each other); otherwise the loopback provider over <code>ctx.peersDirectory</code> (<code>APP_CONTEXT_PEERS_DIR</code>), which finds copies on one machine.</li>
+<li><strong><code>ctx.startPeers(hook, {network, options})</code></strong> builds and starts a hub and never throws for a runtime condition. It returns a <code>PeersHandle</code> at once: <code>hub</code> (null when peers are unavailable), <code>started</code> (a future that completes when the hub is open or has failed, never with an error), <code>error</code> (a sentence starting <code>peers unavailable: </code>), <code>isStarting</code>, <code>isRunning</code> and <code>changes</code> (a broadcast <code>Stream&lt;void&gt;</code> that fires when the hub opens or fails and on every peer change). <code>handle.hub?.broadcast(...)</code> is always safe. <code>KitNotDeclared</code> is not swallowed: that is a bug in the app.</li>
+<li><strong><code>ctx.peerHub(hook, {provider, network, authenticator, options})</code></strong> builds a hub without starting it; call <code>hub.start()</code>. Use it for a custom provider or authenticator.</li>
+<li><strong>The hook</strong> is an <code>AppCoordination</code> that you write: <code>channel</code>, <code>hello()</code>, <code>admit(peer, theirHello)</code>, <code>onPeer(peer, change)</code>, <code>onMessage(from, message)</code> and an optional <code>attach(hub)</code>. The Kit never reads a payload; it carries bytes and an app-declared <code>schema</code> integer.</li>
+<li><strong><code>PeerJson</code></strong> has helpers for JSON payloads: <code>encode</code>, <code>decode</code> (null on malformed input, never throws), <code>fits</code>, <code>encodeWithin</code> (throws <code>PeerPayloadTooLarge</code>), <code>quiet</code> and <code>label</code>. <code>AppMessage.jsonBody</code> decodes a message body.</li>
+</ul>
+<p>Hubs are closed with the context. The default authenticator accepts every peer.</p>
+<h2 id="errors"><a class="header" href="#errors">Errors</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Type</th><th>Thrown by</th><th>Carries</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ManifestError</code></td><td><code>AppManifest.parse</code>, <code>fromJson</code></td><td><code>code</code>: the <a href="#the-manifest">manifest code</a></td></tr>
+<tr><td><code>ResolveError</code></td><td><code>resolve</code>, <code>AppContext.open</code></td><td><code>code</code>: <code>missing-env</code> or <code>bad-mode</code></td></tr>
+<tr><td><code>FileSystemException</code></td><td><code>AppContext.open</code></td><td>the folder that could not be made. The core does not wrap it; the companion turns it into <code>open-failed</code></td></tr>
+<tr><td><code>DamagedConfigError</code></td><td><code>ConfigStore.set</code>, <code>save</code></td><td><code>file</code>, <code>problem</code></td></tr>
+<tr><td><code>AppCloseError</code></td><td><code>ctx.close</code>, <code>AppContext.run</code></td><td><code>errors</code>, <code>stackTraces</code>: every failed step</td></tr>
+<tr><td><code>VenueRefused</code></td><td><code>hold</code>, <code>withHold</code></td><td><code>kind</code> (<code>doesNotFit</code>, <code>forbidden</code>), <code>reason</code>, <code>plainReason</code>, <code>retryable</code></td></tr>
+<tr><td><code>VenueUnavailable</code></td><td><code>AppContext.open</code> (mode <code>on</code>), Venue calls</td><td><code>reason</code>, <code>status</code></td></tr>
+<tr><td><code>HoldWaitCancelled</code></td><td><code>withHoldWaiting</code></td><td></td></tr>
+<tr><td><code>TlsPinException</code></td><td>the transport (surfaced as <code>VenueUnavailable</code>)</td><td><code>message</code></td></tr>
+<tr><td><code>KitNotDeclared</code></td><td><code>ctx.peerHub</code>, <code>ctx.startPeers</code></td><td><code>kit</code>, <code>appId</code></td></tr>
+<tr><td><code>PeerError</code> and its subclasses</td><td>the peer hub</td><td><code>message</code>. Subclasses: <code>EnvelopeError</code>, <code>PeerNotAvailable</code>, <code>PeerLost</code>, <code>PeerOutboxFull</code>, <code>PeerTimeout</code>, <code>PeerClosed</code>, <code>PeerScopeError</code>, <code>PeerConnectError</code>, <code>PeerLinkClosed</code>, <code>PeerPayloadTooLarge</code></td></tr>
+<tr><td><code>AppContextKitStartupError</code></td><td>the Flutter companion</td><td><code>code</code>, <code>message</code>, <code>hint</code>, <code>cause</code></td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="the-rust-crate"><a class="header" href="#the-rust-crate">The Rust crate</a></h2>
+<p><code>rust/</code> implements spec sections 1, 2, 5 and 8 and passes the same conformance fixtures. Names differ by language convention.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Dart</th><th>Rust</th></tr>
+</thead>
+<tbody>
+<tr><td><code>AppManifest</code>, <code>ManifestError</code></td><td><code>Manifest</code>, <code>ManifestError</code> (with <code>.code()</code>)</td></tr>
+<tr><td><code>resolve</code>, <code>Resolved</code>, <code>AppDirs</code></td><td><code>resolve</code>, <code>Resolved</code>, <code>Dirs</code></td></tr>
+<tr><td><code>AppContext.open</code>, <code>.run</code>, <code>.close</code></td><td><code>AppContext::open</code>, <code>::run</code>, <code>.close()</code> (also on drop, errors lost)</td></tr>
+<tr><td><code>ctx.onClose(fn)</code></td><td><code>ctx.on_close(fn)</code>, <code>ctx.on_close_fallible(fn)</code></td></tr>
+<tr><td><code>ConfigStore.get&lt;T&gt;</code>, <code>set</code>, <code>setAsideCorrupt</code></td><td><code>ConfigStore::get_or</code>, <code>set</code> (returns <code>Result</code>), <code>set_aside_corrupt</code></td></tr>
+<tr><td><code>AppCloseError</code></td><td><code>CloseErrors</code>, each a <code>CloseError { what: "roster" | "hook" | "venue", message }</code>. A panic in a hook is caught and reported</td></tr>
+<tr><td><code>Roster.running</code>, <code>.scan</code></td><td><code>Roster::running(now, stale_after)</code>, <code>::scan(now, stale_after)</code> with <code>EntryStatus</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Not in Rust: peers, <code>SessionSettings</code>, <code>AppJsonFile</code> and <code>ctx.dataJson</code>, <code>withHoldWaiting</code> and <code>FakeVenue.refuseNext</code> (Rust has <code>with_hold</code> and <code>with_hold_opts</code>), a remote Venue session, and everything in the Flutter companion.</p>
+<p><strong>The Kit’s Rust crate has no remote Venue session.</strong> It has <code>LocalVenue</code> and <code>FakeVenue</code> only. It still looks for a token (the lookup order and its errors are the same as in Dart), but a token that is found cannot connect to anything: with <code>venue.mode</code> <code>auto</code> the session is <code>local</code> and its description says the crate has no remote Venue session (a warning note), and with <code>on</code> the context fails to open. <code>VENUE_DAEMON</code> and <code>VENUE_DAEMON_FINGERPRINT</code> are not read.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../30-kits/app-context-kit/getting-started.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../30-kits/app-context-kit/venue-guide.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../30-kits/app-context-kit/getting-started.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../30-kits/app-context-kit/venue-guide.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-09f2665d.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../mermaid-init-5853b93b.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

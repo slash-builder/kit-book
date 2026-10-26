@@ -1,0 +1,496 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Make targets - The Kit Book</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex-e0dd22bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc-ce6d682b.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kit Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book/edit/main/book/90-reference/make-targets.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="make-targets"><a class="header" href="#make-targets">Make targets</a></h1>
+<p>Everything is driven from the <code>Makefile</code> at the repository root. It works with the system <code>make</code> on macOS (3.81) and Linux and uses nothing newer. <code>make</code> on its own runs <code>make help</code>, which lists every target with one line. The Makefile follows the convention of the Kit repositories (<code>help</code>, <code>all</code>, <code>build</code>, <code>lint</code>, <code>test</code>, <code>fmt</code>) so the CI job and people use the same names.</p>
+<p>The scripts behind the targets are in <a href="https://github.com/slash-builder/kit-book/tree/main/tools"><code>tools/</code></a>. They are plain POSIX <code>sh</code> (and Python 3 for the link checker and the website tools), so they run on the <code>/bin/sh</code> and <code>/bin/bash 3.2</code> that ship with macOS. The one exception is the catalog generator behind <code>docs-catalog</code>, a maintainer tool that also needs PyYAML; nothing a reader runs depends on it. <code>docs-pull</code> is also a maintainer tool, but it is Python 3 standard library only.</p>
+<h2 id="variables"><a class="header" href="#variables">Variables</a></h2>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Variable</th><th>Used by</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>KITS</code></td><td><code>setup</code>, <code>fetch</code></td><td><code>public</code> (default) fetches only public Kits. <code>all</code> also fetches private Kits and needs a GitHub login</td></tr>
+<tr><td><code>SETUP_INSTALL</code></td><td><code>setup</code></td><td><code>1</code> prints the install commands for missing required tools and runs them after a y/N question. Default: never installs</td></tr>
+<tr><td><code>APP</code></td><td><code>app</code>, <code>run</code></td><td>An app folder name under <code>apps/</code>: <code>calculator</code>, <code>minesweeper</code>, <code>notepad</code>, <code>stopwatch</code>, <code>render-queue</code>, <code>launcher</code>, <code>notes_rust</code></td></tr>
+<tr><td><code>KIT</code></td><td><code>lock</code></td><td>A Kit name from <code>kits.lock</code>. Empty means every Kit</td></tr>
+<tr><td><code>LOCK_YES</code></td><td><code>lock</code></td><td><code>1</code> skips the y/N question before <code>kits.lock</code> is rewritten (the difference is still printed)</td></tr>
+<tr><td><code>GITHUB_TOKEN</code></td><td><code>fetch</code>, <code>lock</code></td><td>A token that can read private Kits, used when the GitHub CLI is not logged in</td></tr>
+<tr><td><code>VENUE_TOKEN_FILE</code></td><td><code>test</code>, <code>test-integration</code></td><td>A resource-broker token file. When set, the render-queue tests that need a running broker run for real instead of skipping</td></tr>
+<tr><td><code>CHECK_PUBLIC_STRICT</code></td><td><code>check-public</code></td><td><code>1</code> also fails while <code>kits.lock</code> lists a private Kit with role <code>core</code>. A private <code>app-dep</code> Kit only prints a warning that names the apps that will be skipped for a stranger. <code>go-public-check</code> sets it</td></tr>
+<tr><td><code>REGISTRY</code></td><td><code>docs-catalog</code></td><td>Maintainers only: the path of the Kit registry file (<code>kits.yaml</code>). If empty, <code>KITS_REGISTRY</code> from the environment is used. With neither, <code>docs-catalog</code> stops with a message</td></tr>
+<tr><td><code>KITS_REGISTRY</code></td><td><code>docs-catalog</code></td><td>The same path, from the environment, for people who regenerate often</td></tr>
+<tr><td><code>REGISTRY_COMMIT</code></td><td><code>docs-catalog</code></td><td>The commit of the registry the catalog is generated from; the catalog index prints it as “Generated from registry commit abc1234”</td></tr>
+<tr><td><code>OFFLINE</code></td><td><code>docs-catalog</code></td><td><code>1</code> does not ask GitHub who is public and reuses <code>tools/kit-visibility.tsv</code> as it is</td></tr>
+<tr><td><code>PYTHON</code></td><td><code>docs-catalog</code>, <code>test-tools</code>, <code>test-fast</code></td><td>The Python 3 to use for the catalog generator and the tool tests (default <code>python3</code>). For <code>docs-catalog</code> it must have PyYAML; <code>docs-pull</code> always uses plain <code>python3</code></td></tr>
+<tr><td><code>SITE_DOMAIN</code></td><td><code>site</code>, <code>site-check</code>, <code>publish-site</code></td><td>The domain the website is served at (default <code>kits.slashbuilder.com</code>). It is written into the <code>CNAME</code> file of the published branch. Set in the Makefile, in one place</td></tr>
+<tr><td><code>SITE_TITLE</code></td><td><code>site</code></td><td>The title shown on every page of the website (default <code>The Kit Book</code>)</td></tr>
+<tr><td><code>SITE_REPO_URL</code></td><td><code>site</code></td><td>The repository address used for the “edit this page” links and for the rewritten links into <code>apps/</code> and <code>labs/</code> (default <code>https://github.com/slash-builder/kit-book</code>)</td></tr>
+<tr><td><code>SITE_REPO_BRANCH</code></td><td><code>site</code>, <code>publish-site</code></td><td>The branch those links point at (default <code>main</code>); <code>publish-site</code> only pushes from this branch</td></tr>
+<tr><td><code>SITE_REWRITE_REPO_LINKS</code></td><td><code>site</code></td><td><code>1</code> (default) rewrites links from the book to files outside <code>book/</code> into GitHub addresses; <code>0</code> leaves them as relative links, which do not work on the website</td></tr>
+<tr><td><code>SITE_INDEXABLE</code></td><td><code>site</code>, <code>site-check</code>, <code>publish-site</code></td><td><code>0</code> (default) puts <code>&lt;meta name="robots" content="noindex"&gt;</code> on every page; <code>1</code> leaves it out so search engines may index the site (mdBook keeps noindex on its own <code>print.html</code> and <code>toc.html</code>). Set <code>1</code> only when the site is meant to be found</td></tr>
+<tr><td><code>PUBLISH</code></td><td><code>publish-site</code></td><td><code>1</code> allows the push to the <code>gh-pages</code> branch, and only if the repository behind <code>origin</code> is public. Anything else is a dry run</td></tr>
+<tr><td><code>MDBOOK</code></td><td><code>site</code></td><td>The path of the <code>mdbook</code> program to use. Otherwise <code>mdbook</code> on the <code>PATH</code>, then <code>~/.cache/mdbook/mdbook</code></td></tr>
+<tr><td><code>STRANGER_REPO_URL</code></td><td><code>stranger-test</code></td><td>The repository to clone (default <code>https://github.com/slash-builder/kit-book</code>; a local path works for a rehearsal)</td></tr>
+<tr><td><code>STRANGER_DRY</code></td><td><code>stranger-test</code></td><td><code>1</code> prints the plan and what would be removed from the environment, and clones nothing</td></tr>
+<tr><td><code>STRANGER_STEPS</code></td><td><code>stranger-test</code></td><td>Which steps to run after the clone, in order (default <code>doctor setup test-fast</code>)</td></tr>
+<tr><td><code>STRANGER_KEEP</code></td><td><code>stranger-test</code></td><td><code>1</code> keeps the temporary clone and prints where it is</td></tr>
+<tr><td><code>GO_PUBLIC_OFFLINE</code></td><td><code>go-public-check</code></td><td><code>1</code> skips the checks that need the network and ends INCOMPLETE (exit 3), never a pass</td></tr>
+<tr><td><code>LINUX_SMOKE_APPS</code></td><td><code>linux-smoke</code></td><td>The app folders to test, separated by spaces (default: every app that can be built here; an app whose Kit is not fetched is skipped with a line)</td></tr>
+<tr><td><code>LINUX_SMOKE_IMAGE</code></td><td><code>linux-smoke</code>, <code>linux-smoke-image</code></td><td>The Docker image name (default <code>kit-book-linux-smoke:flutter-3.41.9</code>)</td></tr>
+<tr><td><code>LINUX_SMOKE_PLATFORM</code></td><td><code>linux-smoke</code>, <code>linux-smoke-image</code></td><td>A Docker <code>--platform</code> (default: the daemon’s own, <code>linux/arm64</code> on Apple silicon)</td></tr>
+<tr><td><code>LINUX_SMOKE_UP</code>, <code>LINUX_SMOKE_SHOT_AT</code></td><td><code>linux-smoke</code></td><td>Seconds to keep each app up (default 10) and the second of the screenshot (default 6)</td></tr>
+<tr><td><code>LINUX_SMOKE_PEERS</code></td><td><code>linux-smoke</code></td><td>The apps for the two-copies check (default <code>stopwatch notepad</code>; empty skips it)</td></tr>
+<tr><td><code>LINUX_SMOKE_NOCACHE</code></td><td><code>linux-smoke</code></td><td><code>1</code> does not use the two cache volumes for Dart packages and Rust crates</td></tr>
+<tr><td><code>NO_COLOR</code></td><td>all</td><td>Turns off colours in the output</td></tr>
+<tr><td><code>KITS_LOCK</code></td><td>the scripts in <code>tools/</code></td><td>Read a different lock file (used for testing the fetch script)</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="targets"><a class="header" href="#targets">Targets</a></h2>
+<h3 id="help"><a class="header" href="#help"><code>help</code></a></h3>
+<p>The default. Prints every target with a one-line description.</p>
+<h3 id="all"><a class="header" href="#all"><code>all</code></a></h3>
+<p>What CI runs: <code>lint</code>, then <code>test-fast</code>, then <code>build</code>.</p>
+<h3 id="doctor"><a class="header" href="#doctor"><code>doctor</code></a></h3>
+<p>Checks the toolchain and prints a table: tool, whether it is required, status, the version found and the version wanted. For each missing or too-old tool it prints the install command for your system (Homebrew on macOS, <code>apt</code> on Debian and Ubuntu). It installs <strong>nothing</strong> and exits non-zero only when a <strong>required</strong> tool is missing or too old.</p>
+<ul>
+<li><strong>Required:</strong> Flutter and Dart (the minimum Dart is read from the apps’ <code>pubspec.yaml</code> files), Rust and Cargo (the minimum is the highest <code>rust-version</code> among the Kits’ crates and the apps’ Rust cores), <code>curl</code>, <code>tar</code>, Python 3, and on macOS the Xcode command line tools. <strong><code>flutter_rust_bridge_codegen</code> is required only when an app with a Rust core (<code>apps/notes_rust</code>) is one that can be built here</strong>, at exactly the version that app pins in its <code>pubspec.yaml</code> (<code>flutter_rust_bridge: 2.12.0</code> today); it is looked for on <code>PATH</code> and in <code>~/.cargo/bin</code>, where <code>cargo install</code> puts it. An app that is <a href="#kitsneed">skipped</a> (its Kit is not fetched) adds no requirement: not this tool, not its Rust version, not CocoaPods; <code>doctor</code> lists the skipped apps under the table.</li>
+<li><strong>For apps:</strong> needed only to build and run the demo apps. On macOS, the full Xcode app, and CocoaPods when an app has a native plugin (the Rust core’s build glue is one). On Linux, <code>clang</code>, <code>cmake</code>, <code>ninja</code>, <code>pkg-config</code> and the GTK 3 development files. <code>make apps</code> requires them; <code>make test-fast</code> does not.</li>
+<li><strong>Optional:</strong> Docker (for the Linux container checks), <code>redis-server</code>, <code>protoc</code>, <code>flutter_rust_bridge_codegen</code> (optional only when no app in the tree needs it), the GitHub CLI (<code>gh</code>, for private Kits) and <code>mdbook</code> (for <code>make site</code>).</li>
+</ul>
+<h3 id="setup"><a class="header" href="#setup"><code>setup</code></a></h3>
+<p>Runs <code>doctor</code>, then <code>fetch</code>, then <code>flutter pub get</code> or <code>dart pub get</code> for every app and package, then <code>cargo fetch</code> for each Kit’s Rust crate and for each app’s own Rust core. An app whose Kit is not fetched is skipped with a one-line reason (see <a href="#kitsneed"><code>kits.need</code></a>); that is never an error. Safe to run again. <code>KITS=all</code> also fetches private Kits. <code>SETUP_INSTALL=1</code> offers to run the install commands for missing required tools; the default never installs.</p>
+<h3 id="fetch"><a class="header" href="#fetch"><code>fetch</code></a></h3>
+<p>Reads <a href="#kitslock"><code>kits.lock</code></a> and, for each Kit (unless <a href="#kitsoverride"><code>kits.override</code></a> names a local checkout for it), downloads the archive at the pinned commit into <code>.kits/&lt;name&gt;/</code>. Public Kits come from a plain <code>curl</code> download. Private Kits come from the GitHub CLI (<code>gh api</code>) when it is logged in, else from <code>GITHUB_TOKEN</code>; with neither, the Kit is skipped with a one-line explanation. After unpacking it writes <code>.kits/&lt;name&gt;/.fetched</code> containing the commit, and skips the Kit next time when that matches. It checks that the archive really is the commit asked for. No git and no submodules are involved. One line per Kit: <code>fetched</code>, <code>up to date</code>, or <code>skipped (why)</code>.</p>
+<h3 id="lock"><a class="header" href="#lock"><code>lock</code></a></h3>
+<p>Shows how the pins would move: for each Kit it asks GitHub for the newest commit of the default branch and prints <code>old -&gt; new</code> with a compare link. It rewrites <code>kits.lock</code> only after you answer <code>y</code>. <code>make lock KIT=app-context-kit</code> does one Kit. After it, run <code>make setup</code> and <code>make test-fast</code>.</p>
+<h3 id="test"><a class="header" href="#test"><code>test</code></a></h3>
+<p>Runs every fetched Kit’s own test suite, then <code>labs/interface_candidates</code>, then every demo app (an app with a Rust core runs its <code>cargo test</code> first and then <code>flutter test</code>, which uses an in-memory stand-in for the core, so it needs no native build), then the integration suites that can run on this computer. A Kit with a <code>Makefile</code> is tested with its own <code>make test-fast</code> (or <code>make test</code>); a Kit without one is tested with its native commands (<code>dart test</code>, <code>flutter test</code>, <code>cargo test</code>). Prints a table with each suite’s passed, failed and skipped counts and its seconds; logs are in <code>build/test-logs/</code>. An app whose Kit is not fetched is skipped whole, with a line such as <code>skipped apps/notes_rust: needs storage-kit (private; fetch with KITS=all)</code> and one row in the table that says so. Exits non-zero when any suite that ran has a failure; a skip is not one.</p>
+<h3 id="test-fast"><a class="header" href="#test-fast"><code>test-fast</code></a></h3>
+<p>The same as <code>test</code> without anything that needs Docker, Redis or a running daemon. This is the everyday command. It also runs the unit tests of the maintainer tools (see <a href="#test-tools"><code>test-tools</code></a>) when PyYAML is installed, and skips them with a message when it is not.</p>
+<h3 id="test-integration"><a class="header" href="#test-integration"><code>test-integration</code></a></h3>
+<p>Only the suites that need Docker, Redis or a daemon. Each one skips with a clear message when its tool is absent; skipping is never a failure.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Suite</th><th>Needs</th><th>What it does</th></tr>
+</thead>
+<tbody>
+<tr><td>Linux containers</td><td>The Docker daemon running</td><td>Runs a Kit’s Dart and Rust cores in throwaway Linux containers, if the Kit ships a script for it (the App Context Kit does)</td></tr>
+<tr><td>Resource-broker daemon tests</td><td><code>VENUE_TOKEN_FILE</code> set to a token for a running broker</td><td>Runs the render-queue tests that otherwise skip themselves</td></tr>
+<tr><td>App integration tests</td><td>A desktop to run an app on (macOS, or Linux with a display) and the Kits the app builds against</td><td>Runs an app’s <code>integration_test/</code> inside the built app with <code>flutter test integration_test -d macos</code>, so a Rust core is the real native library. <code>apps/notes_rust</code> has one</td></tr>
+<tr><td>Message-hub probes</td><td>Redis</td><td>These run in a private repository; nothing here runs yet</td></tr>
+</tbody>
+</table>
+</div>
+<h3 id="apps"><a class="header" href="#apps"><code>apps</code></a></h3>
+<p>Builds every demo app in debug mode for this computer (macOS or Linux desktop). Needs the “for apps” tools from <code>doctor</code> and a fetched App Context Kit. An app whose <a href="#kitsneed">Kit is not fetched</a> is skipped with a one-line reason, and the others are built.</p>
+<h3 id="app"><a class="header" href="#app"><code>app</code></a></h3>
+<p>Builds one app: <code>make app APP=notepad</code>. If you name an app whose <a href="#kitsneed">Kit is not fetched</a>, it says which Kit and what to run (<code>make setup KITS=all</code> for a private one) and exits non-zero, because the app you asked for was not built.</p>
+<h3 id="run"><a class="header" href="#run"><code>run</code></a></h3>
+<p>Runs one app on this computer: <code>make run APP=notepad</code>. Like <code>app</code>, it stops with the fix if the app’s <a href="#kitsneed">Kit is not fetched</a>.</p>
+<h3 id="frb"><a class="header" href="#frb"><code>frb</code></a></h3>
+<p>Regenerates the Flutter-to-Rust bridge (<code>flutter_rust_bridge_codegen generate</code>) for every app that has a <code>flutter_rust_bridge.yaml</code>, which is <code>apps/notes_rust</code> today. Run it after changing the bridge layer (<code>rust/src/api/*.rs</code>) and commit the result: the generated files are committed so that <code>make app</code> works without this tool. It refuses to run with a codegen whose version differs from the one the app pins. An app that is <a href="#kitsneed">skipped</a> is passed over with a one-line reason.</p>
+<h3 id="build"><a class="header" href="#build"><code>build</code></a></h3>
+<p>An alias for <code>apps</code>.</p>
+<h3 id="lint"><a class="header" href="#lint"><code>lint</code></a></h3>
+<p>Runs <code>flutter analyze</code> over <code>labs/interface_candidates</code> and every app, then <code>docs</code> and <code>check-public</code>.</p>
+<h3 id="fmt"><a class="header" href="#fmt"><code>fmt</code></a></h3>
+<p>Runs <code>dart format</code> over <code>apps/</code> and <code>labs/</code>.</p>
+<h3 id="docs"><a class="header" href="#docs"><code>docs</code></a></h3>
+<p>Checks every relative link and heading anchor in <code>book/</code> and in the README files (<code>tools/check-links.py</code>), using GitHub’s heading slugs. A code fence whose opening line says <code>copied-from=&lt;path&gt;</code> is also checked against that file. It also checks that every Makefile target is described on this page. It writes nothing.</p>
+<h3 id="docs-catalog"><a class="header" href="#docs-catalog"><code>docs-catalog</code></a></h3>
+<p><strong>For maintainers; readers never need it.</strong> Regenerates the Kit catalog in <code>book/30-kits/</code> from the Kit registry, then runs <code>docs</code> and <code>check-public</code> on the result. The registry is in a private repository, so the generated pages are committed here and <code>make docs</code> never asks for it.</p>
+<pre><code class="language-sh">python3 -m pip install pyyaml            # once; only this tool needs PyYAML
+gh auth login                            # once; the tool asks GitHub which repositories are public
+make docs-catalog REGISTRY=/path/to/kits.yaml REGISTRY_COMMIT=abc1234
+make docs-catalog REGISTRY=/path/to/kits.yaml OFFLINE=1     # no GitHub calls: reuse tools/kit-visibility.tsv
+</code></pre>
+<p>With neither <code>REGISTRY</code> nor <code>KITS_REGISTRY</code> set it stops and says so. It runs <code>tools/gen-catalog.py</code>, which writes:</p>
+<ul>
+<li>one status card per Kit in the registry (<code>book/30-kits/&lt;name&gt;.md</code>), for <strong>every</strong> Kit: public, private, banked and archived; this repository is the book, not a Kit, and is never listed;</li>
+<li>the catalog index (<code>book/30-kits/README.md</code>), the <a href="../30-kits/status-vocabulary.html">status vocabulary</a> and the page for <a href="../30-kits/not-in-the-registry.html">things that are not in the registry</a>;</li>
+<li>the block of <code>book/SUMMARY.md</code> between <code>&lt;!-- catalog:start --&gt;</code> and <code>&lt;!-- catalog:end --&gt;</code> (the markers are added if missing; nothing else in that file is touched);</li>
+<li><code>tools/kit-visibility.tsv</code>: for each Kit (by name), <code>public</code>, <code>private</code>, <code>missing</code> (the repository does not exist) or <code>unknown</code>, whether a public repository has a README or <code>docs/</code>, and the day that was checked. It never records where a Kit lives: no repository name and no organisation, so it is safe in a public repository. A repository link appears on a card only for <code>public</code>, and the repository is read from the registry each time.</li>
+</ul>
+<p>Running it twice gives identical files: nothing in the output carries a time. Prose from the registry passes through a sanitiser that drops, rather than rewords, any sentence or parenthetical that names people, roles, agents, tickets, hostnames, local paths, notes-vault paths, Jira or dates, and <code>check-public</code> scans the result again. A card that comes out thin is thin because the registry entry behind it is.</p>
+<h3 id="docs-pull"><a class="header" href="#docs-pull"><code>docs-pull</code></a></h3>
+<p><strong>For maintainers; readers never need it.</strong> Pulls each Kit’s own reference documentation out of the fetched Kit (<code>.kits/&lt;name&gt;/</code>) into the book, then runs <code>docs</code> and <code>check-public</code> on the result. The Kits keep their documentation with their code, so it versions with the code; the book copies it in at the commit <code>kits.lock</code> pins, and the copies are <strong>committed</strong>, so a reader needs neither <code>make setup</code> nor access to a private Kit’s repository to read them. <code>make docs</code> never needs <code>.kits/</code>.</p>
+<pre><code class="language-sh">make setup KITS=all     # once, and after every pin move: the Kit must be fetched at the pinned commit
+make docs-pull          # then commit book/ (the pulled pages and the docs-pull block of SUMMARY.md)
+</code></pre>
+<p>It runs <code>tools/pull-docs.py</code> (Python 3 standard library only), which reads <code>kits.lock</code> and <code>tools/docs-pull.conf</code>. For each Kit with a section in the configuration, the configuration says where the pages land, which source files are pulled, their order in the table of contents, and whether the Kit is public (<code>auto</code> reads the visibility column of <code>kits.lock</code>). Today only the App Context Kit is pulled; because it is not in the registry its pages land in <code>book/30-kits/app-context-kit/</code>. A Kit in the registry lands in <code>book/30-kits/&lt;slug&gt;/reference/</code>, and its catalog card then lists the pages.</p>
+<p>What it writes, and nothing else:</p>
+<ul>
+<li><code>index.md</code>: the Kit’s <code>docs/README.md</code>, followed by a generated table of every pulled page (title from the page’s first heading, one line from its first paragraph);</li>
+<li>one page per pulled source file, named in lower case with <code>docs/</code> dropped (<code>docs/GETTING-STARTED.md</code> becomes <code>getting-started.md</code>, a folder’s <code>README.md</code> is named after the folder), and any images those pages use under <code>assets/</code>;</li>
+<li>the block of <code>book/SUMMARY.md</code> between <code>&lt;!-- docs-pull:start --&gt;</code> and <code>&lt;!-- docs-pull:end --&gt;</code>, which nests the pages under one entry per Kit. It sits in its own part, “Kit reference”, after the catalog (the part and the markers are added before “Reference” if missing). It is not inside the catalog’s list because mdBook drops the first of two lists in one item when an HTML comment separates them, which would delete the catalog from the contents.</li>
+</ul>
+<p>Every pulled page starts with a banner comment and carries the visible line “Reference page pulled from <code>&lt;kit&gt;</code> at commit <code>&lt;sha7&gt;</code>. Edit it in the Kit, not here.” Do not edit a pulled page: the next pull overwrites it, and a content fix belongs in the Kit. The tool changes the Kit’s text only by rewriting links:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>A link in a Kit page that points to…</th><th>becomes</th></tr>
+</thead>
+<tbody>
+<tr><td>a web address, a mail address, or a heading on the same page</td><td>itself, unchanged</td></tr>
+<tr><td>a pulled page, or a folder whose <code>README.md</code> is pulled, or the Kit’s <code>docs/README.md</code></td><td>a relative link to the pulled copy, with its <code>#anchor</code> kept (the headings are not changed, so the anchors still exist)</td></tr>
+<tr><td>the Kit’s root <code>README.md</code> or <code>CONTRIBUTING.md</code>, when the Kit is <strong>private</strong> and its section sets <code>home</code></td><td>a link to the Kit’s entry in the catalog (the page named by <code>home</code>), so “Repository home” and “Contributing” lead somewhere</td></tr>
+<tr><td>anything else in the Kit (code, other folders), when the Kit is <strong>private</strong></td><td>plain text: the link text stays, the link goes</td></tr>
+<tr><td>anything else in the Kit, when the Kit is <strong>public</strong></td><td>a GitHub address at the pinned commit (<code>blob</code> for a file, <code>tree</code> for a folder), with any <code>#anchor</code> or <code>#L10</code> kept</td></tr>
+<tr><td>a place outside the Kit, or a file the Kit does not have</td><td>plain text, and a warning naming the page, so it can be fixed in the Kit</td></tr>
+<tr><td>an <code>#anchor</code> that is not a heading of the page it names</td><td>the link to the page without the anchor, and a warning</td></tr>
+<tr><td>an image that exists in the Kit</td><td>a copy under <code>assets/</code>, linked there</td></tr>
+<tr><td>an image that does not exist</td><td>dropped, with the visible note “image not included”</td></tr>
+</tbody>
+</table>
+</div>
+<p>Code blocks and code spans are never touched. Running it twice gives identical files: nothing in the output carries a time.</p>
+<p>It <strong>refuses to run</strong> if <code>.kits/&lt;name&gt;/.fetched</code> is not exactly the commit <code>kits.lock</code> pins (or the Kit is not fetched at all), so the book never mixes versions. It says so, writes nothing, and prints the fix: <code>make fetch</code> (with <code>KITS=all</code> for a private Kit). It exits with status 2 on a refusal and on a configuration error.</p>
+<h3 id="docs-pull-check"><a class="header" href="#docs-pull-check"><code>docs-pull-check</code></a></h3>
+<p><strong>For maintainers.</strong> Pulls in memory exactly as <code>docs-pull</code> does and writes nothing; it fails (status 1) and prints each file that differs, is missing, or is stale, with the first changed lines, if the committed pages are not what a fresh pull would give. Use it to see that nobody edited a pulled page by hand and that the pages were re-pulled after a pin moved. A Kit that is not in <code>.kits/</code> is skipped with a message (and the <code>SUMMARY.md</code> block is then not judged), so it is safe to run anywhere. A Kit fetched at a different commit than the pin is a refusal, as for <code>docs-pull</code>.</p>
+<h3 id="test-tools"><a class="header" href="#test-tools"><code>test-tools</code></a></h3>
+<p><strong>For maintainers.</strong> Runs the unit tests of the tools in <code>tools/</code>:</p>
+<ul>
+<li>the catalog generator, <code>tools/tests/test_gen_catalog.py</code>: sanitising, idempotence, the public/private link rule, the missing-repository note, status grouping, the rewrite of the <code>SUMMARY.md</code> block and the listing of pulled reference pages on the cards. They need PyYAML and skip themselves with a message when it is missing;</li>
+<li>the reference-docs puller, <code>tools/tests/test_pull_docs.py</code>: each class of link rewrite, the banner, anchors, idempotence, the pin refusal and <code>--check</code>. They need nothing beyond Python 3;</li>
+<li>the launch tooling: <code>tools/tests/test_go_public_check.py</code> (every check of <code>go-public-check</code>, with <code>curl</code> and <code>gh</code> replaced by stand-ins), <code>tools/tests/test_stranger_env.py</code> (the sanitised environment of <code>stranger-test</code> and its dry run), <code>tools/tests/test_app_needs.py</code> (the per-app Kit requirements: the gate, <code>test-run.sh</code> and <code>frb.sh</code> in a throwaway repository with stand-in <code>flutter</code> and <code>cargo</code>), <code>tools/tests/test_check_public_strict.py</code> (the strict mode of <code>check-public</code>), <code>tools/tests/test_render_community.py</code> and <code>tools/tests/test_gen_third_party_notices.py</code>. They need nothing beyond Python 3;</li>
+<li>the website tools: <code>tools/tests/test_site_stage.py</code> (the link rewrite and the README rename), <code>tools/tests/test_site_check.py</code> (the checks of <code>site-check</code>) and <code>tools/tests/test_publish_site.py</code> (the dry run and the push guard, against a local bare repository and a stub <code>gh</code>; needs <code>git</code>). They need nothing beyond Python 3.</li>
+</ul>
+<p>Plain <code>python3 -m unittest</code> from the repository root runs the same tests.</p>
+<h3 id="site"><a class="header" href="#site"><code>site</code></a></h3>
+<p>Builds the book as a website with <a href="https://rust-lang.github.io/mdBook/">mdBook</a> into <code>build/site/</code>, ready to be served at the root of <code>SITE_DOMAIN</code>. If mdBook is not installed it prints how to install it and exits 0. How the site is built and published is in <a href="publishing.html">Publishing the website</a>; the steps in order:</p>
+<ol>
+<li><strong>Stage the book.</strong> <code>book/</code> is copied to <code>build/site-src/</code>, and in the copy every link to a path outside <code>book/</code> (the demo apps, the labs, <code>CONTRIBUTING.md</code> and so on) becomes a link to the file or folder on GitHub (<code>SITE_REPO_URL</code>, <code>SITE_REPO_BRANCH</code>). Links that stay inside the book are left alone. It prints how many links it rewrote. While the repository is private those addresses answer 404 for everyone without access, and <code>make site</code> says so. <code>SITE_REWRITE_REPO_LINKS=0</code> turns the rewrite off. The same step renames an in-book link to a folder’s <code>README.md</code> to <code>index.md</code>, because mdBook publishes that page as <code>index.html</code>. <code>book/</code> itself is never changed.</li>
+<li><strong>Build with mdBook.</strong> The configuration is generated into <code>build/mdbook/</code>, so there is no <code>book.toml</code> to keep in step. The site is served at <code>/</code>, search is on, every page has an “edit this page” link, and there is a <code>404.html</code>. The default favicon is kept.</li>
+<li><strong>Diagrams.</strong> The <code>mermaid</code> code blocks of the pulled Kit pages are drawn in the browser by a pinned copy of mermaid that is committed in <code>tools/site/vendor/</code> and copied into the site; nothing is loaded from another host. The page’s light or dark theme decides the diagram colours.</li>
+<li><strong>Robots.</strong> Every page gets <code>&lt;meta name="robots" content="noindex"&gt;</code> unless <code>SITE_INDEXABLE=1</code>.</li>
+<li><strong>Third-party notices.</strong> <code>THIRD-PARTY-NOTICES.md</code> is copied into the site root, because the vendored diagram script is a bundle of other people’s code and their licences ask for the notice to travel with it.</li>
+<li><strong>Publish staging.</strong> <code>build/site-publish/</code> is <code>build/site/</code> plus a <code>CNAME</code> file holding exactly <code>SITE_DOMAIN</code> and an empty <code>.nojekyll</code>. That folder is what <code>publish-site</code> commits.</li>
+</ol>
+<p>Preview it with <code>python3 -m http.server -d build/site 8000</code>. The first line of output says how many pages were built. <code>make docs</code> does not need mdBook and is unchanged.</p>
+<h3 id="site-check"><a class="header" href="#site-check"><code>site-check</code></a></h3>
+<p>Checks the site that <code>make site</code> built (it stops with a message if there is none) and prints one line per check. It uses only Python 3.</p>
+<ul>
+<li><strong>Links:</strong> every internal link, script, stylesheet and image address in every generated page resolves to a file, and every <code>#fragment</code> is an id that exists in the page it points to. Addresses to other sites are counted but not fetched.</li>
+<li><strong>Publish folder:</strong> <code>build/site-publish/</code> has a <code>CNAME</code> that holds exactly <code>SITE_DOMAIN</code>, an empty <code>.nojekyll</code>, an <code>index.html</code>, and the same pages as <code>build/site/</code>.</li>
+<li><strong>Robots:</strong> with <code>SITE_INDEXABLE=0</code> every page carries the noindex tag; with <code>SITE_INDEXABLE=1</code> none does, except <code>print.html</code> and <code>toc.html</code>, which mdBook always marks noindex itself.</li>
+<li><strong>Diagrams:</strong> the vendored <code>tools/site/vendor/mermaid.min.js</code>, the copy in the site and the copy in the publish folder all match the sha256 recorded in <code>tools/site/vendor/README.md</code>, the licence file is there, and every page with a diagram loads the init script.</li>
+<li><strong>Notices:</strong> <code>THIRD-PARTY-NOTICES.md</code> is in the site root and in the publish folder, byte for byte the one at the repository root.</li>
+</ul>
+<p>Exits non-zero on any failure.</p>
+<h3 id="publish-site"><a class="header" href="#publish-site"><code>publish-site</code></a></h3>
+<p>Maintainers only. Removes the old build, runs <code>make site</code> and <code>make site-check</code>, then commits the contents of <code>build/site-publish/</code> as <strong>one orphan commit</strong> (no parent) to a local branch <code>gh-pages</code>. The commit is built with a scratch index and no checkout, so <code>main</code>, your index and your working tree are never touched.</p>
+<ul>
+<li><strong>By default it is a dry run:</strong> it prints the commit, its file count, its <code>CNAME</code>, the repository’s visibility, the push it would have made, and why it did not, and exits 0.</li>
+<li><strong>It pushes only when all of these hold:</strong> <code>PUBLISH=1</code>; <code>gh repo view</code> says the repository behind <code>origin</code> is <code>PUBLIC</code>; the working tree has no uncommitted changes; and the current branch is <code>SITE_REPO_BRANCH</code>. The push is <code>git push --force-with-lease=refs/heads/gh-pages:&lt;what origin holds now&gt; origin gh-pages:refs/heads/gh-pages</code>. It never pushes any other branch.</li>
+<li>It does not turn GitHub Pages on, change any GitHub setting, or touch DNS. Those steps, and their order, are in <a href="publishing.html#going-public-in-order">Publishing the website</a>.</li>
+</ul>
+<p>Undo the local branch with <code>git branch -D gh-pages</code>.</p>
+<h3 id="check-public"><a class="header" href="#check-public"><code>check-public</code></a></h3>
+<p>Scans every file in the tree except <code>.kits/</code> and build output for anything that must not be public: internal hostnames, ticket ids, local paths that contain a user name (except the invented user name <code>ada</code> that the Kits’ reference pages use in examples), notes-vault paths, references to agent instruction files, repository URLs that are not public Kits in <code>kits.lock</code> or on the card of a Kit that <code>tools/kit-visibility.tsv</code> marks public, people named in credits or licence text other than the author, and secret patterns. The generator <code>tools/gen-catalog.py</code> and its tests are not scanned, because they spell the patterns out; what they generate, including <code>tools/kit-visibility.tsv</code>, is. This repository’s own address (<code>github.com/slash-builder/kit-book</code>, which the website links to) is allowed. One more file is skipped: the vendored <code>tools/site/vendor/mermaid.min.js</code>, third-party minified JavaScript that nobody here edits. It is skipped only while its sha256 equals the one recorded in <code>tools/site/vendor/README.md</code>; if the file changes it is scanned like everything else, and the README and licence next to it are always scanned. It prints <code>file:line</code> for every hit and exits non-zero on any. While <code>kits.lock</code> lists private Kits it also prints a note that each must become public (or stop being needed) before this repository is made public.</p>
+<p>With <code>CHECK_PUBLIC_STRICT=1</code> it also fails while <code>kits.lock</code> lists a private Kit with role <code>core</code>. A private <code>app-dep</code> Kit is only a warning that names the apps that will be skipped for a stranger. <code>THIRD-PARTY-NOTICES.md</code> is exempt from the rule about people named in credits (it exists to name the copyright holders that third-party licences require); every other rule scans it.</p>
+<h3 id="community"><a class="header" href="#community"><code>community</code></a></h3>
+<p><strong>For maintainers.</strong> Renders <code>CODE_OF_CONDUCT.md</code> and <code>SECURITY.md</code> at the repository root from the templates in <code>tools/community/</code> and the two contacts in <code>tools/contacts.conf</code> (<code>CONDUCT_CONTACT</code>, <code>SECURITY_CONTACT</code>), with <code>tools/render-community.py</code>. The Code of Conduct is the Contributor Covenant 2.1, unmodified except for the enforcement contact; the template records the sha256 of the official text it was made from. An empty contact is written as the visible marker <code>[CONTACT NOT SET]</code> with a draft banner at the top of the file, and the tool prints a warning; <code>python3 tools/render-community.py --final</code> fails instead, and <code>--check</code> fails if the committed files are not a fresh render. Edit the template or <code>contacts.conf</code>, never the rendered file.</p>
+<h3 id="go-public-check"><a class="header" href="#go-public-check"><code>go-public-check</code></a></h3>
+<p><strong>For maintainers.</strong> The launch gate: a single read-only run that prints a checklist table, one row per check, <code>ok</code>, <code>warn</code> or <code>FAIL</code>, and exits 1 if any row is <code>FAIL</code> (a <code>warn</code> says what to do and does not fail it). It writes nothing to the working tree (the website is built in a temporary copy), changes no GitHub setting and touches no DNS. It takes about a minute.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>#</th><th>Check</th></tr>
+</thead>
+<tbody>
+<tr><td>a</td><td><code>CHECK_PUBLIC_STRICT=1 make check-public</code> passes; a private <code>app-dep</code> Kit is a warning that names the apps that will be skipped</td></tr>
+<tr><td>b</td><td><code>kits.lock</code>: each URL ends in a repository named like the Kit; no <code>RENAMED AT RELEASE</code> comment; no <code>application-kit</code>, <code>application_kit</code> or <code>appkit</code>; every pin is 40 hex characters</td></tr>
+<tr><td>c</td><td>every <code>core</code> Kit’s repository answers HTTP 200 to a plain <code>curl</code> with no token, and <code>github.com/&lt;org&gt;/&lt;repo&gt;/commit/&lt;sha&gt;</code> of its pin answers 200 (a redirect is not a 200)</td></tr>
+<tr><td>d</td><td><code>make docs</code>, <code>make docs-pull-check</code>, and <code>make site</code> and <code>make site-check</code> with <code>SITE_INDEXABLE=1</code> pass</td></tr>
+<tr><td>e</td><td><code>LICENSE</code> and <code>LICENSE-docs</code> exist; <code>THIRD-PARTY-NOTICES.md</code> exists and names the vendored mermaid version and sha256 recorded in <code>tools/site/vendor/README.md</code></td></tr>
+<tr><td>f</td><td><code>tools/contacts.conf</code> has both contacts (else: <code>set CONDUCT_CONTACT and SECURITY_CONTACT in tools/contacts.conf</code>); <code>CODE_OF_CONDUCT.md</code> and <code>SECURITY.md</code> exist, carry no placeholder (<code>[CONTACT NOT SET]</code>, <code>[INSERT</code>, <code>{{</code>) and are a fresh render</td></tr>
+<tr><td>g</td><td>no tracked file spells an old Kit name (<code>appkit</code>, <code>application_kit</code>, <code>application-kit</code>) except where <code>tools/go-public-allow.txt</code> allows it (never <code>kits.lock</code>)</td></tr>
+<tr><td>h</td><td>this repository’s own visibility, from <code>gh repo view --json visibility</code>: <code>PRIVATE</code> is a warning, “make the repo public, then re-run”</td></tr>
+<tr><td>i</td><td>the built site’s <code>CNAME</code> equals <code>SITE_DOMAIN</code></td></tr>
+<tr><td>j</td><td>the working tree is clean and on <code>main</code> (a warning), and every <code>apps/&lt;app&gt;/kits.need</code> names a Kit that <code>kits.lock</code> lists</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>GO_PUBLIC_OFFLINE=1</code> skips the two network checks (c, h) and ends <code>INCOMPLETE</code> with exit 3, never a pass. The pure parts of the checks have unit tests (<code>tools/tests/test_go_public_check.py</code>). What to do with the result, and in which order, is in <a href="publishing.html#before-you-publish">Publishing the website</a>.</p>
+<h3 id="stranger-test"><a class="header" href="#stranger-test"><code>stranger-test</code></a></h3>
+<p><strong>For maintainers, after the repository is public.</strong> Does what a newcomer with no GitHub account would do, and shows what they would see: clones <code>STRANGER_REPO_URL</code> into a fresh temporary folder, then runs <code>make doctor</code>, <code>make setup</code> (with <code>KITS=public</code>, the default) and <code>make test-fast</code> in the clone. Everything runs in a sanitised environment (<code>tools/stranger-env.py</code>): the GitHub token variables are removed, git may not ask for a password and has no credential helper (<code>-c credential.helper=</code>, <code>GIT_TERMINAL_PROMPT=0</code>), and <code>gh</code> is not on <code>PATH</code>, so a step that needs a login cannot quietly use yours. A fetch that skips for want of a login does not make <code>make setup</code> fail, so afterwards the script checks that every <code>core</code> Kit in <code>kits.lock</code> is public and was fetched at its pinned commit, and fails loudly if not (<code>A STRANGER COULD NOT GET ...</code>). It ends with a table of steps and exits non-zero if anything failed.</p>
+<p><code>STRANGER_DRY=1 make stranger-test</code> prints the plan and the names (never the values) of the environment variables it would remove, and clones nothing. <code>STRANGER_STEPS="doctor setup"</code> runs fewer steps; <code>STRANGER_KEEP=1</code> keeps the clone. Apps that need a Kit that is still private are skipped with a message, which is the expected result; see <a href="#kitsneed"><code>kits.need</code></a>.</p>
+<h3 id="linux-smoke-image"><a class="header" href="#linux-smoke-image"><code>linux-smoke-image</code></a></h3>
+<p>Builds the Docker image that <code>linux-smoke</code> runs in, from <code>tools/linux-smoke/Dockerfile</code>: Ubuntu 24.04, the Flutter Linux desktop prerequisites (<code>clang</code>, <code>cmake</code>, <code>ninja-build</code>, <code>pkg-config</code>, GTK 3 and <code>liblzma</code> development files), Xvfb, ImageMagick and xdotool, a software OpenGL (Mesa) and one font (without a font Flutter draws no text), <strong>Flutter 3.41.9</strong> (the version of the maintainer’s machine; Flutter publishes no Linux arm64 archive, so it is cloned at the tag and the commit is checked) and <strong>Rust 1.98.1</strong> through a hash-checked <code>rustup-init</code>. The sources and hashes of the pins are printed at the end and kept in the image as <code>/opt/linux-smoke-pins.txt</code>. The first build takes a few minutes and the image is about 4 GB; after that it is cached by Docker and <code>linux-smoke</code> does not need the network except for <code>flutter pub get</code> and Rust crates (cached in two named Docker volumes). The build log is <code>build/linux-smoke/image-build.log</code>.</p>
+<h3 id="linux-smoke"><a class="header" href="#linux-smoke"><code>linux-smoke</code></a></h3>
+<p>Builds every demo app for Linux <strong>in a container</strong> and launches each one under a virtual display. Needs Docker, <code>make linux-smoke-image</code> once, and the Kits fetched (<code>make setup KITS=all</code> while they are private; <code>notes_rust</code> is skipped without the Storage Kit like everywhere else). The repository is mounted read-only; each app is copied to the container’s own disk (without <code>build/</code> and <code>.dart_tool</code>) and the host is never written to except <code>build/linux-smoke/</code>.</p>
+<p>For each app: <code>flutter pub get</code>, <code>flutter build linux --release</code> (seconds and bundle size are recorded), then a launch under <code>xvfb-run</code> (1280x800x24, no window manager) with <code>APP_CONTEXT_SCRATCH</code> set, <code>APP_CONTEXT_MODE=mock</code> and the app’s own <code>&lt;PREFIX&gt;_MODE=mock</code>. It keeps the app up 10 s, takes a screenshot at 6 s, sends SIGTERM and records whether it was still running, the exit code, whether the roster entry appeared and was withdrawn, any Gtk/GLib warning and uncaught exception in the output, and the files the app wrote under the scratch directory. For <code>calculator</code>, <code>stopwatch</code>, <code>minesweeper</code> and <code>notepad</code> the first launch is <strong>driven with xdotool</strong> (a few clicks, and typing in the notepad) so there is something to save; a <strong>second launch</strong> on the same scratch directory then shows what survived. Finally two copies of <code>stopwatch</code> and of <code>notepad</code> run side by side in real mode with the same <code>APP_CONTEXT_PEERS_DIR</code> and different <code>APP_CONTEXT_DEVICE</code> values; the harness checks that each announced, that the two processes hold a TCP connection to each other, and, for notepad, that a note written into copy A’s folder arrives in copy B’s. The apps do not log peers, so the screenshot (each footer reads <code>Peers: 1</code>) is the other evidence.</p>
+<p>Results: <code>build/linux-smoke/results.md</code> (a table, the environment and the details, including every warning line) and the screenshots <code>build/linux-smoke/&lt;app&gt;-first.png</code>, <code>-second.png</code> and <code>-peers.png</code>. <code>build/</code> is ignored by git. Exit status is non-zero when an app did not build or was not running at 10 s.</p>
+<p><strong>What it proves and what it does not.</strong> It shows that the Linux runners build and that the apps start, draw, take mouse and keyboard input, write their state, survive a relaunch and exit on SIGTERM, <strong>headless under a virtual display, in a container, on one architecture</strong> (<code>linux/arm64</code> on Apple silicon; <code>linux/amd64</code> was not run). It is not a real desktop session (no window manager or compositor, no window-close click, no notification daemon), not a real GPU (software rendering), and says nothing about other distributions, Wayland, or X11 with a real server. The GTK accessibility-bus warnings it lists come from the container having no accessibility bus.</p>
+<h3 id="clean"><a class="header" href="#clean"><code>clean</code></a></h3>
+<p>Removes build output: <code>build/</code>, each app’s and lab’s <code>build/</code> and <code>.dart_tool/</code>, an app’s Rust core <code>target/</code> folder, and Rust <code>target/</code> folders inside <code>.kits/</code>. Keeps the fetched Kits.</p>
+<h3 id="clean-all"><a class="header" href="#clean-all"><code>clean-all</code></a></h3>
+<p><code>clean</code>, and also deletes <code>.kits/</code>. Run <code>make setup</code> to fetch again.</p>
+<h2 id="kitslock"><a class="header" href="#kitslock"><code>kits.lock</code></a></h2>
+<p>One line per Kit, five fields separated by spaces; lines starting with <code>#</code> are comments.</p>
+<pre><code class="language-text">name  repo-url  commit  visibility  role
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>name</code></td><td>The folder it is fetched into: <code>.kits/&lt;name&gt;/</code></td></tr>
+<tr><td><code>repo-url</code></td><td><code>https://github.com/&lt;org&gt;/&lt;repo&gt;</code></td></tr>
+<tr><td><code>commit</code></td><td>The full 40-character commit id. A branch name is not accepted, so a pin never moves by itself</td></tr>
+<tr><td><code>visibility</code></td><td><code>public</code> (plain download, no account) or <code>private</code> (needs a GitHub login and <code>KITS=all</code>)</td></tr>
+<tr><td><code>role</code></td><td><code>core</code> (documented here, tests run by <code>make test</code>), <code>app-dep</code> (another Kit needs it to build; fetched, not tested) or <code>reference</code> (documented here, not needed to build the apps)</td></tr>
+</tbody>
+</table>
+</div>
+<h2 id="kitsoverride"><a class="header" href="#kitsoverride"><code>kits.override</code></a></h2>
+<p>Optional. One line per Kit, <code>name  path</code>, with the path relative to the repository root; lines starting with <code>#</code> are comments. For a Kit named here, <code>make fetch</code> and <code>make setup</code> link <code>.kits/&lt;name&gt;/</code> to that local checkout instead of downloading the pin in <code>kits.lock</code>, and say so in their output, because the pin is then not what you are building against. The file exists for a Kit change that is not merged yet. It is not meant to stay: the steps for removing a line are in the file’s own header comment.</p>
+<h2 id="kitsneed"><a class="header" href="#kitsneed"><code>kits.need</code></a></h2>
+<p>Optional, one per app, at <code>apps/&lt;app&gt;/kits.need</code>. The Kits the app needs <strong>besides the App Context Kit</strong>, one name from <code>kits.lock</code> per line; <code>#</code> starts a comment. Today only <code>apps/notes_rust/kits.need</code> exists, and it lists <code>storage-kit</code>, which is private for now.</p>
+<p>An app whose needed Kit is not in <code>.kits/</code> is <strong>skipped, never failed</strong>, by <code>setup</code>, <code>test</code>, <code>test-fast</code>, <code>test-integration</code>, <code>apps</code>, <code>frb</code> and <code>doctor</code>. Each prints one line such as</p>
+<pre><code class="language-text">skipped apps/notes_rust: needs storage-kit (private; fetch with KITS=all)
+</code></pre>
+<p>and the test table shows the app as skipped, so a stranger who runs <code>make setup &amp;&amp; make test-fast</code> with only public Kits gets a green run that says plainly what it left out. <code>doctor</code> also drops everything that app alone required (<code>flutter_rust_bridge_codegen</code>, its Rust version, CocoaPods). <code>make app APP=&lt;app&gt;</code> and <code>make run APP=&lt;app&gt;</code>, which name one app, say which Kit is missing and what to run, and exit non-zero. With <code>KITS=all</code> (and a GitHub login) nothing is skipped and every test runs as before. <code>make go-public-check</code> fails if a <code>kits.need</code> names a Kit that <code>kits.lock</code> does not list.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../30-kits/app-context-kit/examples/flutter_hello.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../90-reference/publishing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../30-kits/app-context-kit/examples/flutter_hello.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../90-reference/publishing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../mark-09e88c2c.min.js"></script>
+        <script src="../searcher-09f2665d.js"></script>
+
+        <script src="../clipboard-1626706a.min.js"></script>
+        <script src="../highlight-abc7f01d.js"></script>
+        <script src="../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../mermaid-init-5853b93b.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

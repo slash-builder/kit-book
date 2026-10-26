@@ -1,0 +1,423 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>The app context spec - The Kit Book</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex-e0dd22bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc-ce6d682b.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kit Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book/edit/main/book/30-kits/app-context-kit/spec/app-context.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <!-- Generated by tools/pull-docs.py from app-context-kit at 4797e81 (spec/APP-CONTEXT.md). Do not edit by hand: edit it in the Kit, then run make docs-pull. -->
+<h1 id="app-context-kit-the-app-context-specification-v01"><a class="header" href="#app-context-kit-the-app-context-specification-v01">App Context Kit: the app context specification (v0.1)</a></h1>
+<blockquote>
+<p>Reference page pulled from app-context-kit at commit 4797e81. Edit it in the Kit, not here.</p>
+</blockquote>
+<p>This is the contract both implementations (Rust in <code>rust/</code>, Dart in <code>dart/app_context_kit/</code>) must satisfy. It is
+checked by the shared fixtures in <code>conformance/</code>. If an implementer finds the text ambiguous, that is a <strong>finding</strong>:
+write it down (as an issue or a note) and do not silently pick; the fixtures win over the prose.</p>
+<p>Everything here is a pure function of its inputs (no I/O), so both languages can be tested without a filesystem.</p>
+<h2 id="1-the-manifest-appjson"><a class="header" href="#1-the-manifest-appjson">1. The manifest (<code>app.json</code>)</a></h2>
+<p>JSON, not YAML, on purpose: it avoids choosing a Rust YAML library for now.
+Whether the real thing is YAML is an open question.</p>
+<pre><code class="language-json">{
+  "id": "com.slashbuilder.demo.calc",
+  "name": "Calculator",
+  "version": "0.1.0",
+  "kits": ["venue"],
+  "envPrefix": "CALC",
+  "venue": { "mode": "auto", "consumer": "calc" }
+}
+</code></pre>
+<p>Fields: <code>id</code>, <code>name</code>, <code>version</code> required. <code>kits</code> optional (default <code>[]</code>). <code>envPrefix</code> optional. <code>venue</code> optional.</p>
+<p>Validation, checked in this order; <strong>report the first failure only</strong>, as these codes. A field that is present as <code>null</code> is present and invalid (<code>kits: null</code> is <code>bad-kits</code>). Every pattern must match the <strong>whole string</strong>: a trailing newline fails (this matters to implementations whose <code>$</code> also matches before a final newline).</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>order</th><th>code</th><th>rule</th></tr>
+</thead>
+<tbody>
+<tr><td>0a</td><td><code>not-json</code></td><td>the source text is not valid JSON (only for <code>parse(text)</code>; a parsed value skips this)</td></tr>
+<tr><td>0b</td><td><code>not-object</code></td><td>the JSON is not an object (an array, a string, <code>null</code>…)</td></tr>
+<tr><td>1</td><td><code>bad-id</code></td><td><code>id</code> missing or not matching <code>^[a-z][a-z0-9-]*(\.[a-z][a-z0-9-]*)+$</code> (reverse-DNS, at least two segments)</td></tr>
+<tr><td>2</td><td><code>bad-name</code></td><td><code>name</code> missing, <code>null</code>, not a string, or empty after removing ASCII whitespace (space, tab, CR, LF). Other characters, including U+FEFF, count as content</td></tr>
+<tr><td>3</td><td><code>bad-version</code></td><td><code>version</code> missing or not matching <code>^\d+\.\d+\.\d+$</code></td></tr>
+<tr><td>4</td><td><code>bad-kits</code></td><td><code>kits</code> present but not a list of strings, or a name not matching <code>^[a-z][a-z0-9-]*$</code></td></tr>
+<tr><td>5</td><td><code>duplicate-kit</code></td><td>the same kit name twice (checked only after every name passed rule 4)</td></tr>
+<tr><td>6</td><td><code>bad-prefix</code></td><td><code>envPrefix</code> present and not matching <code>^[A-Z][A-Z0-9_]*$</code></td></tr>
+<tr><td>7</td><td><code>bad-venue</code></td><td><code>venue</code> present but not an object, or <code>venue.mode</code> not one of <code>auto</code>, <code>on</code>, <code>off</code>, or <code>venue.consumer</code> present and not matching <code>^[a-z][a-z0-9-]*$</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Defaults after validation: <code>venue.mode</code> = <code>auto</code>; <code>venue.consumer</code> = the last segment of <code>id</code>; env prefix (below).</p>
+<h2 id="2-resolution"><a class="header" href="#2-resolution">2. Resolution</a></h2>
+<p>Inputs: <code>manifest</code>, <code>platform</code> (<code>linux</code>, <code>macos</code>, <code>windows</code>), <code>home</code> (string), <code>env</code> (string map).
+Outputs: <code>prefix</code>, <code>dirs.{data,config,state,cache,runtime}</code>, <code>roster</code> (a shared directory), <code>scratch</code> (bool), <code>mode</code> (<code>real</code>/<code>mock</code>).</p>
+<p><strong>Prefix:</strong> <code>manifest.envPrefix</code>, else the last segment of <code>id</code>, upper-cased, with every character outside <code>A-Z0-9</code> replaced by <code>_</code>.
+(<code>render-queue</code> becomes <code>RENDER_QUEUE</code>.)</p>
+<p><strong>Path joining:</strong> on <code>linux</code> and <code>macos</code> join with <code>/</code>, on <code>windows</code> with <code>\</code>, whatever the host is.
+Before joining, a trailing separator on an <em>input base</em> (for example <code>TMPDIR=/var/T/</code>) is dropped; the separators are those of the <strong>target platform only</strong> (<code>/</code> on linux and macos; both <code>/</code> and <code>\</code> on windows), so a trailing <code>\</code> on a linux base is kept. A base that is only a separator (<code>/</code>) is not reduced to nothing: joining <code>/</code> and <code>ID</code> gives <code>/ID</code>, never <code>//ID</code>. Values used verbatim (overrides, below) are never trimmed.</p>
+<p><strong>Platform defaults</strong> (<code>ID</code> is the manifest id):</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th></th><th>linux</th><th>macos</th><th>windows</th></tr>
+</thead>
+<tbody>
+<tr><td>data</td><td><code>$XDG_DATA_HOME</code> else <code>home/.local/share</code>, then <code>/ID</code></td><td><code>home/Library/Application Support/ID/data</code></td><td><code>%LOCALAPPDATA%\ID\data</code></td></tr>
+<tr><td>config</td><td><code>$XDG_CONFIG_HOME</code> else <code>home/.config</code>, then <code>/ID</code></td><td><code>home/Library/Preferences/ID</code></td><td><code>%APPDATA%\ID</code></td></tr>
+<tr><td>state</td><td><code>$XDG_STATE_HOME</code> else <code>home/.local/state</code>, then <code>/ID</code></td><td><code>home/Library/Application Support/ID/state</code></td><td><code>%LOCALAPPDATA%\ID\state</code></td></tr>
+<tr><td>cache</td><td><code>$XDG_CACHE_HOME</code> else <code>home/.cache</code>, then <code>/ID</code></td><td><code>home/Library/Caches/ID</code></td><td><code>%LOCALAPPDATA%\ID\cache</code></td></tr>
+<tr><td>runtime</td><td><code>$XDG_RUNTIME_DIR/ID</code> if set, else the <strong>platform-default state directory</strong> (after <code>XDG_STATE_HOME</code>, before any override) plus <code>/run</code></td><td><code>TMPDIR</code> (else <code>/tmp</code>), then <code>/ID</code></td><td><code>%TEMP%\ID</code></td></tr>
+<tr><td>roster</td><td><code>$XDG_RUNTIME_DIR</code> (else <code>/tmp</code>), then <code>/app-context-roster</code></td><td><code>TMPDIR</code> (else <code>/tmp</code>), then <code>/app-context-roster</code></td><td><code>%TEMP%\app-context-roster</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>(On <code>windows</code>, a missing <code>LOCALAPPDATA</code>, <code>APPDATA</code> or <code>TEMP</code> is the error <code>missing-env</code>, but <strong>only if a default that needs it is actually used</strong>: a directory fixed by an override or by scratch needs none.)</p>
+<p><strong>Overrides</strong>, highest priority first, for each directory kind <code>K</code> in <code>DATA</code>, <code>CONFIG</code>, <code>STATE</code>, <code>CACHE</code>, <code>RUNTIME</code>:</p>
+<ol>
+<li><code>&lt;PREFIX&gt;_&lt;K&gt;_DIR</code>: used exactly as given (no id appended, <strong>no trimming</strong>).</li>
+<li>Scratch: if <code>APP_CONTEXT_SCRATCH=S</code> (non-empty), the directory is <code>S/ID/&lt;kind&gt;</code> with <code>&lt;kind&gt;</code> lower-case, and <code>roster</code> is <code>S/roster</code>; <code>scratch</code> is true. (Scratch joins with <code>/</code> on every platform.)</li>
+<li>The platform default.</li>
+</ol>
+<p><code>roster</code> has one override of its own: <code>APP_CONTEXT_ROSTER_DIR</code>, which beats scratch.</p>
+<p><strong>Mode:</strong> <code>&lt;PREFIX&gt;_MODE</code>, else <code>APP_CONTEXT_MODE</code>, else <code>real</code>. Allowed values <code>real</code>, <code>mock</code>; anything else is the error <code>bad-mode</code>. Only the variable that wins is checked: a garbage <code>APP_CONTEXT_MODE</code> is ignored when <code>&lt;PREFIX&gt;_MODE</code> is set. <strong>Error precedence:</strong> <code>bad-mode</code> is reported before <code>missing-env</code>.
+An empty string counts as unset, for every variable above.</p>
+<h2 id="3-venue-not-in-the-fixtures-needs-a-network-or-a-fake"><a class="header" href="#3-venue-not-in-the-fixtures-needs-a-network-or-a-fake">3. Venue (not in the fixtures; needs a network or a fake)</a></h2>
+<p><em>(v0.1 changes to this section are in section 5.)</em></p>
+<p>Reuse Venue’s existing variable names so nothing new is invented: <code>VENUE_DAEMON</code> (URL, default <code>http://127.0.0.1:7878</code>), <code>VENUE_TOKEN</code>,
+<code>VENUE_TOKEN_FILE</code>, <code>VENUE_DAEMON_FINGERPRINT</code>. Token lookup: see section 5, item 2 (a <code>VENUE_TOKEN_FILE</code> that is set but missing or empty is an error, never a fall-through). <code>venue.mode</code>: <code>off</code> never connects; <code>auto</code> connects if a token exists and the daemon answers <code>/healthz</code>, otherwise
+degrades to a <strong>local</strong> session and says so in <code>description</code> (the way a larger app words it: “GPU lease: local (Venue not configured)”);
+<code>on</code> fails to open if it cannot connect. In <code>mock</code> mode the session is always the in-memory fake. The Rust crate has no remote session: with a token found, <code>auto</code> gives a local session that says so (a warning) and <code>on</code> fails to open.</p>
+<h2 id="4-lifecycle-and-roster-a-minimal-first-version-not-covered-by-fixtures"><a class="header" href="#4-lifecycle-and-roster-a-minimal-first-version-not-covered-by-fixtures">4. Lifecycle and roster (a minimal first version, not covered by fixtures)</a></h2>
+<p><code>AppContext.run(body)</code>: resolve, create the directories, write a presence file <code>roster/&lt;ID&gt;@&lt;INSTANCE&gt;.json</code>
+(<code>{"id","name","version","pid","startedAt","heartbeatAt"}</code>), start a 5-second heartbeat, open Venue, run <code>body</code>, then on exit or error
+delete the presence file, run the close hooks and close Venue. (Holds are released by <code>withHold</code>, which is the only thing that tracks them; a context does not release holds it did not take through <code>withHold</code>.) A presence file is stale when <code>heartbeatAt</code> is older than 15 seconds. This is the
+<code>BRoster</code> question: <strong>does it belong here, in Venue, or nowhere?</strong> The Kit ships the smallest version so the answer comes from use.</p>
+<h2 id="5-v01-decisions"><a class="header" href="#5-v01-decisions">5. v0.1 decisions</a></h2>
+<p>Building the second implementation showed that two implementations can pass 41 fixtures and still disagree. These are the decisions that close the gaps it exposed.
+Items marked <strong>(fixture)</strong> are covered by <code>conformance/*.json</code>; the rest are behaviours each implementation must test itself.</p>
+<ol>
+<li><strong>(fixture)</strong> The manifest, resolution and mode rules above, including the new codes and precedences.</li>
+<li><strong>Token lookup (replaces section 3’s order).</strong> <code>VENUE_TOKEN</code>; else the file named by <code>VENUE_TOKEN_FILE</code>; else <code>&lt;config&gt;/venue-token</code>.
+If <code>VENUE_TOKEN_FILE</code> is <strong>set</strong> but the file is missing or empty, that is a configuration error and the lookup does <strong>not</strong> fall through
+to <code>&lt;config&gt;/venue-token</code>: <code>auto</code> degrades to a local session whose description names the problem; <code>on</code> fails to open.</li>
+<li><strong>Config is never silently overwritten.</strong> A <code>config.json</code> that is not valid UTF-8 or not a JSON object is <em>damaged</em>. <code>open</code> reports it
+(<code>problem</code>) and still opens; <code>set</code> and <code>save</code> then fail with a damaged-config error until the caller explicitly sets the file aside
+(renamed to <code>config.json.corrupt</code>). <code>get&lt;double&gt;</code> accepts a whole number (JSON <code>3</code> reads as <code>3.0</code>).</li>
+<li><strong><code>close()</code> is idempotent and isolates hooks.</strong> The second call does nothing. Every <code>onClose</code> hook runs even if an earlier one throws;
+after all have run, the errors are raised together. Venue is closed last.</li>
+<li><strong>Roster instance id.</strong> Each opened context draws a random 8-hex-digit instance id. The presence file is <code>roster/&lt;ID&gt;@&lt;INSTANCE&gt;.json</code> and
+carries an <code>instance</code> field; withdrawal removes only the context’s own file, so two copies of one app no longer erase each other.
+<code>running()</code> hides stale and unreadable entries (as before); <code>scan()</code> returns every entry with its status (<code>live</code>, <code>stale</code>, <code>unreadable</code>) so a viewer can tell a crash from “never ran”.</li>
+<li><strong>Typed Venue answers.</strong> <code>VenueRefused</code> carries a <code>kind</code>: <code>doesNotFit</code> (HTTP 409) or <code>forbidden</code> (HTTP 403, including the live-hold limit).
+<code>VenueUnavailable</code> is everything else (transport failure, 401, 5xx). Venue gives no machine-readable reason for a 403 (the limit and other
+refusals share the code <code>forbidden</code>): <strong>a finding for the Venue project</strong>; until it does, <code>forbidden</code> is treated as not retryable.</li>
+<li><strong>Holds the app can see.</strong> <code>VenueSession.holds()</code> lists this consumer’s own live holds (to find orphans after a crash).
+<code>withHold</code> no longer swallows renewal failures: the hold records them and the optional <code>onLeaseLost</code> callback fires; a failing <code>release</code>
+never replaces a successful body result (it is recorded on the hold).</li>
+<li><strong>Fake capacity</strong> is a parameter of <code>AppContext.open</code> (<code>fakeCapacity</code>, default 1), not an environment variable.</li>
+<li><strong>Notes carry a severity.</strong> <code>ctx.notes</code> is a list of <code>{severity: info|warning|error, text}</code>.</li>
+<li><strong>Flutter.</strong> The core packages stay free of Flutter. A companion package supplies the pieces a Flutter app needs: loading <code>app.json</code> from
+an asset, a single guarded close on exit (window close, quit, SIGINT, SIGTERM), a mode badge and a notes banner.</li>
+<li><strong>Coordination.</strong> See section 6.</li>
+</ol>
+<h2 id="6-coordination-between-copies-of-the-same-app-the-kit-manages-the-app-defines"><a class="header" href="#6-coordination-between-copies-of-the-same-app-the-kit-manages-the-app-defines">6. Coordination between copies of the same app (the Kit manages, the app defines)</a></h2>
+<p>The Kit does not decide what coordination means. The app supplies a hook; the Kit finds, authenticates, connects and routes.</p>
+<ul>
+<li><strong>Scope key:</strong> <code>(account, app id)</code>. A peer is another running copy of the same app id for the same account, identified by <code>(device, instance)</code>.</li>
+<li><strong>Envelope:</strong> a Kit-owned header <code>{account, app, channel, from:{device,instance}, seq, kind}</code> and an <strong>opaque</strong> app-owned payload with an app-declared <code>schema</code> integer. The Kit never reads the payload.</li>
+<li><strong>Provider interface</strong> (how peers are found and carried; the Kit ships a fake and a loopback one): <code>discover()</code> (a stream of candidate peers), <code>connect(peer)</code>, <code>send(peer, bytes)</code>, and an inbound stream. Hearth and LAN providers are later work and need the Hearth protocol owners.</li>
+<li><strong>Hook</strong> (the app’s): <code>channel</code>; <code>hello()</code> (opaque, sent on connect); <code>admit(peer, theirHello)</code> returning accept, accept read-only, or reject; <code>onPeer(peer, change)</code> for found, ready, lost; <code>onMessage(from, message)</code>.</li>
+<li><strong>Management interface</strong> (the Kit’s): a live <code>peers</code> view, <code>send(peer, payload)</code>, <code>broadcast(payload)</code>, <code>request(peer, payload)</code> with a timeout, and <code>close()</code>.</li>
+<li><strong>Delivery:</strong> best effort with per-sender ordering by <code>seq</code>; anything stronger is the app’s.</li>
+<li><strong>Mock mode</strong> uses the fake provider so apps test coordination with no network.</li>
+</ul>
+<h3 id="61-as-built-in-the-dart-core-dartapp_context_kitlibsrcpeers"><a class="header" href="#61-as-built-in-the-dart-core-dartapp_context_kitlibsrcpeers">6.1 As built in the Dart core (<code>dart/app_context_kit/lib/src/peers/</code>)</a></h3>
+<p>The first implementation departs from the sketch above in these ways. They are decisions to keep or reverse, not settled design.</p>
+<ul>
+<li><code>admit</code> may be async (<code>FutureOr&lt;Admit&gt;</code>): a pairing prompt or a storage lookup needs it. <code>AppCoordination.attach(hub)</code> (default no-op) hands the hook its hub. <code>hello()</code> must be JSON-encodable; the hook receives the decoded value.</li>
+<li><strong>One hub serves one channel</strong>, and <code>admit</code> is one answer per peer. An app with several facets (a timer, a notes sync, a game) uses one hub per facet or a mux hook that routes by kind prefix; the Kit has no per-facet admission.</li>
+<li>Providers also have <code>open(self)</code> and <code>close()</code>; candidates carry <code>available: false</code> for withdrawal; <code>rid</code> (optional) correlates request and reply, whose reserved kind is <code>kit.reply</code>; the <code>kit.</code> prefix is reserved.</li>
+<li><strong>Only the lower <code>PeerId</code> dials</strong>, so two copies never open two links. <code>seq</code> is per link and restarts at 1 on a new link; a bounded reorder buffer (16 frames, 500 ms) delivers in order and skips a gap that stays open; the app sees loss as a jump in <code>AppMessage.seq</code>.</li>
+<li><strong>A full outbox fails <code>send</code> with <code>PeerOutboxFull</code></strong> (256 messages or 8 MiB per peer) instead of dropping: only the app knows what is safe to drop.</li>
+<li><code>acceptReadOnly</code> only tags <code>peer.readOnly</code>; the decision is local and the other side is not told. A rejected peer is not redialed until the provider withdraws and re-announces it.</li>
+<li><code>send</code> completing means the transport took the frame, not that the peer applied it. No heartbeat or keepalive yet. No transfer for state over 1 MiB. No replay for a late joiner (use a version in <code>hello()</code> and let whoever is ahead push on <code>ready</code>).</li>
+</ul>
+<h3 id="62-what-the-hearth-integration-changed-from-testing-against-a-local-hearth-hub"><a class="header" href="#62-what-the-hearth-integration-changed-from-testing-against-a-local-hearth-hub">6.2 What the Hearth integration changed (from testing against a local Hearth hub)</a></h3>
+<ul>
+<li><strong>The app-scoped topic grammar is rejected by the stock hub</strong> (<code>TOPIC_INVALID</code>) and needs a one-file hub change (the hub’s topic module, about 60 lines). Until the Hearth protocol owners rule on it, carry app traffic on the stock topics with <code>payload_type = ak.app/&lt;app&gt;</code> and filter at the receiver.</li>
+<li><strong>The hub isolates accounts, not apps.</strong> Any device on the account can join any app’s topic, so the scope key is hygiene until a per-app credential and grant exist.</li>
+<li><strong>Provider payload limits differ.</strong> Hearth’s effective payload cap is <strong>64 KiB minus the Kit header</strong> (the 1 MiB figure is the whole envelope and above it the hub drops the connection). A provider must declare its maximum payload and <code>send</code> must fail before the wire when it is exceeded; the 1 MiB cap in section 6 is the Kit’s outer limit only.</li>
+<li><strong>The Kit must do for itself on Hearth:</strong> Kit-owned correlation ids (the hub’s <code>message_id</code> is not a safe key) and request deadlines; echo suppression by <code>from.device</code> + <code>from.instance</code> (the hub echoes to the sender); dedupe by <code>message_id</code> across live delivery and catch-up; liveness by a <code>no_retain</code> heartbeat no more often than every 30 s (the hub’s idle timeout is 90 s and its hourly publish caps are 600 per connection and 6000 per account); reconnect.</li>
+</ul>
+<h3 id="63-opting-in-and-who-this-copy-is-ctxpeerhub"><a class="header" href="#63-opting-in-and-who-this-copy-is-ctxpeerhub">6.3 Opting in, and who this copy is (<code>ctx.peerHub</code>)</a></h3>
+<ul>
+<li><strong>Peers are an opt-in Kit.</strong> An app lists <code>"peers"</code> in <code>app.json</code> <code>kits</code>; <code>ctx.peerHub(hook)</code> throws <code>KitNotDeclared</code> otherwise. This is the first place the manifest’s <code>kits</code> list gates a capability.</li>
+<li><strong>Account:</strong> <code>APP_CONTEXT_ACCOUNT</code>, else config <code>account</code>, else <code>local</code> (a single-user machine with no household account yet; replaced by the real account when an identity service issues one).</li>
+<li><strong>Device:</strong> <code>APP_CONTEXT_DEVICE</code>, else config <code>device</code>; generated once (<code>d-</code> plus 8 hex digits) and saved, or ephemeral for the run if the settings file is damaged. <strong>Instance:</strong> the context’s instance id.</li>
+<li><strong>Provider by mode:</strong> an explicit provider; else in <code>mock</code> mode a fake network (pass one to share it between copies in a test); else the loopback provider over <code>APP_CONTEXT_PEERS_DIR</code> (default: the roster directory plus <code>-peers</code>). Hubs are closed with the context.</li>
+</ul>
+<h2 id="7-additions-helpers-the-demo-apps-each-wrote-for-themselves-additions-only-nothing-removed-or-renamed"><a class="header" href="#7-additions-helpers-the-demo-apps-each-wrote-for-themselves-additions-only-nothing-removed-or-renamed">7. Additions (helpers the demo apps each wrote for themselves; additions only, nothing removed or renamed)</a></h2>
+<p>Evidence: the apps’ <code>lib/kit_gaps/</code> files, identical across apps. Each addition below replaces a copy; the apps still compile against their old copies until they are migrated (new names were chosen so they cannot collide with the copies).</p>
+<ul>
+<li><strong><code>ctx.startPeers(hook, {network, options})</code> -&gt; <code>PeersHandle</code></strong> (core, <code>peers/context_peers.dart</code>). Builds AND starts a hub and never throws for a runtime condition. An unwritable peers directory or a provider that fails to open becomes <code>handle.error</code> (<code>"peers unavailable: ..."</code>), and the app keeps working alone. <code>KitNotDeclared</code> is NOT swallowed (a bug in the app). The handle: <code>hub</code> (null when unavailable; non-null while still opening; set back to null, and the hub closed, if opening fails, so <code>handle.hub?.broadcast(...)</code> is always safe), <code>started</code> (completes when open or failed, never with an error), <code>error</code>, <code>isStarting</code>, <code>isRunning</code>, <code>changes</code> (<code>Stream&lt;void&gt;</code>, broadcast: fires when the hub opens or fails and on every peer found/ready/lost; ends with the context). Closed with the context; a close that fails on a hub that never opened is not reported. Use <code>ctx.peerHub</code> for a custom provider or authenticator.</li>
+<li><strong><code>PeerJson</code></strong> (core, <code>peers/peer_json.dart</code>): <code>encode</code>, <code>decode(bytes, {maxBytes})</code> (null for malformed, non-UTF-8 or oversized input; never throws), <code>sizeOf</code>, <code>fits(value, maxBytes)</code>, <code>encodeWithin(value, maxBytes)</code> (throws <code>PeerPayloadTooLarge</code>, a <code>PeerError</code>), <code>quiet(future)</code> (a send nobody awaits), <code>label(PeerId)</code> (“laptop #3fa2”); and <code>AppMessage.jsonBody</code>. The Kit does NOT know a provider’s payload cap: the app passes the limit (Hearth: 64 KiB minus the Kit header). <strong>No <code>JsonMessage {kind, v, body}</code> envelope was built:</strong> all three apps use the Kit envelope’s own <code>kind</code> and <code>schema</code> and put only the body in the payload, so a second envelope inside the payload has no user.</li>
+<li><strong><code>VenueSession.withHoldWaiting(need, body, {required maxWait, leaseSeconds, retryEvery, renewEvery, cancel, onWaiting, onLeaseLost})</code></strong> (core). Retries a <code>doesNotFit</code> (409) refusal; retries <code>forbidden</code> (403) only while <code>holds()</code> shows this consumer still has live holds of its own; gives up after <code>maxWait</code> (counted in naps of <code>retryEvery</code>, not read from a clock) with the LAST refusal; <code>maxWait: Duration.zero</code> is <code>withHold</code>. <code>cancel</code> (a Future) ends the wait at once with <code>HoldWaitCancelled</code>; a hold granted in that instant is released. Only the refusal of the hold is retried, never an error from <code>body</code>, never <code>VenueUnavailable</code>. <code>withHold</code> now shares its post-grant part (<code>_runHeld</code>) with it; behaviour unchanged. <code>FakeVenue.refuseNext(n, {kind})</code> makes the fake refuse n times. <code>VenueRefused.plainReason</code> unwraps the daemon’s <code>error.message</code>.
+<strong>The 403 rule is a heuristic and has a known failure.</strong> The real daemon answers its per-consumer live-hold limit with 403, and also answers a missing grant or an observer token with 403, with the same code <code>forbidden</code>. A consumer that holds something and is refused 403 for lack of a grant waits <code>maxWait</code> for nothing before it gets the real refusal. <strong>Finding for the Venue project:</strong> give “over the live-hold limit” a machine-readable reason (or its own status); then drop the heuristic. Verified against the real daemon (consumer <code>calc</code>, limit 3): waits while it holds its own, is granted once one hold ends, gives up at <code>maxWait</code> with <code>forbidden</code>.</li>
+<li><strong><code>PeersIndicator</code></strong> (companion, <code>package:app_context_kit_flutter/peers.dart</code>): <code>PeersIndicator.forHandle(handle, {extra})</code> or <code>PeersIndicator(hub: hub, offlineReason:, extra:)</code>. Shows <code>"This copy: &lt;device&gt; #&lt;instance&gt;"</code>, “Peers: N”, a chip per ready copy, “(K connecting)” and, when peers are unavailable, “Peers: off (peers unavailable: …)” with an icon. One live-region Semantics sentence; words and an icon, never colour alone. Same keys and texts as the apps’ copy. <strong>It is in its own library, not the <code>app_context_kit_flutter.dart</code> barrel,</strong> because an app that still has its own <code>PeersIndicator</code> imports both and would get an ambiguous name; re-export it from the barrel (additive) once the copies are deleted.</li>
+<li><strong><code>AppJsonFile</code> / <code>AppJsonRead</code> / <code>ctx.dataJson(name)</code></strong> (core): atomic write, read that tells missing from damaged, <code>quarantine()</code>. <strong><code>SessionSettings(store)</code></strong>: a <code>ConfigStore</code> wrapper whose <code>set</code> keeps the change in memory for the session while <code>config.json</code> is damaged (<code>readOnly</code> says so). Both are the apps’ <code>JsonFile</code> / <code>SessionConfig</code> under names that cannot collide with them; the migration renames call sites.</li>
+</ul>
+<h3 id="71-not-built-and-why"><a class="header" href="#71-not-built-and-why">7.1 Not built, and why</a></h3>
+<ul>
+<li><strong>Large transfer (<code>notepad/lib/kit_gaps/blob_pull.dart</code>): not built: one user.</strong> What a Kit-level chunked transfer would need, if a second app wants it: (1) the provider declares its maximum payload (<code>maxPayloadBytes</code>) and the transfer sizes parts from it, instead of the app guessing a constant; (2) a pull protocol over request/reply (the only reliable primitive today): the receiver asks for part 0, 1, 2 … one reply at a time; (3) an opaque version <code>tag</code> on every part, pinned after part 0, and a restart (bounded <code>attempts</code>) when it changes mid-way; (4) a hard <code>maxBytes</code> enforced before allocating, and a bound on the part count taken from the sender’s first reply; (5) base64 accounting: payload bytes become base64 inside the Kit’s own base64, about 1.8x on the wire (24 KiB of text is a 44 KB frame); (6) typed outcomes: gone, too large, stale, and malformed-reply (the caller counts those) versus <code>PeerError</code> for a lost or silent peer; (7) a serving side (<code>hub.serveBlob</code>) that answers parts for bytes at a given tag; (8) progress callbacks, cancel, and request deadlines per part. Also unsolved: no acknowledgement and no replay (6.1).</li>
+<li><strong>Desktop notifications (<code>stopwatch/lib/kit_gaps/notifier.dart</code>):</strong> one user, and not an App Context Kit concern (a UI toolkit or the platform).</li>
+<li><strong><code>launcher</code> gaps (<code>manifest_scan.dart</code>, <code>pid_alive.dart</code>):</strong> one user each. A scan of a source tree is not an install registry; <code>pidAliveViaKill</code> belongs with the roster (<code>RosterRecord.processAlive</code> or a control socket) and is only meaningful on the same machine and user.</li>
+</ul>
+<h2 id="8-sharing-one-context-between-a-dart-ui-and-a-rust-core"><a class="header" href="#8-sharing-one-context-between-a-dart-ui-and-a-rust-core">8. Sharing one context between a Dart UI and a Rust core</a></h2>
+<p>A Flutter app with a Rust core is one process with two runtimes. If each side opened its own context, the app would announce itself twice (two roster files, two instance ids) and two code paths would write one <code>config.json</code>. So <strong>one side opens the context and the other adopts it.</strong></p>
+<ul>
+<li><strong>The rule.</strong> The side that opened the context (normally the Dart UI: <code>AppContext.open</code>, or <code>AppContextKit.run</code> in Flutter) is the <strong>owner</strong>. It hands the other side a <strong>snapshot</strong>. The other side is the <strong>adopter</strong>: it calls <code>AppContext::adopt(&amp;snapshot)</code> (Rust) and does not open a context of its own. An adopter <strong>does not announce</strong>: no roster entry, no heartbeat, no Venue session, no peers.</li>
+<li><strong>One owner per file.</strong> The owner owns <code>config.json</code> and the roster entry. The adopter only <em>reads</em> settings (the Rust crate’s <code>ReadOnlySettings</code> refuses every write) and owns the files it creates under <code>data</code> and <code>state</code>. It may create directories under those two and under no other. If the Rust core needs a setting changed, it asks the owner; the owner writes it.</li>
+<li><strong>The snapshot</strong> is JSON, produced by <code>AppContext.snapshot()</code> (Dart) or <code>AppContext::snapshot()</code> (Rust):</li>
+</ul>
+<pre><code class="language-json">{ "schema": 1, "appId": "com.slashbuilder.demo.notes-rust", "instance": "0a1b2c3d", "mode": "real", "scratch": false,
+  "dirs": { "data": "/abs/data", "config": "/abs/config", "state": "/abs/state", "cache": "/abs/cache", "runtime": "/abs/runtime" },
+  "roster": "/abs/roster" }
+</code></pre>
+<p><code>instance</code> is the owner’s 8-hex-digit instance id; the adopter has none of its own. <code>mode</code> is <code>real</code> or <code>mock</code>. Every path is absolute (a relative <code>APP_CONTEXT_SCRATCH</code> is made absolute by the owner). The snapshot has no secrets (no Venue token, no environment) and no file handles; it is a copy taken at one moment, not a live view.</p>
+<ul>
+<li><strong>Parsing is strict.</strong> First failure only, in this order: <code>not-json</code>, <code>not-object</code>, <code>unknown-schema</code> (any <code>schema</code> other than the number 1; a missing <code>schema</code> is <code>missing-field</code>), <code>missing-field</code> (the shape’s order; nested ones are dotted, <code>dirs.data</code>), <code>unknown-field</code> (the schema is the only versioning: an addition bumps it), <code>bad-field</code> (wrong type or pattern: <code>appId</code> is reverse-DNS, <code>instance</code> is <code>^[0-9a-f]{8}$</code>, <code>mode</code> is <code>real</code> or <code>mock</code>, <code>scratch</code> is a bool, a path is a non-empty string), then <code>relative-path</code>. A path is absolute by its own syntax on any host: <code>/x</code>, <code>\\server\share</code>, <code>C:\x</code>, <code>C:/x</code>.</li>
+<li><strong>Fixtures.</strong> <code>conformance/snapshot_cases.json</code> holds snapshots written by the Dart test <code>snapshot_test.dart</code> (real contexts, except the Windows shape, which the host cannot open), each with the inputs it came from; Rust adopts each and asserts that its own <code>resolve</code> over those inputs gives the same directories, and the same instance. <code>conformance/snapshot_negative_cases.json</code> lists snapshots that must be refused, with the error code and field. They are separate from the 61 resolution and manifest cases.</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../30-kits/app-context-kit/design-decisions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../30-kits/app-context-kit/examples/dart_cli.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../30-kits/app-context-kit/design-decisions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../30-kits/app-context-kit/examples/dart_cli.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../../mark-09e88c2c.min.js"></script>
+        <script src="../../../searcher-09f2665d.js"></script>
+
+        <script src="../../../clipboard-1626706a.min.js"></script>
+        <script src="../../../highlight-abc7f01d.js"></script>
+        <script src="../../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../../mermaid-init-5853b93b.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,869 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Coordination guide: copies of one app talking to each other - The Kit Book</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-e0dd22bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-ce6d682b.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kit Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book/edit/main/book/30-kits/app-context-kit/coordination-guide.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <!-- Generated by tools/pull-docs.py from app-context-kit at 4797e81 (docs/COORDINATION-GUIDE.md). Do not edit by hand: edit it in the Kit, then run make docs-pull. -->
+<h1 id="coordination-guide-copies-of-one-app-talking-to-each-other"><a class="header" href="#coordination-guide-copies-of-one-app-talking-to-each-other">Coordination guide: copies of one app talking to each other</a></h1>
+<blockquote>
+<p>Reference page pulled from app-context-kit at commit 4797e81. Edit it in the Kit, not here.</p>
+</blockquote>
+<p>This guide is for a developer who wants two running copies of the same app to find each other, agree on who is there, and exchange messages. It covers the peer layer of the App Context Kit: what the Kit does, what you write, how to start it, and what it does not do.</p>
+<p><strong>Status, so you know what you are reading.</strong> The peer layer is implemented in the Dart core (<code>dart/app_context_kit/lib/src/peers/</code>). Two providers are built: an in-memory fake network (tests and mock mode) and a loopback provider (copies on one machine). No provider for a real network exists yet, and the Rust implementation has no peer code. Every example in this guide that has a file under <a href="https://github.com/slash-builder/app-context-kit/tree/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination"><code>examples/coordination/</code></a> runs as a test; the commands are in <a href="#run-the-examples">Run the examples</a>.</p>
+<p>Contents: <a href="#1-the-model">the model</a> · <a href="#2-the-scope-key">the scope key</a> · <a href="#3-the-hook-five-jobs">the hook</a> · <a href="#4-starting-a-hub">starting a hub</a> · <a href="#5-the-hub-api">the hub API</a> · <a href="#6-providers">providers</a> · <a href="#7-the-envelope">the envelope</a> · <a href="#8-ordering-and-loss">ordering and loss</a> · <a href="#9-delivery">delivery</a> · <a href="#10-backpressure">backpressure</a> · <a href="#11-peerjson-and-size-limits">PeerJson and size limits</a> · <a href="#12-testing-coordination">testing</a> · <a href="#13-three-worked-patterns">three worked patterns</a> · <a href="#14-what-the-hook-does-not-give-you">what the hook does not give you</a> · <a href="#15-real-transports">real transports</a></p>
+<h2 id="1-the-model"><a class="header" href="#1-the-model">1. The model</a></h2>
+<p>The Kit finds, authenticates, connects and routes. Your app supplies a hook and decides what the messages mean. The Kit never reads the payload.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>The Kit does</th><th>Your app does</th></tr>
+</thead>
+<tbody>
+<tr><td>Finds other copies in the same scope (account and app id)</td><td>Names the conversation (<code>channel</code>)</td></tr>
+<tr><td>Opens a link to each one and runs a handshake</td><td>Says what to tell a new peer (<code>hello</code>)</td></tr>
+<tr><td>Checks the peer is who it claims to be (through an authenticator)</td><td>Decides whether to talk to it (<code>admit</code>)</td></tr>
+<tr><td>Keeps the list of peers and tells you when one is found, ready or lost</td><td>Reacts to that list changing (<code>onPeer</code>)</td></tr>
+<tr><td>Delivers each peer’s messages to you once, in order, and reports a gap as a jump in <code>seq</code></td><td>Decides what a message means, and what to do about a missing one (<code>onMessage</code>)</td></tr>
+<tr><td>Correlates a request with its reply and fails it on timeout or loss</td><td>Defines the message kinds, the payload format and its version</td></tr>
+<tr><td>Bounds the outgoing queue and fails a send instead of dropping</td><td>Decides what is safe to drop, coalesce or retry</td></tr>
+</tbody>
+</table>
+</div>
+<p>“Never reads the payload” is literal. A message carries a <code>kind</code> string and a <code>schema</code> integer that you choose, and an opaque byte payload. The Kit routes on its own header (see <a href="#7-the-envelope">the envelope</a>) and hands you the bytes.</p>
+<p>You get one hub per channel. A hub is one <code>PeerHub</code> object that owns the links to every other copy of your app. An app with several unrelated conversations either starts one hub per conversation or writes one hook that routes by <code>kind</code> prefix (a sample is <code>MuxHook</code> in <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/test/peers/sample_hooks.dart"><code>sample_hooks.dart</code></a>).</p>
+<h2 id="2-the-scope-key"><a class="header" href="#2-the-scope-key">2. The scope key</a></h2>
+<p>Two copies are peers only if they have the same <strong>account</strong> and the same <strong>app id</strong>. Anything else is never offered to your hook and never admitted.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Part</th><th>Where it comes from</th></tr>
+</thead>
+<tbody>
+<tr><td>App id</td><td><code>id</code> in <code>app.json</code> (the manifest)</td></tr>
+<tr><td>Account</td><td><code>APP_CONTEXT_ACCOUNT</code>, else <code>account</code> in the app’s <code>config.json</code>, else <code>local</code></td></tr>
+<tr><td>Device</td><td><code>APP_CONTEXT_DEVICE</code>, else <code>device</code> in <code>config.json</code>; if neither exists the Kit generates <code>d-</code> plus 8 hex digits and saves it</td></tr>
+<tr><td>Instance</td><td>8 random hex digits, drawn each time the app opens (<code>ctx.instance</code>)</td></tr>
+</tbody>
+</table>
+</div>
+<p>A peer is identified by <code>(device, instance)</code>, the <code>PeerId</code>. Two copies on one device are two peers. <code>local</code> is the account of a machine that has no household account; it is a placeholder until something issues a real one.</p>
+<p>Scope is checked in three places, so a bug in one does not open the others:</p>
+<ul>
+<li>The provider does not list candidates from another scope and refuses to dial or accept one. The loopback provider also keeps one directory per account and app, so it never reads another scope’s files.</li>
+<li>The hub drops a candidate or an incoming link whose claimed scope differs from its own, and counts it in <code>hub.stats.scopeViolations</code>.</li>
+<li>Every frame carries <code>account</code> and <code>app</code> in its header. A frame with a different scope cuts the link.</li>
+</ul>
+<p><a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/ping_test.dart"><code>ping_test.dart</code></a> checks this: a copy of the app, a copy with another app id and a copy with another account share one network, and none of the three sees any peer.</p>
+<p><strong>Scope is a name, not a credential.</strong> The default authenticator (<code>OpenAuthenticator</code>) accepts every peer in scope, and no per-app credential exists yet. Treat the scope key as a way to keep copies of different apps and accounts apart, not as access control. The authenticator is the seam where a real check goes; see <a href="#14-what-the-hook-does-not-give-you">per-app credentials</a>. A security review is pending; details withheld.</p>
+<p>Identifier rules for the loopback provider: account, app, device and instance become directory and file names, so they may contain only letters, digits, <code>.</code>, <code>_</code> and <code>-</code>, may not start with <code>.</code>, and may be at most 128 characters. Anything else makes the hub fail to open, which <code>ctx.startPeers</code> reports in <code>handle.error</code>.</p>
+<h2 id="3-the-hook-five-jobs"><a class="header" href="#3-the-hook-five-jobs">3. The hook: five jobs</a></h2>
+<p>A hook is a subclass of <code>AppCoordination</code> (<a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/coordination.dart"><code>coordination.dart</code></a>). It has five jobs and one convenience:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>#</th><th>Member</th><th>When the Kit calls it</th><th>What you return or do</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td><code>String get channel</code></td><td>Once, when the hub is built</td><td>The conversation this hook owns, such as <code>"default"</code> or <code>"game"</code>. A peer on another channel is rejected at the handshake</td></tr>
+<tr><td>2</td><td><code>Object? hello()</code></td><td>Each time a link opens</td><td>Anything JSON-encodable, or null. Describe your current state (a version, a digest, a protocol number). The Kit carries it and never reads it</td></tr>
+<tr><td>3</td><td><code>FutureOr&lt;Admit&gt; admit(Peer, Object? theirHello)</code></td><td>After the Kit has checked identity, once per link</td><td><code>Admit.accept()</code>, <code>Admit.acceptReadOnly()</code> or <code>Admit.reject(reason)</code>. May be async; the link waits</td></tr>
+<tr><td>4</td><td><code>void onPeer(Peer, PeerChange)</code></td><td>A peer is <code>found</code>, <code>ready</code> or <code>lost</code></td><td>React. Runs before the same event appears on <code>hub.changes</code></td></tr>
+<tr><td>5</td><td><code>void onMessage(Peer from, AppMessage)</code></td><td>A message arrives from a ready peer</td><td>Your meaning lives here. It is synchronous: queue async work yourself</td></tr>
+<tr><td></td><td><code>void attach(PeerHub)</code></td><td>Once, from <code>hub.start()</code></td><td>Keep the hub so you can call <code>send</code>, <code>broadcast</code>, <code>request</code> and <code>reply</code>. The default does nothing</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>acceptReadOnly</code> only sets <code>peer.readOnly</code>. The Kit does not filter anything for a read-only peer, and the other side is not told. You decide what read-only means, for example by ignoring that peer’s write messages in <code>onMessage</code>.</p>
+<p>A hook must not throw. If it does, the hub catches the error, counts it in <code>hub.stats.hookErrors</code>, passes it to <code>PeerHubOptions.onHookError</code> if you set one, and carries on.</p>
+<h3 id="a-complete-hook-ping"><a class="header" href="#a-complete-hook-ping">A complete hook: “ping”</a></h3>
+<p>This is the whole of a working app’s coordination code. Any copy can ping another, and the other answers with its device name. It is <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/lib/ping_hook.dart"><code>examples/coordination/lib/ping_hook.dart</code></a>, unchanged.</p>
+<pre><code class="language-dart">import 'dart:async';
+
+import 'package:app_context_kit/app_context_kit.dart';
+
+/// A complete coordination hook: the five jobs, and nothing else.
+///
+/// "ping": any copy can ask another copy "are you there?", and the other copy answers with its device name.
+class PingHook extends AppCoordination {
+  PeerHub? hub;
+
+  /// Peer changes as the Kit reported them, e.g. "ready desktop".
+  final List&lt;String&gt; events = [];
+
+  /// Messages this hook did not understand. A hook counts these instead of throwing.
+  int ignored = 0;
+
+  // 1. Which conversation inside the app this hook owns.
+  @override
+  String get channel =&gt; 'ping';
+
+  // The Kit hands the hook its hub once, from PeerHub.start().
+  @override
+  void attach(PeerHub hub) =&gt; this.hub = hub;
+
+  // 2. What to tell a peer when a link opens. Any JSON-encodable value.
+  @override
+  Object? hello() =&gt; {'proto': 1};
+
+  // 3. Whether to talk to this peer, given what it said in its hello.
+  @override
+  FutureOr&lt;Admit&gt; admit(Peer peer, Object? theirHello) =&gt;
+      theirHello is Map &amp;&amp; theirHello['proto'] == 1
+          ? const Admit.accept()
+          : const Admit.reject('ping protocol 1 only');
+
+  // 4. A peer was found, became ready, or was lost.
+  @override
+  void onPeer(Peer peer, PeerChange change) =&gt;
+      events.add('${change.name} ${peer.id.device}');
+
+  // 5. The app's meaning lives here. Answer a ping; count anything else.
+  @override
+  void onMessage(Peer from, AppMessage message) {
+    if (message.kind == 'ping' &amp;&amp; message.schema == 1 &amp;&amp; message.requestId != null) {
+      PeerJson.quiet(hub!.reply(message, PeerJson.encode({'pong': hub!.device}), schema: 1));
+    } else {
+      ignored++;
+    }
+  }
+
+  /// Ask [peer] if it is there. Returns the name it answered with, or null for an answer in the wrong shape.
+  /// Throws a PeerError (PeerTimeout, PeerLost, ...) if there is no answer.
+  Future&lt;String?&gt; ping(Peer peer) async {
+    final reply = await hub!.request(peer, PeerJson.encode({'n': 1}), kind: 'ping', schema: 1);
+    final body = reply.jsonBody;
+    return body is Map &amp;&amp; body['pong'] is String ? body['pong'] as String : null;
+  }
+}
+</code></pre>
+<p>And this is how two copies of it run in one test process. Each copy is an <code>AppContext</code> in mock mode; they share one <code>FakePeerNetwork</code>. The manifest must list <code>"peers"</code> in <code>kits</code>, or <code>ctx.startPeers</code> throws <code>KitNotDeclared</code>. From <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/ping_test.dart"><code>ping_test.dart</code></a>:</p>
+<pre><code class="language-dart">/// The manifest must list "peers", or ctx.startPeers throws KitNotDeclared.
+const manifestJson = {
+  'id': 'dev.example.ping',
+  'name': 'Ping',
+  'version': '0.1.0',
+  'kits': ['peers'],
+};
+</code></pre>
+<pre><code class="language-dart">/// One copy of the app: its own AppContext, in mock mode, on the shared fake network.
+Future&lt;({AppContext ctx, PingHook hook, PeersHandle peers})&gt; copy(
+  String device,
+  FakePeerNetwork network, {
+  Map&lt;String, Object?&gt; manifest = manifestJson,
+  String account = 'home',
+}) async {
+  final ctx = await AppContext.open(
+    AppManifest.fromJson(manifest),
+    env: {
+      'APP_CONTEXT_MODE': 'mock',
+      'APP_CONTEXT_SCRATCH': '${scratch.path}/$device',
+      'APP_CONTEXT_DEVICE': device,
+      'APP_CONTEXT_ACCOUNT': account,
+    },
+    platform: 'linux',
+    home: '/unused',
+    announce: false,
+  );
+  final hook = PingHook();
+  final peers = ctx.startPeers(hook, network: network);
+  await peers.started;
+  return (ctx: ctx, hook: hook, peers: peers);
+}
+</code></pre>
+<pre><code class="language-dart">test('two copies of one app find each other, ping, and get a pong', () async {
+  final network = FakePeerNetwork();
+  final laptop = await copy('laptop', network);
+  final desktop = await copy('desktop', network);
+
+  expect(await until(() =&gt; laptop.peers.hub!.readyPeers.isNotEmpty &amp;&amp; desktop.peers.hub!.readyPeers.isNotEmpty), isTrue);
+
+  final desktopFromLaptop = laptop.peers.hub!.readyPeers.single;
+  expect(desktopFromLaptop.id.device, 'desktop');
+  expect(await laptop.hook.ping(desktopFromLaptop), 'desktop');
+
+  final laptopFromDesktop = desktop.peers.hub!.readyPeers.single;
+  expect(await desktop.hook.ping(laptopFromDesktop), 'laptop');
+
+  // The hook heard found, then ready, in that order, on both sides.
+  expect(laptop.hook.events, ['found desktop', 'ready desktop']);
+  expect(desktop.hook.events, ['found laptop', 'ready laptop']);
+  expect(laptop.hook.ignored + desktop.hook.ignored, 0);
+
+  await laptop.ctx.close();
+  await desktop.ctx.close();
+});
+</code></pre>
+<p><code>until(...)</code> is a small polling helper defined at the top of that file. Discovery and the handshake are asynchronous, so the test waits for <code>readyPeers</code> instead of sleeping.</p>
+<h3 id="run-the-examples"><a class="header" href="#run-the-examples">Run the examples</a></h3>
+<pre><code class="language-sh">cd docs/examples/coordination
+dart pub get
+dart test
+</code></pre>
+<p>The package depends on <code>app_context_kit</code> by path and on nothing else except <code>test</code>. It contains three test files: <code>ping_test.dart</code> (the example above), <code>hub_behaviour_test.dart</code> (tests for the behavioural claims in this guide: sequence numbers, loss, outbox, size caps, timeouts, admit and reject, hello) and <code>loopback_test.dart</code> (two copies over real TCP and announcement files).</p>
+<h2 id="4-starting-a-hub"><a class="header" href="#4-starting-a-hub">4. Starting a hub</a></h2>
+<p>Declare the Kit in the manifest, then call <code>ctx.startPeers</code> with your hook.</p>
+<pre><code class="language-json">{ "id": "dev.example.ping", "name": "Ping", "version": "0.1.0", "kits": ["peers"] }
+</code></pre>
+<p><code>ctx.startPeers(hook, {network, options})</code> builds a hub and starts it. It returns a <code>PeersHandle</code> at once, before the hub has opened, and it does not throw for a runtime condition. If the peers directory cannot be created or the provider fails to open, the handle carries the reason and your app keeps working alone.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th><code>PeersHandle</code> member</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>hub</code></td><td>The <code>PeerHub</code>, or null when peers are unavailable. Non-null while the hub is still opening; set back to null (and the hub closed) if opening fails. <code>handle.hub?.broadcast(...)</code> is always safe</td></tr>
+<tr><td><code>started</code></td><td>A future that completes when the hub is open or has failed. It never completes with an error</td></tr>
+<tr><td><code>error</code></td><td><code>"peers unavailable: ..."</code>, or null</td></tr>
+<tr><td><code>isStarting</code>, <code>isRunning</code></td><td><code>isRunning</code> is true when the hub is open and there is no error</td></tr>
+<tr><td><code>changes</code></td><td>A broadcast <code>Stream&lt;void&gt;</code>. Fires when the hub opens or fails and on every peer found, ready or lost. Ends when the context closes</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>KitNotDeclared</code> is the one exception that <code>startPeers</code> does throw: forgetting to list <code>"peers"</code> is a bug in the app, not something that happens to a person. The hub is closed with the context (<code>ctx.onClose</code>), so you do not close it yourself.</p>
+<p>The provider is chosen from the mode, in this order:</p>
+<ol>
+<li>In mock mode (<code>&lt;PREFIX&gt;_MODE=mock</code> or <code>APP_CONTEXT_MODE=mock</code>): the <code>FakePeerNetwork</code> you pass as <code>network:</code>, or a private one if you pass none. A private network contains only your own context, so <strong>to have two contexts find each other in a test, pass the same <code>FakePeerNetwork</code> to both.</strong> Apps do this by taking a <code>network:</code> parameter in their own production code; the demo apps’ constructors show the shape.</li>
+<li>Otherwise: a <code>LoopbackProvider</code> over the peers directory.</li>
+</ol>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Variable</th><th>Effect</th></tr>
+</thead>
+<tbody>
+<tr><td><code>APP_CONTEXT_ACCOUNT</code></td><td>The account half of the scope key</td></tr>
+<tr><td><code>APP_CONTEXT_DEVICE</code></td><td>The device half of the peer id</td></tr>
+<tr><td><code>APP_CONTEXT_PEERS_DIR</code></td><td>Where loopback announcements are written. Default: the roster directory with <code>-peers</code> appended (for example <code>/tmp/app-context-roster-peers</code>)</td></tr>
+<tr><td><code>APP_CONTEXT_MODE</code>, <code>&lt;PREFIX&gt;_MODE</code></td><td><code>mock</code> selects the fake network</td></tr>
+<tr><td><code>APP_CONTEXT_SCRATCH</code></td><td>Puts every app directory and the roster under one directory. Note that the default peers directory moves with the roster, so two copies with different scratch directories need a shared <code>APP_CONTEXT_PEERS_DIR</code> to find each other</td></tr>
+</tbody>
+</table>
+</div>
+<p>Building a hub writes a generated <code>device</code> value into the app’s <code>config.json</code> the first time, unless <code>APP_CONTEXT_DEVICE</code> is set. Two copies that share a config directory therefore share a device id and differ only by instance. Give each copy its own <code>APP_CONTEXT_DEVICE</code>, or its own config directory.</p>
+<p>In a Flutter app, <code>PeersIndicator.forHandle(handle)</code> from <code>package:app_context_kit_flutter/app_context_kit_flutter.dart</code> shows “This copy: laptop #3fa2”, the number of peers, a chip for each ready copy, and “Peers: off (reason)” when <code>handle.error</code> is set. It follows <code>handle.changes</code> itself.</p>
+<p><code>ctx.peerHub(hook, {provider, network, authenticator, options})</code> is the lower-level call. It builds the hub and registers it for closing with the context, but does not start it: you <code>await hub.start()</code> yourself and handle the failure. Use it when you need your own provider, a custom authenticator, or a specific <code>LoopbackProvider</code> configuration. It also throws <code>KitNotDeclared</code> when <code>"peers"</code> is missing.</p>
+<h2 id="5-the-hub-api"><a class="header" href="#5-the-hub-api">5. The hub API</a></h2>
+<p><code>PeerHub</code> (<a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/hub.dart"><code>hub.dart</code></a>) is the management interface.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Member</th><th>What it does</th></tr>
+</thead>
+<tbody>
+<tr><td><code>start()</code></td><td>Opens the provider and starts finding peers. Calls <code>hook.attach(this)</code> first. <code>startPeers</code> calls it for you</td></tr>
+<tr><td><code>peers</code></td><td>A snapshot list of every peer that is found, connecting or ready. Lost and rejected peers are not in it</td></tr>
+<tr><td><code>readyPeers</code></td><td>The ready subset of <code>peers</code></td></tr>
+<tr><td><code>changes</code></td><td>A broadcast <code>Stream&lt;PeerEvent&gt;</code>: every found, ready and lost, in order, after your hook’s <code>onPeer</code> has seen it</td></tr>
+<tr><td><code>send(peer, payload, {kind, schema})</code></td><td>Queues one message. Completes when the transport has taken the frame. See <a href="#9-delivery">delivery</a></td></tr>
+<tr><td><code>broadcast(payload, {kind, schema})</code></td><td><code>send</code> to every ready peer. Returns a <code>BroadcastResult</code> with <code>sent</code> and a per-peer <code>failed</code> map; one bad peer does not throw</td></tr>
+<tr><td><code>request(peer, payload, {kind, schema, timeout})</code></td><td>Sends a request and returns the reply as an <code>AppMessage</code>. Default timeout 5 s</td></tr>
+<tr><td><code>reply(requestMessage, payload, {schema})</code></td><td>Answers a message that arrived with a <code>requestId</code></td></tr>
+<tr><td><code>close()</code></td><td>Sends <code>kit.bye</code> to ready peers, closes every link and the provider. Idempotent</td></tr>
+<tr><td><code>id</code>, <code>identity</code>, <code>device</code>, <code>instance</code>, <code>stats</code>, <code>isClosed</code></td><td>Who this copy is, and counters (<code>duplicatesDropped</code>, <code>gapsSkipped</code>, <code>malformedFrames</code>, <code>scopeViolations</code>, <code>protocolViolations</code>, <code>droppedBeforeReady</code>, <code>hookErrors</code>, <code>linksOpened</code>, <code>dialFailures</code>)</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>kind</code> defaults to <code>"msg"</code> and <code>schema</code> to <code>0</code>. <code>kind</code> is 1 to 256 characters and may not start with <code>kit.</code>; <code>schema</code> is <code>0</code> to 2,147,483,647. A bad value is an <code>ArgumentError</code>.</p>
+<h3 id="peers-and-their-states"><a class="header" href="#peers-and-their-states">Peers and their states</a></h3>
+<p>A <code>Peer</code> is read-only to you. Its <code>state</code> is one of <code>found</code>, <code>connecting</code>, <code>ready</code>, <code>rejected</code> or <code>lost</code>. <code>found</code> means the provider announced it; <code>connecting</code> means a link is being opened or the handshake is running; <code>ready</code> means both sides admitted each other. <code>peer.hello</code> is the decoded hello once received, and <code>peer.rejectReason</code> and <code>peer.lostReason</code> say why a peer ended (<code>goodbye</code>, <code>link closed</code>, <code>hub closed</code>, <code>withdrawn</code>, and others).</p>
+<p><strong>A <code>Peer</code> object is never reused.</strong> A copy that goes away and comes back is a new <code>Peer</code> with the same <code>PeerId</code>. Keep the <code>PeerId</code> if you need to find the peer again; calling <code>send</code> with a <code>Peer</code> that has been replaced throws <code>PeerNotAvailable</code>. A rejected peer is not redialed until the provider withdraws it and announces it again.</p>
+<p>A rejection shows up as a <code>lost</code> event on both sides, with <code>peer.state == rejected</code>. <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/hub_behaviour_test.dart"><code>hub_behaviour_test.dart</code></a> checks it: one side’s <code>admit</code> rejects with <code>"proto 2 only"</code>, and the other side’s peer ends with <code>rejectReason == 'rejected by peer: proto 2 only'</code>.</p>
+<h3 id="errors"><a class="header" href="#errors">Errors</a></h3>
+<p>All failures in this layer are subclasses of <code>PeerError</code>.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Error</th><th>Raised when</th></tr>
+</thead>
+<tbody>
+<tr><td><code>PeerNotAvailable</code></td><td>The peer is unknown, rejected, lost, or a stale <code>Peer</code> object</td></tr>
+<tr><td><code>PeerLost</code></td><td>The link ended while a message or request was outstanding</td></tr>
+<tr><td><code>PeerOutboxFull</code></td><td>The peer’s outgoing queue is full (<a href="#10-backpressure">backpressure</a>)</td></tr>
+<tr><td><code>PeerTimeout</code></td><td>A request got no reply in time</td></tr>
+<tr><td><code>PeerClosed</code></td><td>The hub is closed</td></tr>
+<tr><td><code>EnvelopeError</code></td><td>The payload is over the 1 MiB cap, or a frame is malformed</td></tr>
+<tr><td><code>PeerPayloadTooLarge</code></td><td><code>PeerJson.encodeWithin</code> found the value over your limit</td></tr>
+<tr><td><code>PeerLinkClosed</code>, <code>PeerConnectError</code>, <code>PeerScopeError</code></td><td>Provider-level: a send on a closed link, a candidate that cannot be reached, a candidate outside the scope</td></tr>
+</tbody>
+</table>
+</div>
+<p>If you call <code>send</code> without awaiting it, attach a handler or use <code>PeerJson.quiet(...)</code>. A late failure of an un-awaited future is an uncaught async error.</p>
+<h2 id="6-providers"><a class="header" href="#6-providers">6. Providers</a></h2>
+<p>The hub talks to two small interfaces, <code>PeerProvider</code> and <code>PeerLink</code> (<a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/provider.dart"><code>provider.dart</code></a>), so the same hook runs over any provider. A provider announces this copy, reports other copies in the same scope (<code>discover()</code>), dials one (<code>connect</code>), and hands over links that others dialed (<code>incoming</code>). A link is one ordered, message-framed connection: one <code>send</code> arrives as one inbound event.</p>
+<h3 id="fake-network-tests-and-mock-mode"><a class="header" href="#fake-network-tests-and-mock-mode">Fake network: tests and mock mode</a></h3>
+<p><code>FakePeerNetwork</code> (<a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/fake_network.dart"><code>fake_network.dart</code></a>) is an in-memory network. Several hubs join one network, each through its own provider. It enforces the scope key itself and lets a test change the world while it runs:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Control</th><th>Effect</th></tr>
+</thead>
+<tbody>
+<tr><td><code>latency</code>, <code>jitter</code></td><td>Delay every frame; jitter can reorder</td></tr>
+<tr><td><code>dropRate</code>, <code>duplicateRate</code></td><td>Probability that a frame is lost or delivered twice. Seeded, so a run repeats</td></tr>
+<tr><td><code>dropIf</code></td><td>A function you set, <code>(from, to, bytes) =&gt; bool</code>. Return true to drop that frame. <code>Envelope.decode(bytes)</code> lets you pick a victim by kind or content</td></tr>
+<tr><td><code>partition(a, b)</code>, <code>isolate(a)</code>, <code>heal(...)</code>, <code>healAll()</code></td><td>Cut peers from each other, and undo it</td></tr>
+<tr><td><code>dropLinks(a, b)</code></td><td>Break the links but keep discovery: a flaky connection rather than a partition</td></tr>
+<tr><td><code>deliveries</code></td><td>A record of every frame that reached a link end, so a test can prove what did not arrive</td></tr>
+</tbody>
+</table>
+</div>
+<p>For deterministic time, build a <code>PeerHub</code> directly with a <code>ManualPeerClock</code> (see <code>World</code> in <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/test/peers/support.dart"><code>support.dart</code></a>). <code>ctx.startPeers</code> and <code>ctx.peerHub</code> do not take a clock, so hubs they build run on real time.</p>
+<h3 id="loopback-copies-on-one-machine"><a class="header" href="#loopback-copies-on-one-machine">Loopback: copies on one machine</a></h3>
+<p><code>LoopbackProvider</code> (<a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/loopback_provider.dart"><code>loopback_provider.dart</code></a>) connects copies that run on one machine, as processes. It needs nothing but a shared directory.</p>
+<p><strong>Announcement files.</strong> Each copy listens on a TCP port on <code>127.0.0.1</code> (never a routable address; the operating system picks the port) and writes one file:</p>
+<pre><code class="language-text">&lt;peers dir&gt;/&lt;account&gt;/&lt;app id&gt;/&lt;device&gt;@&lt;instance&gt;.json
+</code></pre>
+<p>with these fields. This file was written by a run of the stopwatch probe; <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/loopback_test.dart"><code>loopback_test.dart</code></a> asserts the key set and the path.</p>
+<pre><code class="language-json">{"account":"local","app":"com.slashbuilder.demo.stopwatch","device":"desktop","instance":"48e784da","port":52367,"pid":63779,"beat":1792850562108}
+</code></pre>
+<p><code>beat</code> is a wall-clock time in epoch milliseconds. The file is written to a temporary name and renamed, so a reader never sees half a file.</p>
+<p><strong>Finding each other.</strong> Each provider reads the directory for its own account and app every 100 ms (<code>pollInterval</code>). A file naming another scope than its directory is ignored. A candidate is offered if its file is under 4 KiB, parses, has a valid port, and has a recent beat.</p>
+<p><strong>Connecting.</strong> Only the copy with the lower <code>PeerId</code> dials, so two copies never open two links. A frame on the wire is a 4-byte big-endian length followed by the envelope bytes. The dialer’s first frame is a preface naming who it claims to be; the accepting side closes the socket if the preface names another scope or is garbage, before the hub sees a link. A dial that fails is retried after 0.2 s, doubling to a 5 s ceiling, at most 10 attempts; after that the hub waits for the provider to announce the copy again.</p>
+<p><strong>Beat, staleness and reaping.</strong> This is how a crashed copy disappears.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Setting</th><th>Default</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>announceEvery</code></td><td>1 s</td><td>Each provider rewrites its own file with a fresh <code>beat</code></td></tr>
+<tr><td><code>staleAfter</code></td><td>4 s</td><td>A file whose last beat is older is not offered, and a peer already known from it is withdrawn</td></tr>
+<tr><td><code>reapAfter</code></td><td>60 s</td><td>A file whose last beat is older is deleted by whichever copy notices. A paused copy rewrites its file at its next beat</td></tr>
+</tbody>
+</table>
+</div>
+<p>A file with no <code>beat</code> (one made by hand) is aged by its modification time. The provider does not check whether the pid in the file is alive: a pid means nothing across pid namespaces, can be reused, and Dart has no portable check that does not spawn a process. The cost of the beat is one small write per second per process.</p>
+<p><strong>What a crash looks like.</strong> On a clean <code>close()</code> the copy sends <code>kit.bye</code>, deletes its file, and the other copy sees <code>lost</code> with reason <code>goodbye</code>; it is not redialed. If the process is killed, the operating system closes its sockets, so the survivor sees the link drop at once. But the file is still there and still has a recent beat, so the dead copy is still announced and the survivor sees it as <code>found</code> again. It stays that way until the beat is older than <code>staleAfter</code>. One death is therefore three events: <code>lost</code>, <code>found</code>, <code>lost</code>.</p>
+<p>Measured today on macOS (Apple silicon) by <code>dart test test/peers/two_process_test.dart -r expanded</code> in <code>dart/app_context_kit</code>, which starts real operating-system processes over one temporary directory and kills one with <code>SIGKILL</code>. Two runs, one for each side of the dial rule:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Observation after the kill</th><th>Survivor that dials</th><th>Survivor that waits to be dialed</th></tr>
+</thead>
+<tbody>
+<tr><td><code>lost</code> (“link closed”)</td><td>6 ms</td><td>7 ms</td></tr>
+<tr><td><code>found</code> for the same dead copy</td><td>at the same instant</td><td>at the same instant</td></tr>
+<tr><td>final <code>lost</code> (“withdrawn”)</td><td>3564 ms</td><td>3591 ms</td></tr>
+<tr><td>failed dial attempts</td><td>4</td><td>0</td></tr>
+<tr><td>dead copy in <code>hub.peers</code> after 12 s</td><td>gone</td><td>gone</td></tr>
+<tr><td>announcement file on disk after 12 s</td><td>still present (deleted at 60 s)</td><td>still present</td></tr>
+</tbody>
+</table>
+</div>
+<p>The same test passes in a Linux container (numbers in <a href="platforms.html#macos">Platforms</a>). Before the beat was added, the dead copy stayed <code>found</code> for ever. The <code>found</code> after the first <code>lost</code> is a known rough edge: the hub cannot yet tell “link dropped” from “gone” earlier than the beat allows. Make <code>onPeer</code> idempotent, and do not assume <code>found</code> cannot follow <code>lost</code>.</p>
+<p>Run as two macOS debug builds of the stopwatch, notepad and minesweeper apps, the second copy’s announcement appeared 257 to 439 ms after launch and a TCP link 31 to 35 ms after that. These figures are recorded in the apps’ notes; they were not re-run for this guide.</p>
+<p><strong>Tuning.</strong> <code>ctx.startPeers</code> and <code>ctx.peerHub</code> take <code>PeerHubOptions</code> but not the loopback timings. To change <code>staleAfter</code> or <code>announceEvery</code>, build the provider yourself and pass it: <code>ctx.peerHub(hook, provider: LoopbackProvider(directory: ..., staleAfter: ...))</code>.</p>
+<p><strong>Limits.</strong></p>
+<ul>
+<li>One machine, one user. The loopback provider has no encryption and no authentication. Use it for same-user coordination on one machine and for tests, not across users or trust boundaries.</li>
+<li>On macOS, a sandboxed app has its own container. The peers directory (and the roster) must be reachable by every copy: the default location is inside the container and works for copies of one app; a path outside the container leaves the app working alone. The sandbox entitlements <code>com.apple.security.network.client</code> and <code>com.apple.security.network.server</code> are both needed to dial and to listen. Flutter’s macOS template grants only <code>network.server</code> in Debug and neither in Release; the notepad and minesweeper projects add both. With only <code>server</code>, the recorded observation was that two sandboxed copies listen but never connect, with nothing in the log. <a href="platforms.html#the-app-sandbox">PLATFORMS.md</a> has the full table; the observation was not re-run for this guide.</li>
+<li>Environment variables you set in a shell reach an app you start from that shell. They do not reach one started from Finder or the Dock.</li>
+</ul>
+<h2 id="7-the-envelope"><a class="header" href="#7-the-envelope">7. The envelope</a></h2>
+<p>Every frame between two copies is one envelope: a header the Kit reads and a payload it does not (<a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/envelope.dart"><code>envelope.dart</code></a>). The wire form is UTF-8 JSON with the keys in a fixed order:</p>
+<pre><code class="language-json">{"v":1,"account":"a","app":"dev.x","channel":"default","from":{"device":"d","instance":"i"},
+ "seq":1,"kind":"msg","schema":0,"rid":7,"payload":"&lt;base64&gt;"}
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Meaning</th><th>Limits</th></tr>
+</thead>
+<tbody>
+<tr><td><code>v</code></td><td>Envelope version. A different value is rejected</td><td><code>1</code></td></tr>
+<tr><td><code>account</code>, <code>app</code></td><td>The scope key</td><td>1 to 256 characters, no control characters</td></tr>
+<tr><td><code>channel</code></td><td>The hook’s channel</td><td>same</td></tr>
+<tr><td><code>from.device</code>, <code>from.instance</code></td><td>The sender’s <code>PeerId</code></td><td>same</td></tr>
+<tr><td><code>seq</code></td><td>Sequence number, per link and direction</td><td>0 to 2^53 - 1</td></tr>
+<tr><td><code>kind</code></td><td>Message type. Yours, or a reserved <code>kit.</code> kind</td><td>1 to 256 characters</td></tr>
+<tr><td><code>schema</code></td><td>Your payload version. The Kit carries it and does not look at it</td><td>0 to 2^31 - 1</td></tr>
+<tr><td><code>rid</code></td><td>Request id. Present only on requests and replies</td><td>1 to 2^53 - 1</td></tr>
+<tr><td><code>payload</code></td><td>Your bytes, base64</td><td>at most 1,048,576 bytes before encoding</td></tr>
+</tbody>
+</table>
+</div>
+<p>Unknown extra keys are ignored, so a later version can add fields.</p>
+<p><strong>The outer cap is 1 MiB.</strong> A payload over 1,048,576 bytes is an <code>EnvelopeError</code> on send. The largest frame the decoder will look at is 1,406,296 bytes (the base64 of a full payload plus 8,192 bytes of header room). That is the Kit’s limit. A provider may carry less; see <a href="#15-real-transports">real transports</a>.</p>
+<p><strong>Reserved kinds.</strong> Kinds that start with <code>kit.</code> belong to the Kit, and your app cannot send them (<code>ArgumentError</code>). The Kit uses these:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Kind</th><th>Purpose</th></tr>
+</thead>
+<tbody>
+<tr><td><code>kit.hello</code></td><td>First frame each way: a nonce and your <code>hello()</code></td></tr>
+<tr><td><code>kit.auth</code></td><td>The authenticator’s proof over the other side’s nonce</td></tr>
+<tr><td><code>kit.ready</code></td><td>“I admitted you”</td></tr>
+<tr><td><code>kit.reject</code></td><td>“I refuse you”, with a reason of at most 256 characters</td></tr>
+<tr><td><code>kit.bye</code></td><td>Graceful close; the peer is not redialed</td></tr>
+<tr><td><code>kit.reply</code></td><td>The answer to a request</td></tr>
+</tbody>
+</table>
+</div>
+<p>An unknown <code>kit.</code> kind from a peer is ignored. <code>kit.reply</code> is consumed by the hub and completes the <code>request</code> future; it never reaches <code>onMessage</code>.</p>
+<p><strong>Request and reply.</strong> <code>request</code> gives the outgoing frame an <code>rid</code> from a per-hub counter that starts at 1. The other side’s <code>onMessage</code> sees it as <code>AppMessage.requestId</code>; <code>hub.reply(message, payload)</code> sends a <code>kit.reply</code> with the same <code>rid</code>. The hub matches replies to waiting requests by <code>(peer, rid)</code>, so the Kit’s correlation does not depend on a transport’s own message ids. A reply that is late or unknown is ignored. A request that times out cancels its frame if the frame has not been written yet.</p>
+<h2 id="8-ordering-and-loss"><a class="header" href="#8-ordering-and-loss">8. Ordering and loss</a></h2>
+<p><code>seq</code> numbers the frames in one direction of one link. It starts at 1 on every new link, so a reconnect restarts it. <strong>It counts the Kit’s own frames too.</strong> <code>kit.hello</code>, <code>kit.auth</code> and <code>kit.ready</code> take 1, 2 and 3, so the first message your app receives from a peer has <code>seq</code> 4. A <code>kit.reply</code> or <code>kit.bye</code> takes a number as well.</p>
+<p>The hub delivers each peer’s frames to you in <code>seq</code> order, once:</p>
+<ul>
+<li>A frame that arrives early waits in a reorder buffer of 16 frames.</li>
+<li>A gap that is not filled within 500 ms, or a buffer that overflows, is skipped. The hub counts it in <code>hub.stats.gapsSkipped</code> and delivers what it has.</li>
+<li>A frame at or below the last delivered <code>seq</code> is a duplicate or a late arrival after a skip, and is dropped (<code>duplicatesDropped</code>).</li>
+<li>A peer that floods more than 256 undelivered frames on one link has the link dropped.</li>
+</ul>
+<p><strong>You see loss as a jump in <code>AppMessage.seq</code>.</strong> <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/hub_behaviour_test.dart"><code>hub_behaviour_test.dart</code></a> drops the second of three messages on the fake network. The receiver gets two:</p>
+<pre><code class="language-dart">expect(seqs, [4, 6]);
+</code></pre>
+<p>A jump says that one or more frames from that peer were skipped. It cannot say which: the lost frame might have been a reply. If you need to detect a lost message precisely, put your own counter or version in the payload.</p>
+<p>Ordering is per sender. The Kit gives you no order between messages from two different peers.</p>
+<h2 id="9-delivery"><a class="header" href="#9-delivery">9. Delivery</a></h2>
+<p>Delivery is best effort.</p>
+<ul>
+<li><code>send</code> completes when the <strong>transport took the frame</strong>, not when the peer received or applied it. <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/hub_behaviour_test.dart"><code>hub_behaviour_test.dart</code></a> sets the fake network to drop every frame and shows that <code>send</code> still completes without error.</li>
+<li>If the link ends before a queued frame is written, the <code>send</code> future fails with <code>PeerLost</code>. Queued messages are dropped when the peer is lost.</li>
+<li>There is no retry and no replay. A message sent before a peer exists is not kept for it: a <code>broadcast</code> with nobody ready returns an empty <code>sent</code> list, and a copy that arrives later never sees it.</li>
+<li><code>send</code> to a peer that is found or connecting is queued and written once the peer is ready. App frames from a peer are not delivered to you before it is ready.</li>
+<li><code>request</code>/<code>reply</code> is the one acknowledgement the Kit has: a reply proves the other hook ran. A request that gets no reply fails with <code>PeerTimeout</code> (the other hook may still have run).</li>
+</ul>
+<p>If you need “it was applied”, build it from a reply. The minesweeper and notepad apps did; the stopwatch accepted a possible duplicate instead. See <a href="#13-three-worked-patterns">the patterns</a>.</p>
+<h2 id="10-backpressure"><a class="header" href="#10-backpressure">10. Backpressure</a></h2>
+<p>Each peer has an outgoing queue of messages not yet handed to the transport. It holds at most 256 messages or 8 MiB of payload (<code>PeerHubOptions.outboxMessages</code>, <code>outboxBytes</code>). When it is full, <code>send</code>, <code>request</code> and <code>reply</code> fail with <code>PeerOutboxFull</code> on the returned future, and <code>broadcast</code> reports that peer in <code>failed</code>. The Kit does not drop an older message to make room, because only your app knows what is safe to drop.</p>
+<p>What to do depends on the message. For state (“the current note”, “the timer”), send the newest value and let <code>PeerOutboxFull</code> mean “skip this one; the next change carries the state anyway”. For events that all matter, await each send before the next. <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/hub_behaviour_test.dart"><code>hub_behaviour_test.dart</code></a> sets <code>outboxMessages: 2</code>, sends ten messages without awaiting, and counts the <code>PeerOutboxFull</code> failures.</p>
+<h2 id="11-peerjson-and-size-limits"><a class="header" href="#11-peerjson-and-size-limits">11. PeerJson and size limits</a></h2>
+<p>Apps that speak JSON need the same few helpers, so they are in the Kit (<code>PeerJson</code>, <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/peer_json.dart"><code>peer_json.dart</code></a>):</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Helper</th><th>What it does</th></tr>
+</thead>
+<tbody>
+<tr><td><code>PeerJson.encode(value)</code></td><td>UTF-8 JSON bytes</td></tr>
+<tr><td><code>PeerJson.decode(bytes, {maxBytes})</code></td><td>The decoded value, or null for malformed, non-UTF-8 or oversized input. Never throws, so hostile input cannot escape <code>onMessage</code></td></tr>
+<tr><td><code>message.jsonBody</code></td><td><code>decode(message.payload)</code></td></tr>
+<tr><td><code>PeerJson.sizeOf(value)</code>, <code>fits(value, maxBytes)</code></td><td>Size checks before sending</td></tr>
+<tr><td><code>PeerJson.encodeWithin(value, maxBytes)</code></td><td>Encode, or throw <code>PeerPayloadTooLarge</code> (a <code>PeerError</code>)</td></tr>
+<tr><td><code>PeerJson.quiet(future)</code></td><td>A send nobody awaits: failures are swallowed. Use it for state you resend anyway</td></tr>
+<tr><td><code>PeerJson.label(peerId)</code></td><td><code>"laptop #3fa2"</code>: the device and the first four characters of the instance</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>decode</code> returns null both for malformed input and for the JSON literal <code>null</code>. Send an object (<code>{"v": 1}</code>) rather than a bare value when you must tell “nothing” from “malformed”.</p>
+<p><strong>The Kit does not know your provider’s payload limit.</strong> You pass it. The fake and loopback providers carry up to the 1 MiB envelope cap; a Hearth transport would carry 64 KiB minus the Kit’s header. If your app may run on a smaller transport, size to the smaller one with <code>fits</code> or <code>encodeWithin</code>. Keep the hello small as well: it travels in one frame like any other message, so carry a version or a digest, not the data.</p>
+<p>There is no second envelope inside the payload. The Kit envelope already has <code>kind</code> and <code>schema</code>, so switch on <code>message.kind</code>, check <code>message.schema</code>, then read the body with <code>message.jsonBody</code>. The three coordinating demo apps do.</p>
+<h2 id="12-testing-coordination"><a class="header" href="#12-testing-coordination">12. Testing coordination</a></h2>
+<p>Run two copies in one process. Open two <code>AppContext</code>s in mock mode (<code>APP_CONTEXT_MODE=mock</code>), give each its own <code>APP_CONTEXT_DEVICE</code>, call <code>ctx.startPeers(hook, network: network)</code> with one shared <code>FakePeerNetwork</code>, wait for <code>readyPeers</code>, and drive the hooks. The example in <a href="#3-the-hook-five-jobs">section 3</a> is this setup. The demo apps use it for their hook tests, including a hostile peer that sends malformed JSON, wrong types and an unknown schema, and tests that cut the network with <code>partition</code>/<code>heal</code>.</p>
+<p>For tests that depend on timing (reorder timeout, request timeout, redial backoff), build the <code>PeerHub</code> directly with a <code>ManualPeerClock</code> so the test controls time. That is how the Kit’s own tests in <code>dart/app_context_kit/test/peers/</code> work. For a real process boundary, <code>two_process_test.dart</code> starts operating-system processes over a shared temporary directory.</p>
+<p>Count what your hook ignores. The demo hooks keep an <code>ignored</code> counter, and their tests assert it after sending garbage.</p>
+<h2 id="13-three-worked-patterns"><a class="header" href="#13-three-worked-patterns">13. Three worked patterns</a></h2>
+<p>The three demo apps that use peers (stopwatch, notepad and minesweeper, in The Kit Book) each used the hook for a different kind of meaning. The snippets below are copied from their code.</p>
+<h3 id="a-signal-the-timer-finished-stopwatch"><a class="header" href="#a-signal-the-timer-finished-stopwatch">A signal: “the timer finished” (stopwatch)</a></h3>
+<p>The stopwatch app shares one countdown between copies. This pattern is only the announcement: when the countdown ends, exactly one copy should say so, and the others should show “finished on laptop #3fa2” instead of announcing it again.</p>
+<p>Which copy announces is the app’s decision, not the Kit’s. Every start, pause or reset bumps a stamp, a pair of a revision number and the id of the copy that made the change (its “writer”). The rule: the writer of the current stamp announces. If the writer is no longer among <code>hub.readyPeers</code>, the lowest-numbered live copy announces. Any other copy waits for the <code>timer.finished</code> message and, if it has not arrived after a 2-second grace, announces itself. The announcement is a broadcast with a <code>kind</code> and <code>schema</code> the app chose. A late joiner is not told what it missed; the countdown state rides in its <code>hello()</code> instead (see the replay entry in <a href="#14-what-the-hook-does-not-give-you">section 14</a>).</p>
+<p>Delivery is best effort, so the announcement can be lost. The app does not try to prevent that with an acknowledgement; it prevents silence instead. Under a partition two copies may both announce. The app chose “at least once” on purpose, and the comment at the top of the file says so. It accepts a possible duplicate announcement rather than a possible missing one.</p>
+<p>The Kit contributes the list of ready peers (<code>hub.readyPeers</code>, used to decide who is alive), the broadcast, and the guarantee that one peer’s messages arrive in order. The stopwatch also replicates the countdown itself with a last-writer-wins stamp; that is a second use of the same hook, and this section covers only the signal. From the stopwatch demo app’s <code>lib/coordination/shared_timer.dart</code>:</p>
+<pre><code class="language-dart">/// This copy's countdown ran out. Announce if we are the announcer, else wait for the announcer.
+void countdownEnded(CountdownModel done) {
+  if (_told == stamp) return;
+  if (_isAnnouncer()) return _announce(done);
+  final at = stamp;
+  _grace = Timer(takeoverGrace, () {
+    if (_told != at &amp;&amp; stamp == at) _announce(done);
+  });
+}
+
+bool _isAnnouncer() {
+  final h = hub;
+  if (h == null || stamp.rev == 0 || stamp.writer == _me) return true;
+  final ready = h.readyPeers;
+  if (ready.any((p) =&gt; p.id.toString() == stamp.writer)) return false; // the owner is alive: it announces
+  return ready.every((p) =&gt; h.id.compareTo(p.id) &lt; 0); // owner gone: the lowest live copy does
+}
+
+void _announce(CountdownModel done) {
+  _told = stamp;
+  final label = formatMs(done.durationMs, tenths: false);
+  onFinished(Finished(label: label, by: hub?.id ?? const PeerId('local', 'local'), local: true));
+  final h = hub;
+  if (h != null) {
+    final ended = _stateJson(done)..['label'] = label;
+    PeerJson.quiet(h.broadcast(PeerJson.encode(ended), kind: 'timer.finished', schema: 1));
+  }
+}
+</code></pre>
+<h3 id="a-sync-with-an-app-defined-conflict-rule-notepad"><a class="header" href="#a-sync-with-an-app-defined-conflict-rule-notepad">A sync with an app-defined conflict rule (notepad)</a></h3>
+<p>The notepad app keeps the same notes on every copy. The Kit carries bytes between copies; it has no store, no merge and no idea what a note is. The hook file is 29 lines and forwards each of the five jobs to a sync engine, about 500 lines in <code>note_sync.dart</code>, which is the app’s own.</p>
+<p>The central choice is what happens when two copies edit the same note while apart. The engine tracks a version vector per note, so it can tell “you are behind” from “we both edited”. A timestamp cannot tell those apart: it always orders two edits, and one edit silently loses. When the versions are concurrent, the engine keeps both: the version that sorts later (by <code>updatedAt</code>, then device, then a content hash) keeps the note’s title and place, and the other becomes a new note titled <code>&lt;title&gt; (conflict from &lt;device&gt;)</code>. The rule is symmetric and total, so both copies reach the same decision without talking, and they derive the same id for the new note, so they converge instead of duplicating. The person is told what happened. Edit beats delete: a delete never destroys a concurrent edit. Identical text on both sides is not a conflict.</p>
+<p>Content moves by pull. Small <code>sync.have</code> messages say “note X is at version V”. A copy that is behind asks with <code>request</code>, one part at a time, because request/reply is the only acknowledgement the Kit has. A late joiner puts only a digest in its <code>hello()</code>; if the digests differ, each side sends its index and the one that is behind pulls.</p>
+<p>None of this is in the Kit, by design: the Kit does not interpret payloads. The hook is the right shape for meaning; it is not a sync framework. From the notepad demo app’s <code>lib/coordination/note_sync.dart</code>:</p>
+<pre><code class="language-dart">void _applyRemote(Note remote, Vv rvv, String rby) {
+  final id = remote.id;
+  if (host.isDamaged(id)) return;
+  host.flushNote(id);
+  final local = meta[id];
+  final order = local == null ? VvOrder.before : local.vv.compare(rvv);
+  try {
+    switch (order) {
+      case VvOrder.equal || VvOrder.after:
+        return;
+      case VvOrder.before:
+        _put(remote, rvv, rby);
+      case VvOrder.concurrent:
+        final mine = host.note(id);
+        if (local!.deleted || mine == null) {
+          _put(remote, local.vv.join(rvv), rby); // edit beats delete
+        } else if (hashNote(mine) == hashNote(remote)) {
+          meta[id] = Meta(local.vv.join(rvv), by: local.by, hash: local.hash); // same text on both: only the histories merge
+          _save();
+          _announce([id]);
+        } else {
+          _conflict(mine, local, remote, rvv, rby);
+        }
+    }
+  } on FileSystemException catch (e) {
+    report('Could not store a synced note: ${e.message}. It will be tried again at the next sync.');
+  }
+}
+</code></pre>
+<pre><code class="language-dart">/// Does A sort after B? Symmetric and total, so both copies pick the same winner with no conversation.
+bool _beats(Note a, String aBy, Note b, String bBy) {
+  final t = a.updatedAt.compareTo(b.updatedAt);
+  if (t != 0) return t &gt; 0;
+  final d = aBy.compareTo(bBy);
+  return d != 0 ? d &gt; 0 : hashNote(a).compareTo(hashNote(b)) &gt; 0;
+}
+</code></pre>
+<h3 id="a-handoff-with-confirmation-minesweeper"><a class="header" href="#a-handoff-with-confirmation-minesweeper">A handoff with confirmation (minesweeper)</a></h3>
+<p>The minesweeper app can hand a game to another copy. “Give the game away” changes state on two sides, and the Kit has no transaction, so the app builds the handoff from request/reply:</p>
+<ol>
+<li>The sender <strong>offers</strong> (<code>game.offer</code>: difficulty, status, seconds, squares open; no board).</li>
+<li>The receiving <strong>person</strong> says yes or no. An offer never changes a board by itself.</li>
+<li>The receiver <strong>requests</strong> the board (<code>game.take</code>). The reply is the data. The sender serves it only for an offer it made, to the peer it made it to.</li>
+<li>The receiver applies the board. <code>Minesweeper.fromJson</code> is strict: anything inconsistent is refused and nothing changes.</li>
+<li>The receiver <strong>requests</strong> <code>game.taken</code>. Only when that request arrives does the sender release its game.</li>
+</ol>
+<p>If the confirmation is lost, both copies keep the game: a duplicate, never zero. The receiver is told “did not confirm”. The app accepts one known hole, and says so in its source: moves made on the sender between serving the board and hearing <code>game.taken</code> are lost to the receiver. Closing it needs a lock on UI state that the hook cannot own.</p>
+<p>The same offer also starts “play together”, where each move is sent as a small absolute message plus a checksum of the sender’s board, and a receiver whose checksum differs pulls the whole board. Two players who make the first move at the same instant are resolved by an epoch, then the lower <code>PeerId</code>. All of that is the app’s. The Kit supplied request/reply, the ordered delivery per sender, and <code>admit</code>, which the hook uses to refuse a peer with another protocol number. From the minesweeper demo app’s <code>lib/coordination/game_hook.dart</code>:</p>
+<pre><code class="language-dart">/// The person said yes to [o]: pull the board, apply it, confirm. Returns what happened, in words.
+Future&lt;String&gt; accept(Offer o) async {
+  final h = hub!;
+  final peer = h.readyPeers.where((p) =&gt; p.id == o.from).firstOrNull;
+  incoming.remove(o.from);
+  if (peer == null) return _done('${PeerJson.label(o.from)} is no longer connected.');
+  try {
+    final reply = await h.request(peer, PeerJson.encode({'offer': o.id}), kind: 'game.take', schema: 1);
+    final j = reply.jsonBody;
+    if (j is! Map || j['ok'] != true || j['board'] is! Map) return _done('${PeerJson.label(o.from)} no longer has that game to give.');
+    try {
+      host.adoptBoard((j['board'] as Map).cast&lt;String, Object?&gt;());
+    } on FormatException catch (e) {
+      return _done('The game from ${PeerJson.label(o.from)} was not accepted: ${e.message}');
+    }
+    if (o.mode == 'share') sharing = o.from;
+    try {
+      final ack = (await h.request(peer, PeerJson.encode({'offer': o.id}), kind: 'game.taken', schema: 1)).jsonBody;
+      if (ack is Map &amp;&amp; ack['ok'] == true) return _done(o.mode == 'share' ? 'Playing together with ${PeerJson.label(o.from)}.' : 'Took over the game from ${PeerJson.label(o.from)}.');
+    } on PeerError {
+      // fall through
+    }
+    return _done('Took the game, but ${PeerJson.label(o.from)} did not confirm: it may still show the game too.');
+  } on PeerError catch (e) {
+    return _done('Could not get the game from ${PeerJson.label(o.from)}: ${e.message}');
+  }
+}
+</code></pre>
+<h2 id="14-what-the-hook-does-not-give-you"><a class="header" href="#14-what-the-hook-does-not-give-you">14. What the hook does not give you</a></h2>
+<p>These are the places where the hook is not enough. Each has the pattern the demo apps used. None is built into the Kit. Section 7.1 of the spec records why large transfer was not built and what it would need.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Missing</th><th>What you get instead</th><th>Pattern the demo apps used</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Acknowledgement</strong></td><td><code>send</code> completes when the transport took the frame</td><td>Make the receiver answer. Minesweeper’s handoff is a <code>request</code> whose reply carries the board, followed by a second <code>request</code> as confirmation. Notepad pulls content by <code>request</code>. Stopwatch accepts at-least-once delivery of “finished” and adds a takeover after a grace period</td></tr>
+<tr><td><strong>Large transfer</strong></td><td>One message is one frame, up to 1 MiB here and 64 KiB on Hearth. Nothing splits or reassembles</td><td>Notepad’s <code>lib/kit_gaps/blob_pull.dart</code> (79 lines) pulls a note part by part over <code>request</code>/<code>reply</code>: parts are sized under the smaller limit, every part carries a version tag and a changed tag restarts the pull (up to 3 attempts), a size cap and a part-count bound are checked as parts arrive, and the outcomes are kept apart: <code>null</code> for gone or changing, <code>FormatException</code> for a malformed reply, <code>PeerError</code> for a lost or silent peer. Payload bytes become base64 inside the envelope’s own base64, about 1.8 times larger on the wire. Not built into the Kit: one app wants it</td></tr>
+<tr><td><strong>Replay for late joiners</strong></td><td>A copy that connects later sees nothing that was sent before it was ready</td><td>Put a version, digest or the small state itself in <code>hello()</code>, and let whoever is ahead push on <code>ready</code>. Stopwatch carries the whole countdown state in the hello, a small JSON object. Notepad carries <code>{proto, digest, count}</code> and exchanges indexes when digests differ. Minesweeper drops pending offers on <code>lost</code> and never replays them</td></tr>
+<tr><td><strong>Liveness ticks</strong></td><td>No heartbeat or keepalive runs on a link. Loopback detects a dead process through the dropped TCP connection and a 1 s file beat; a silent but connected copy stays <code>ready</code></td><td>Notepad runs its own 30-second <code>sync.digest</code> broadcast, which doubles as a repair for a lost message. A real network transport will need a heartbeat; the spec says the Kit must supply one on Hearth</td></tr>
+<tr><td><strong>Ordering across senders</strong></td><td>Per-sender order only</td><td>Stopwatch orders writes by a Lamport stamp <code>(rev, writer)</code> instead of a clock. Minesweeper uses an epoch, then the lower <code>PeerId</code>, plus a checksum to notice when the order failed</td></tr>
+<tr><td><strong>Atomic exchange</strong></td><td>No transaction. Two parties cannot change state together</td><td>Pull, apply, confirm, release. A failure costs a duplicate rather than a loss. See the handoff above</td></tr>
+<tr><td><strong>Per-app credentials</strong></td><td>None. See <a href="#2-the-scope-key">section 2</a></td><td>Every demo hook validates the shape, range and size of each message and counts what it refuses. Offers are shown to the person instead of applied. A security review is pending; details withheld</td></tr>
+</tbody>
+</table>
+</div>
+<p>Smaller gaps you will meet:</p>
+<ul>
+<li><strong><code>onMessage</code> is synchronous.</strong> The hub processes one link’s frames one at a time. If a message needs async work, queue it in your hook (notepad has a pump with a bound).</li>
+<li><strong>One hub is one channel, and <code>admit</code> is one answer per peer.</strong> “Accept this peer but not its offers” cannot be expressed. Use one hub per facet or a mux hook.</li>
+<li><strong>No “same device” signal.</strong> Two copies with one device id are one replica to your files. Notepad compares <code>peer.id.device</code> itself in <code>admit</code> and rejects them.</li>
+<li><strong>No place for hook state, and no clock.</strong> A stamp or a version that must survive a restart goes in your own file. A timer inside a hook is a plain <code>Timer</code>.</li>
+<li><strong><code>hello()</code> is a snapshot taken at connect.</strong> A command can land between the hello and <code>ready</code>; the stopwatch re-checks on <code>ready</code> for that reason.</li>
+</ul>
+<h2 id="15-real-transports"><a class="header" href="#15-real-transports">15. Real transports</a></h2>
+<p>Only the fake network and the loopback provider are built. <strong>There is no provider for a real network, and no Hearth provider for the Dart hub.</strong> What follows is what a provider has to do, and what was learned about Hearth before writing one.</p>
+<h3 id="what-every-provider-must-do"><a class="header" href="#what-every-provider-must-do">What every provider must do</a></h3>
+<p>The contract is in <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/provider.dart"><code>provider.dart</code></a>. In short:</p>
+<ul>
+<li><code>open(self)</code> announces this copy and starts accepting. <code>discover()</code> replays what is known, then follows changes, and re-emits a candidate with <code>available: false</code> when it goes away. <code>connect(candidate)</code> throws <code>PeerScopeError</code> outside the scope and <code>PeerConnectError</code> when it cannot reach the candidate. <code>incoming</code> buffers until listened to. <code>close()</code> is idempotent.</li>
+<li><strong>Never offer, dial or accept another account or app id.</strong> The hub checks too, but a provider that leaks scope is a bug.</li>
+<li><strong>Discovery must be symmetric.</strong> Only the lower <code>PeerId</code> dials, so both copies have to see each other, or neither connects.</li>
+<li>A link delivers one <code>send</code> as one inbound event. Framing is the provider’s job. <code>send</code> completes when the transport has taken the bytes.</li>
+<li>A link’s <code>remote</code> identity is a claim. The hub checks it against the frame headers and the authenticator’s proof and drops the link if the scope differs. Only a real authenticator makes the proof mean anything.</li>
+</ul>
+<h3 id="what-hearth-would-add"><a class="header" href="#what-hearth-would-add">What Hearth would add</a></h3>
+<p>These come from the spec and from tests against a local Hearth hub. They are requirements for a provider, not code that exists in the Dart hub.</p>
+<ul>
+<li><strong>Payload limit.</strong> Hearth’s effective payload cap is <strong>64 KiB minus the Kit’s header</strong>. The 1 MiB figure is the whole envelope on the Hearth side, and above it the hub drops the connection. A provider should declare its maximum payload and <code>send</code> should fail before the wire when it is exceeded. <strong>This is not built:</strong> <code>PeerProvider</code> has no member for a payload maximum today, so the app passes its limit to <code>PeerJson.fits</code> and <code>encodeWithin</code>.</li>
+<li><strong>Echo suppression.</strong> The hub delivers a broadcast back to its sender. Drop frames whose <code>from.device</code> and <code>from.instance</code> are this copy’s.</li>
+<li><strong>Its own correlation ids.</strong> The hub’s message id is not a safe key for matching replies. The Kit’s <code>rid</code> plus <code>(peer, rid)</code> matching is already independent of it, and a provider must not rely on the transport’s ids.</li>
+<li><strong>Deduplication</strong> by message id across live delivery and catch-up, <strong>liveness</strong> by a heartbeat sent no more often than every 30 seconds (the hub’s idle timeout is 90 seconds, and it caps publishes per hour per connection and per account), and <strong>reconnect</strong>.</li>
+<li><strong>Topics.</strong> The stock hub’s topic grammar rejects app-scoped topics. The Hearth tests carried app traffic on the stock topics, set <code>payload_type = ak.app/&lt;app&gt;</code>, and filtered at the receiver. That is a filter, not access control.</li>
+</ul>
+<h3 id="what-is-built"><a class="header" href="#what-is-built">What is built</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Piece</th><th>State</th></tr>
+</thead>
+<tbody>
+<tr><td>Dart hub, fake network, loopback provider</td><td>Built and tested (<code>dart test</code> in <code>dart/app_context_kit</code>: 360 passed, 7 skipped on the day of writing; six skips need a running resource-broker daemon and one is a Linux-only test)</td></tr>
+<tr><td>A provider for a LAN or for Hearth</td><td>Not built</td></tr>
+<tr><td>A real authenticator (keys checked against a paired set of devices, a per-app credential)</td><td>Not built. <code>OpenAuthenticator</code> accepts everyone; <code>SharedSecretAuthenticator</code> is a test fake</td></tr>
+</tbody>
+</table>
+</div>
+<p>See also: <a href="architecture.html#4-the-peer-handshake">Architecture</a> for the handshake and the roster versus the peers announcement, <a href="context-guide.html">Context guide</a> for the context the hub is built from, <a href="spec/app-context.html"><code>spec/APP-CONTEXT.md</code></a> section 6 for the contract.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../30-kits/app-context-kit/venue-guide.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../30-kits/app-context-kit/testing.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../30-kits/app-context-kit/venue-guide.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../30-kits/app-context-kit/testing.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-09f2665d.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../mermaid-init-5853b93b.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

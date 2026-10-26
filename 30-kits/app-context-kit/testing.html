@@ -1,0 +1,495 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Testing - The Kit Book</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-e0dd22bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-ce6d682b.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kit Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book/edit/main/book/30-kits/app-context-kit/testing.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <!-- Generated by tools/pull-docs.py from app-context-kit at 4797e81 (docs/TESTING.md). Do not edit by hand: edit it in the Kit, then run make docs-pull. -->
+<h1 id="testing"><a class="header" href="#testing">Testing</a></h1>
+<blockquote>
+<p>Reference page pulled from app-context-kit at commit 4797e81. Edit it in the Kit, not here.</p>
+</blockquote>
+<p>Two things are covered here: how to test an app built on the Kit, and how to run the App Context Kit repository’s own test suites.</p>
+<p>The Kit is built so that an app’s tests need no network, no real home directory and no Venue. Two settings do that, and both are ordinary <a href="context-guide.html#environment-variables">environment variables</a>:</p>
+<ul>
+<li><strong>Scratch</strong> (<code>APP_CONTEXT_SCRATCH</code>) puts every directory and the roster under one throwaway folder, so a test never touches real data.</li>
+<li><strong>Mock</strong> (<code>APP_CONTEXT_MODE=mock</code>) replaces Venue with an in-memory fake and peers with an in-memory fake network.</li>
+</ul>
+<p>Part 1 is for app authors. Part 2 is for working on the Kit itself.</p>
+<h2 id="part-1-testing-an-app"><a class="header" href="#part-1-testing-an-app">Part 1: testing an app</a></h2>
+<h3 id="pass-the-environment-in-do-not-read-the-machines"><a class="header" href="#pass-the-environment-in-do-not-read-the-machines">Pass the environment in; do not read the machine’s</a></h3>
+<p><code>AppContext.open</code> takes <code>env:</code>, <code>platform:</code> and <code>home:</code>. When you pass <code>env</code>, nothing from the real process environment is read, so a developer’s own <code>APP_CONTEXT_*</code> variables cannot change a test. The Dart test in <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/dart_cli/test/kit_test.dart"><code>docs/examples/dart_cli/test/kit_test.dart</code></a> opens every context like this:</p>
+<pre><code class="language-dart">final env = {'APP_CONTEXT_MODE': 'mock'}; // the scratch directory is added per test
+
+Future&lt;AppContext&gt; launch(AppManifest m, [Map&lt;String, String&gt; more = const {}]) =&gt;
+    AppContext.open(m, env: {...env, 'APP_CONTEXT_SCRATCH': scratch.path, ...more}, announce: false);
+</code></pre>
+<p><code>announce: false</code> keeps the test out of the roster. <code>scratch</code> is a temporary directory made in <code>setUp</code> and deleted in <code>tearDown</code>:</p>
+<pre><code class="language-dart">late Directory scratch;
+setUp(() =&gt; scratch = Directory.systemTemp.createTempSync('app-context-example-'));
+tearDown(() =&gt; scratch.deleteSync(recursive: true));
+</code></pre>
+<p>Because the scratch directory outlives a context, “quit and launch again” is two opens on the same directory. This test is from the same file:</p>
+<pre><code class="language-dart">test('a setting written by one launch is read by the next, on the same scratch directory', () async {
+  var ctx = await launch(manifest);
+  ctx.config.set('launches', 1);
+  await ctx.close();
+
+  ctx = await launch(manifest);
+  expect(ctx.config.get&lt;int&gt;('launches', 0), 1);
+  await ctx.close();
+});
+</code></pre>
+<p>Run it with <code>dart test</code> in that directory. Expected: <code>All tests passed!</code> (three tests).</p>
+<p>To pin a platform for a test about paths, add <code>platform: 'linux', home: '/x'</code>. <code>resolve()</code> itself is a pure function, so you can also call it directly with a <code>platform</code>, <code>home</code> and <code>env</code> and compare the strings; that is what the conformance fixtures do.</p>
+<h3 id="flutter-pumpkitapp-and-testappcontext"><a class="header" href="#flutter-pumpkitapp-and-testappcontext">Flutter: <code>pumpKitApp</code> and <code>testAppContext</code></a></h3>
+<p>Import <code>package:app_context_kit_flutter/testing.dart</code> from <code>test/</code> only; it depends on <code>flutter_test</code>.</p>
+<p>A <code>testWidgets</code> body runs in fake async, and <code>AppContext.open</code> does real file I/O and starts real timers, so it cannot simply be awaited there. The helpers do that work inside <code>tester.runAsync</code> for you.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Helper</th><th>What it does</th></tr>
+</thead>
+<tbody>
+<tr><td><code>testAppContext(tester, manifest:)</code></td><td>Opens a context in a fresh temporary scratch directory, in <code>mock</code> mode, with no roster entry. Returns a <code>KitTestContext</code></td></tr>
+<tr><td><code>pumpKitApp(tester, manifest:, app:)</code></td><td><code>testAppContext</code>, then mounts <code>app(ctx)</code> under an <code>AppContextScope</code>, exactly as <code>AppContextKit.run</code> does</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>manifest</code> can be an <code>AppManifest</code>, the JSON text of <code>app.json</code>, or a decoded map. Optional parameters: <code>env</code> (added to the isolated environment, and it may override it: <code>{'APP_CONTEXT_SCRATCH', 'APP_CONTEXT_MODE': 'mock', 'HOME'}</code>), <code>scratch</code> (reuse a directory; it is then not deleted), <code>announce</code> (default <code>false</code>), <code>heartbeat</code>, <code>platform</code>, <code>fakeCapacity</code>, <code>transport</code>, and for <code>pumpKitApp</code>, <code>settle</code> (also <code>pumpAndSettle</code>). The directory it made is deleted when the test ends. The host’s environment is never consulted.</p>
+<p>The <code>KitTestContext</code> it returns:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Member</th><th>Meaning</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ctx</code></td><td>The current <code>AppContext</code>. After <code>close</code>, the closed one, whose files you can still inspect</td></tr>
+<tr><td><code>scratch</code></td><td>The directory everything lives under</td></tr>
+<tr><td><code>env</code></td><td>The environment the context was opened with</td></tr>
+<tr><td><code>close()</code></td><td>Closes the context as the real app does on exit: roster, <code>onClose</code> hooks, Venue. Idempotent</td></tr>
+<tr><td><code>reopen()</code></td><td>Closes if open, then opens a new context on the same files. Does not touch the widget tree</td></tr>
+<tr><td><code>quit()</code></td><td>Closes the context while the widgets are still mounted, then unmounts the tree</td></tr>
+<tr><td><code>relaunch()</code></td><td><code>quit()</code>, then a new context on the same scratch directory, then the same app mounted again. Returns the new context</td></tr>
+</tbody>
+</table>
+</div>
+<p>This is the test from <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/flutter_hello/test/hello_test.dart"><code>docs/examples/flutter_hello/test/hello_test.dart</code></a>:</p>
+<pre><code class="language-dart">testWidgets('taps are saved and survive a quit and relaunch', (tester) async {
+  final kit = await pumpKitApp(
+    tester,
+    manifest: File('app.json').readAsStringSync(),
+    app: (ctx) =&gt; const HelloApp(),
+  );
+  expect(find.text('Taps: 0'), findsOneWidget);
+  expect(find.text('mock + scratch'), findsOneWidget);
+
+  await tester.tap(find.text('Tap'));
+  await tester.pump();
+  expect(find.text('Taps: 1'), findsOneWidget);
+  expect(kit.ctx.dataFile('taps.log').readAsStringSync(), '1\n');
+
+  await kit.relaunch(); // close, open again on the same scratch directory, mount again
+  expect(find.text('Taps: 1'), findsOneWidget);
+});
+</code></pre>
+<p>Run it with <code>flutter test</code> in <code>docs/examples/flutter_hello</code>. Expected: <code>All tests passed!</code> (one test).</p>
+<p>If your test is about something that must have happened before the app ends (a flush on quit, a hook), call <code>kit.close()</code> or <code>kit.quit()</code> yourself and then assert. The calculator demo app’s <code>test/calculator_screen_test.dart</code> shows a test that passes <code>announce: true</code> to see the real roster entry appear and disappear, and one that asserts every directory the app resolved is under the scratch directory.</p>
+<p>To test the real manifest asset bundle, <code>AppContextKit.loadManifest('app.json')</code> works in a widget test; the calculator demo app’s <code>test/manifest_asset_test.dart</code> does exactly that.</p>
+<h3 id="the-fake-venue"><a class="header" href="#the-fake-venue">The fake Venue</a></h3>
+<p>In <code>mock</code> mode, <code>ctx.venue</code> is a <code>FakeVenue</code>. It has one node and a capacity (the <code>fakeCapacity</code> parameter of <code>AppContext.open</code>, default 1), refuses a hold with <code>doesNotFit</code> when it is full, and logs each call. <code>refuseNext(n, {kind})</code> makes the next <code>n</code> holds refuse whatever the capacity, so a wait-and-retry loop can be tested without arranging a full node. This test is from <code>kit_test.dart</code>:</p>
+<pre><code class="language-dart">test('mock mode gives a fake Venue that can be made to refuse, so a waiting loop is testable', () async {
+  final ctx = await launch(manifest);
+  final venue = ctx.venue as FakeVenue;
+  venue.refuseNext(2); // the next two holds are refused as "does not fit"
+
+  const need = VenueNeed(name: 'job', contractClass: 'container.run.v1');
+  final result = await venue.withHoldWaiting(need, (hold) async =&gt; 'done',
+      maxWait: const Duration(seconds: 5), retryEvery: const Duration(milliseconds: 2));
+
+  expect(result, 'done');
+  expect(venue.log, ['hold job', 'hold job', 'hold job', 'start job', 'release job']);
+  await ctx.close();
+});
+</code></pre>
+<p>Use a small <code>retryEvery</code> in tests. <code>withHoldWaiting</code> counts waiting in naps rather than reading a clock, so it behaves under fake time. To test against a Venue that answers in particular ways without a socket, implement <code>DaemonTransport</code> (one <code>send</code> method and one <code>close</code>) and pass it as <code>transport:</code>. The App Context Kit repository’s own tests do this in <code>dart/app_context_kit/test/support/fake_transport.dart</code>.</p>
+<h3 id="the-fake-peer-network"><a class="header" href="#the-fake-peer-network">The fake peer network</a></h3>
+<p>Peers are off unless the manifest lists <code>"peers"</code> in <code>kits</code>. In <code>mock</code> mode, <code>ctx.peerHub</code> and <code>ctx.startPeers</code> use an in-memory network. Give two contexts the same <code>FakePeerNetwork</code> and they find each other. Nothing touches the real network or the disk. This test is from <code>kit_test.dart</code>; <code>Listener</code> is a small <code>AppCoordination</code> defined in the same file, which records the messages it gets:</p>
+<pre><code class="language-dart">test('two copies of an app find each other on one fake network and exchange a message', () async {
+  final peerManifest = AppManifest.fromJson({'id': 'dev.example.hello', 'name': 'Hello', 'version': '0.1.0', 'kits': ['peers']});
+  final network = FakePeerNetwork(); // pass the same network to both copies
+  final laptop = await launch(peerManifest, {'APP_CONTEXT_DEVICE': 'laptop'});
+  final phone = await launch(peerManifest, {'APP_CONTEXT_DEVICE': 'phone'});
+
+  final listener = Listener();
+  final laptopHub = laptop.peerHub(Listener(), network: network);
+  final phoneHub = phone.peerHub(listener, network: network);
+  await laptopHub.start();
+  await phoneHub.start();
+
+  for (var i = 0; i &lt; 100 &amp;&amp; laptopHub.readyPeers.isEmpty; i++) {
+    await Future&lt;void&gt;.delayed(const Duration(milliseconds: 20));
+  }
+  expect(laptopHub.readyPeers, isNotEmpty);
+
+  await laptopHub.broadcast(PeerJson.encode({'text': 'hi'}), kind: 'greeting');
+  for (var i = 0; i &lt; 100 &amp;&amp; listener.received.isEmpty; i++) {
+    await Future&lt;void&gt;.delayed(const Duration(milliseconds: 20));
+  }
+  expect(listener.received, ['laptop: {text: hi}']);
+
+  await laptop.close();
+  await phone.close();
+});
+</code></pre>
+<p>Set <code>APP_CONTEXT_DEVICE</code> per copy so the two have different device names; the instance ids are random. In a widget test, run the second copy inside <code>tester.runAsync</code> next to the one under <code>pumpKitApp</code>, and pass the same network to the app. The notepad demo app’s <code>test/peers_ui_test.dart</code> does this end to end.</p>
+<p><code>FakePeerNetwork</code> can also be made unreliable, to test how your hook copes:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Control</th><th>Effect</th></tr>
+</thead>
+<tbody>
+<tr><td><code>partition(a, b)</code>, <code>isolate(a)</code>, <code>heal(a, [b])</code>, <code>healAll()</code></td><td>Cut copies from each other, or from everyone, and restore them</td></tr>
+<tr><td><code>dropLinks(a, b)</code></td><td>Break the connections without cutting discovery, like a flaky link</td></tr>
+<tr><td><code>latency</code>, <code>jitter</code></td><td>A fixed delay, and a random extra delay (non-zero jitter can reorder frames)</td></tr>
+<tr><td><code>dropRate</code>, <code>duplicateRate</code></td><td>Probability that a frame is lost, or delivered twice</td></tr>
+<tr><td><code>dropIf</code></td><td>Drop a frame when your function says so</td></tr>
+<tr><td><code>deliveries</code>, <code>connectAttempts</code></td><td>What arrived where, and how many connections were tried</td></tr>
+</tbody>
+</table>
+</div>
+<p><code>FakePeerNetwork(seed: n)</code> makes the randomness repeatable, and a <code>ManualPeerClock</code> passed as <code>clock:</code> makes time repeatable too. A test that checks a hook with <code>startPeers</code> should also check the case where peers cannot start: the handle’s <code>error</code> is set and the app keeps working alone. The demo apps each have such a test (for example the notepad demo app’s <code>test/peers_ui_test.dart</code>, “when peers cannot start the footer says why and the notes still work”).</p>
+<h3 id="the-conformance-fixtures"><a class="header" href="#the-conformance-fixtures">The conformance fixtures</a></h3>
+<p>The fixtures are the contract in executable form. <code>spec/conformance/manifest_cases.json</code> has one case per manifest rule (valid and invalid), and <code>spec/conformance/context_cases.json</code> has one per directory or mode rule: given a manifest, a platform, a home directory and an environment, the expected directories, roster, scratch flag and mode. Both implementations load the same files:</p>
+<ul>
+<li>Dart: <code>dart/app_context_kit/test/conformance_test.dart</code></li>
+<li>Rust: <code>rust/tests/conformance.rs</code></li>
+</ul>
+<p>The files are generated, not written by hand. <code>tools/gen_fixtures.py</code> spells every expectation out from templates, and never asks an implementation what the answer should be. That is deliberate: an implementation that agrees with the fixture has been checked against the prose spec, not against itself.</p>
+<h3 id="add-a-case"><a class="header" href="#add-a-case">Add a case</a></h3>
+<ol>
+<li>
+<p>Add one line to the <code>cases</code> list (context) or the <code>mc</code> list (manifest) in <code>tools/gen_fixtures.py</code>. A manifest case is <code>bad(name, manifest, code)</code> or <code>ok(name, manifest, defaults)</code>:</p>
+<pre><code class="language-python">bad("kit-underscore", man(kits=["my_kit"]), "bad-kits"),
+</code></pre>
+</li>
+<li>
+<p>Regenerate:</p>
+<pre><code class="language-sh">python3 tools/gen_fixtures.py
+</code></pre>
+<p>It prints <code>25 context cases, 37 manifest cases</code> (the counts with the example case added) and rewrites both JSON files.</p>
+</li>
+<li>
+<p><strong>Update the counts in the Rust test.</strong> <code>rust/tests/conformance.rs</code> asserts how many cases each file holds, so that a silently shortened fixture file cannot pass. Change the number in the matching <code>run_all("manifest_cases.json", 36, ...)</code> or <code>run_all("context_cases.json", 25, ...)</code> line. Without this the Rust run fails with <code>fixture count changed; update this test</code>. The Dart test needs no change.</p>
+</li>
+<li>
+<p>Run both languages:</p>
+<pre><code class="language-sh">(cd dart/app_context_kit &amp;&amp; dart test test/conformance_test.dart)
+(cd rust &amp;&amp; cargo test --test conformance)
+</code></pre>
+<p>Expected: <code>All tests passed!</code> from Dart (<code>+62</code> with the example case) and <code>test result: ok. 2 passed</code> from Rust.</p>
+</li>
+</ol>
+<p>If one implementation disagrees, the fixture is right unless the spec text says otherwise, and the prose is then corrected. A failing Dart case looks like this (shortened; here the expected code was wrong on purpose):</p>
+<pre><code>manifest conformance kit-underscore [E]
+  Expected: throws &lt;Instance of 'ManifestError'&gt; with `code`: 'bad-id'
+    Which: threw ManifestError:&lt;ManifestError(bad-kits)&gt;
+</code></pre>
+<p>This procedure was run on a copy of the App Context Kit repository with the example case; the checked-in fixtures were not changed. Regenerating the committed fixtures produces files identical to the ones in <code>spec/conformance/</code>.</p>
+<h2 id="part-2-running-the-app-context-kit-repositorys-suites"><a class="header" href="#part-2-running-the-app-context-kit-repositorys-suites">Part 2: running the App Context Kit repository’s suites</a></h2>
+<p>Every command below was run on macOS (Apple silicon) when this page was written, and the Linux script in Docker. Counts will change as tests are added; what matters is the pass line. Paths are relative to the root of the App Context Kit repository. Nothing here needs anything outside it except the public package registries (pub.dev and crates.io).</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Suite</th><th>Command</th><th>A pass looks like</th></tr>
+</thead>
+<tbody>
+<tr><td>Dart core</td><td><code>cd dart/app_context_kit &amp;&amp; dart pub get &amp;&amp; dart test</code></td><td><code>All tests passed!</code> (365 passed, 7 skipped)</td></tr>
+<tr><td>Flutter companion</td><td><code>cd dart/app_context_kit_flutter &amp;&amp; flutter test</code></td><td><code>All tests passed!</code> (82 tests)</td></tr>
+<tr><td>Rust crate</td><td><code>cd rust &amp;&amp; cargo test</code></td><td><code>test result: ok.</code> for four targets (83 unit, 2 conformance, 5 host_os, 4 snapshot_conformance)</td></tr>
+<tr><td>Conformance only</td><td><code>cd dart/app_context_kit &amp;&amp; dart test test/conformance_test.dart</code>, then <code>cd rust &amp;&amp; cargo test --test conformance</code></td><td>Dart <code>All tests passed!</code> (61 tests); Rust <code>test result: ok. 2 passed</code></td></tr>
+<tr><td>Snapshot fixtures</td><td><code>cd dart/app_context_kit &amp;&amp; dart test test/snapshot_test.dart</code>, then <code>cd rust &amp;&amp; cargo test --test snapshot_conformance</code></td><td>Dart <code>All tests passed!</code> (5 tests); Rust <code>test result: ok. 4 passed</code></td></tr>
+<tr><td>Two processes</td><td><code>cd dart/app_context_kit &amp;&amp; dart test test/peers/two_process_test.dart</code></td><td><code>All tests passed!</code> (4 tests, about 30 seconds)</td></tr>
+<tr><td>Real Venue daemon</td><td>see below</td><td>Dart <code>All tests passed!</code> (5 tests); skipped without a daemon</td></tr>
+<tr><td>Pinned TLS</td><td>see below</td><td>Dart <code>All tests passed!</code> (14 tests); skipped without a daemon</td></tr>
+<tr><td>Linux</td><td><code>tools/linux-test.sh</code></td><td><code>-- &lt;step&gt;: exit 0 --</code> for four steps; the script exits 0</td></tr>
+</tbody>
+</table>
+</div>
+<p>The Dart core’s skipped tests are the five that need a real Venue daemon, the pinned-TLS group, and one that only applies on Linux. A skip is not a failure, but it means that test proved nothing on this machine.</p>
+<p><strong>The Rust crate builds from the App Context Kit repository alone.</strong> It has no remote Venue session, so it has no real-daemon or TLS tests: the real-daemon and TLS suites below are Dart only.</p>
+<h3 id="the-conformance-fixtures-again"><a class="header" href="#the-conformance-fixtures-again">The conformance fixtures, again</a></h3>
+<p>Both languages must pass every fixture before anything else matters. Run the two conformance commands above first. If a fixture file was edited by hand, <code>python3 tools/gen_fixtures.py</code> will overwrite it.</p>
+<h3 id="tests-against-a-real-venue-daemon"><a class="header" href="#tests-against-a-real-venue-daemon">Tests against a real Venue daemon</a></h3>
+<p><code>test/venue_real_test.dart</code> talks to a real Venue daemon. The daemon is not part of the App Context Kit repository, and the Kit does not ship a script that starts one: start any compatible daemon yourself, then set the variables the test reads. The daemon needs a consumer named <code>calc</code>, granted <code>container.run.v1</code>, with a limit of three live holds (the limit test relies on it), a token file for that consumer, and a node whose heartbeat is kept fresh (without that, the daemon refuses every hold after about two minutes with <code>does_not_fit</code>). <a href="venue-guide.html#testing-against-a-daemon">The Venue guide</a> has the details.</p>
+<pre><code class="language-sh">cd dart/app_context_kit
+VENUE_DAEMON=http://127.0.0.1:7878 VENUE_TOKEN_FILE=&lt;path to calc's token file&gt; dart test test/venue_real_test.dart
+</code></pre>
+<p>Expected: <code>All tests passed!</code> (5 tests). Without <code>VENUE_TOKEN_FILE</code> the file is skipped, and a skipped run proves nothing about the daemon.</p>
+<h3 id="pinned-tls"><a class="header" href="#pinned-tls">Pinned TLS</a></h3>
+<p><code>test/venue_tls_test.dart</code> checks pinned TLS against a daemon that serves a self-signed certificate. Start any compatible daemon with TLS, note the SHA-256 fingerprint of its certificate, and set three variables; without them the tests skip with a message.</p>
+<pre><code class="language-sh">cd dart/app_context_kit
+VENUE_TLS_DAEMON=https://127.0.0.1:17879 VENUE_TLS_FINGERPRINT=sha256:&lt;64 hex digits&gt; VENUE_TOKEN_FILE=&lt;path to calc's token file&gt; \
+  dart test test/venue_tls_test.dart
+</code></pre>
+<p>Expected: <code>All tests passed!</code> (14 tests). They cover:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Case</th><th>Result</th></tr>
+</thead>
+<tbody>
+<tr><td>the right fingerprint: hold, start, <code>holds()</code>, release; <code>withHold</code></td><td>pass</td></tr>
+<tr><td>the right fingerprint through <code>AppContext.open</code> with <code>VENUE_DAEMON_FINGERPRINT</code></td><td>the session <code>kind</code> is <code>venue</code></td></tr>
+<tr><td>a well-formed but wrong fingerprint</td><td><code>VenueUnavailable</code>, naming both fingerprints</td></tr>
+<tr><td>no fingerprint against the self-signed certificate</td><td><code>VenueUnavailable</code>, saying to set <code>VENUE_DAEMON_FINGERPRINT</code></td></tr>
+<tr><td>a malformed fingerprint</td><td><code>VenueUnavailable</code>, naming the fingerprint</td></tr>
+<tr><td>plain <code>http://</code> to the TLS port</td><td><code>VenueUnavailable</code>, well under 10 s</td></tr>
+<tr><td><code>AppContext.open</code> with a wrong or missing pin, mode <code>auto</code></td><td>a local session (“did not answer”) and a warning note</td></tr>
+<tr><td><code>AppContext.open</code> with a wrong pin, mode <code>on</code></td><td>throws <code>VenueUnavailable</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Four more tests need no daemon (<code>test/transport_pin_test.dart</code>): the fingerprint spellings and a malformed pin. The first run of these cases against a real daemon found three problems around a pin that was itself sound (<code>SecurityContext(withTrustedRoots: false)</code> plus the certificate callback accepts exactly the pinned certificate and no other): an upper-case or colon-separated fingerprint was silently refused, and a wrong or malformed pin surfaced as an opaque handshake error. Both are fixed (<code>parseFingerprint</code> normalises the spellings; <code>TlsPinException</code> says what is wrong and what to do), and these cases keep them fixed.</p>
+<h3 id="linux"><a class="header" href="#linux">Linux</a></h3>
+<p><code>tools/linux-test.sh [dart|rust|both]</code> runs the Dart and Rust cores in throwaway Docker containers, as a non-root user, with the App Context Kit repository mounted read-only. It needs Docker running and a network connection, because each container fetches its packages. Set <code>LINUX_AS_ROOT=1</code> to run as root, where a few tests behave differently because root ignores file mode bits (for example, a token file with mode 000 is read anyway, so that test is skipped). It uses <code>dart:stable</code> and <code>rust:1.94</code> unless <code>DART_IMAGE</code> and <code>RUST_IMAGE</code> say otherwise. It copies <code>spec/</code>, <code>rust/</code> and <code>dart/app_context_kit</code> into a tmpfs and builds there; no other checkout is needed.</p>
+<p>It was run with Docker 28.5.2 on an aarch64 Linux VM (kernel 6.12.54), Dart 3.13.6 and Rust 1.94.1. It printed <code>-- conformance fixtures (Dart): exit 0 --</code>, <code>-- whole package (Dart): exit 0 --</code>, <code>-- conformance fixtures (Rust): exit 0 --</code> and <code>-- whole crate (Rust): exit 0 --</code>, then exited 0. The Dart package ran 366 tests with 6 skipped (the Linux-only test runs there, so one fewer skip than on macOS); run as root it ran 365 with 7 skipped, because the mode-000 token test is skipped when root can read the file. The Rust crate ran 83 unit tests, 2 conformance tests, 6 <code>host_os</code> tests and 4 snapshot-conformance tests (one <code>host_os</code> test is Linux-only, so 6 there against 5 on macOS).</p>
+<h3 id="the-two-process-test"><a class="header" href="#the-two-process-test">The two-process test</a></h3>
+<p>Every peers test except this one runs inside one process. <code>dart/app_context_kit/test/peers/two_process_test.dart</code> starts each hub in its own operating-system process (<code>two_process_worker.dart</code>), over the loopback provider and one shared temporary directory. Two copies of one app and account find each other, exchange hello and admit (<code>ready</code> on both sides), <code>send</code>, <code>broadcast</code> and <code>request</code>/<code>reply</code>. A third process with a different app id and a fourth with a different account saw no peer event and no message in over 600 ms, and neither appeared in the others’ peer lists. A graceful quit is <code>lost</code> with the reason <code>goodbye</code>, and the announcement is gone.</p>
+<p>It also kills one process with <code>kill -9</code> to see what a dying process looks like to its neighbour, and prints the numbers it measures: how long the survivor takes to see the peer lost, and how long the dead copy’s announcement file stays behind. Run it with <code>-r expanded</code> to read them. <code>APP_CONTEXT_GHOST_SECONDS</code> (default 12) sets how long the survivor is watched after the kill. This variable is read by the test only; the Kit does not read it. The numbers and the fix they led to are in <a href="platforms.html#macos">Platforms</a>; <code>test/peers/loopback_ghost_test.dart</code> (6 tests) covers the heartbeat rules without a second process.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../30-kits/app-context-kit/coordination-guide.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../30-kits/app-context-kit/architecture.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../30-kits/app-context-kit/coordination-guide.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../30-kits/app-context-kit/architecture.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-09f2665d.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../mermaid-init-5853b93b.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

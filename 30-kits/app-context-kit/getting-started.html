@@ -1,0 +1,599 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Getting started - The Kit Book</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-e0dd22bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-ce6d682b.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kit Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book/edit/main/book/30-kits/app-context-kit/getting-started.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <!-- Generated by tools/pull-docs.py from app-context-kit at 4797e81 (docs/GETTING-STARTED.md). Do not edit by hand: edit it in the Kit, then run make docs-pull. -->
+<h1 id="getting-started"><a class="header" href="#getting-started">Getting started</a></h1>
+<blockquote>
+<p>Reference page pulled from app-context-kit at commit 4797e81. Edit it in the Kit, not here.</p>
+</blockquote>
+<p>This guide takes you from an empty folder to a Flutter desktop app that runs on the App Context Kit, then shows the same thing in plain Dart and in Rust. For what the Kit is, read the <a href="overview.html">overview</a>. For every field and rule, see the <a href="context-guide.html">context guide</a>.</p>
+<p>The app you build is a window with a button. Each tap is counted, saved as a setting and written to a file. The finished project is in <a href="examples/flutter_hello.html"><code>docs/examples/flutter_hello/</code></a>. Every code block below is a file from that directory, or a file from <code>docs/examples/dart_cli/</code> or <code>docs/examples/rust_cli/</code>.</p>
+<p>You need Flutter 3.24 or later with desktop support enabled. The steps were walked through with Flutter 3.41.9 and Dart 3.11.5 on macOS. The demo apps built on the Kit were also built in release mode and launched on Linux, headless in a container (see <a href="platforms.html#linux">Platforms</a>). Where a step differs on Linux or Windows and was not run there, the text says so.</p>
+<h2 id="1-create-the-project"><a class="header" href="#1-create-the-project">1. Create the project</a></h2>
+<p>The app id you choose in <code>app.json</code> should match the bundle id Flutter generates, so create the project with a package name and organisation that join up. Package <code>hello</code> with organisation <code>dev.example</code> gives the id <code>dev.example.hello</code>:</p>
+<pre><code class="language-sh">flutter create --platforms=macos,linux,windows --org dev.example hello
+cd hello
+rm test/widget_test.dart   # the template's counter test; it does not fit this app
+</code></pre>
+<h2 id="2-add-the-dependencies"><a class="header" href="#2-add-the-dependencies">2. Add the dependencies</a></h2>
+<p>The two Kit packages are not published. They are <code>publish_to: none</code>, so you point at them by path or by git.</p>
+<p><strong>By path</strong> (what the demo apps use). Check out the App Context Kit repository somewhere and point at it. Add to <code>pubspec.yaml</code>:</p>
+<pre><code class="language-yaml">dependencies:
+  flutter:
+    sdk: flutter
+  app_context_kit:
+    path: ../app-context-kit/dart/app_context_kit
+  app_context_kit_flutter:
+    path: ../app-context-kit/dart/app_context_kit_flutter
+</code></pre>
+<p>Adjust the relative path to wherever your checkout is. List both packages: <code>app_context_kit_flutter</code> depends on <code>app_context_kit</code>, and your code imports both.</p>
+<p><strong>By git</strong>, once the App Context Kit repository is reachable by URL. Pin both entries to the same full 40-character commit hash in <code>ref</code>:</p>
+<pre><code class="language-yaml">  app_context_kit:
+    git:
+      url: &lt;repository-url&gt;
+      path: dart/app_context_kit
+      ref: &lt;full-commit-sha&gt;
+  app_context_kit_flutter:
+    git:
+      url: &lt;repository-url&gt;
+      path: dart/app_context_kit_flutter
+      ref: &lt;full-commit-sha&gt;
+</code></pre>
+<p>This form was tested against a local clone of the App Context Kit repository. With the default branch instead of a pinned hash, or with an abbreviated hash, <code>pub get</code> failed with a version-solving error, because the companion’s own dependency on the core resolved to a different reference than yours. I have not tested it against a public URL, because there is none yet.</p>
+<p>Then declare the manifest as an asset, and make the <code>pubspec.yaml</code> version match the manifest:</p>
+<pre><code class="language-yaml">version: 0.1.0+1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - app.json
+</code></pre>
+<p>The template’s version is <code>1.0.0+1</code>. The Kit does not read the <code>pubspec.yaml</code>, but <code>app.json</code> and the <code>pubspec.yaml</code> should say the same thing, and the check in <a href="#9-check-that-the-identity-agrees">step 9</a> fails if they do not.</p>
+<h2 id="3-write-appjson"><a class="header" href="#3-write-appjson">3. Write <code>app.json</code></a></h2>
+<p>Create <code>app.json</code> next to <code>pubspec.yaml</code>. This is <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/flutter_hello/app.json"><code>docs/examples/flutter_hello/app.json</code></a>:</p>
+<pre><code class="language-json">{
+  "id": "dev.example.hello",
+  "name": "Hello",
+  "version": "0.1.0",
+  "kits": [],
+  "envPrefix": "HELLO",
+  "venue": { "mode": "off" }
+}
+</code></pre>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Field</th><th>Required</th><th>What it is</th><th>Default</th></tr>
+</thead>
+<tbody>
+<tr><td><code>id</code></td><td>yes</td><td>Reverse-DNS id under a domain you control (the examples use <code>com.slashbuilder.demo.*</code>), at least two dot-separated segments. Each segment starts with a lower-case letter and then has lower-case letters, digits or <code>-</code>. It names your directories and your roster entry.</td><td>none</td></tr>
+<tr><td><code>name</code></td><td>yes</td><td>Display name. Must not be blank.</td><td>none</td></tr>
+<tr><td><code>version</code></td><td>yes</td><td><code>MAJOR.MINOR.PATCH</code>, digits only. A pre-release suffix such as <code>-beta</code> is refused.</td><td>none</td></tr>
+<tr><td><code>kits</code></td><td>no</td><td>List of lower-case kit names, no duplicates. Today only <code>"peers"</code> has an effect: it allows <code>ctx.startPeers</code> and <code>ctx.peerHub</code>. Other names are accepted and ignored.</td><td><code>[]</code></td></tr>
+<tr><td><code>envPrefix</code></td><td>no</td><td><code>UPPER_SNAKE_CASE</code> prefix for this app’s environment variables (<code>HELLO_MODE</code>, <code>HELLO_DATA_DIR</code>).</td><td>the last segment of <code>id</code>, upper-cased, with anything outside <code>A-Z0-9</code> replaced by <code>_</code> (<code>render-queue</code> becomes <code>RENDER_QUEUE</code>)</td></tr>
+<tr><td><code>venue.mode</code></td><td>no</td><td><code>auto</code>, <code>on</code> or <code>off</code>. See <a href="#7-venue-and-the-default">Venue</a>.</td><td><code>auto</code></td></tr>
+<tr><td><code>venue.consumer</code></td><td>no</td><td>The name this app presents to Venue. Lower-case letters, digits and <code>-</code>, starting with a letter.</td><td>the last segment of <code>id</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>If the manifest is wrong, the app shows an error screen with a code such as <code>bad-id</code>. The <a href="context-guide.html#the-manifest">context guide</a> lists every code. The rules are in <a href="spec/app-context.html">spec section 1</a>.</p>
+<h2 id="4-write-maindart"><a class="header" href="#4-write-maindart">4. Write <code>main.dart</code></a></h2>
+<p>Replace <code>lib/main.dart</code> with this. It is <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/flutter_hello/lib/main.dart"><code>docs/examples/flutter_hello/lib/main.dart</code></a>, and apart from the import it is the same line as the calculator demo app’s <code>lib/main.dart</code> (the demo apps are in The Kit Book):</p>
+<pre><code class="language-dart">import 'package:app_context_kit_flutter/app_context_kit_flutter.dart';
+
+import 'hello_app.dart';
+
+Future&lt;void&gt; main() =&gt; AppContextKit.run(manifestAsset: 'app.json', app: (_) =&gt; const HelloApp());
+</code></pre>
+<p><code>AppContextKit.run</code> does the work a hand-written <code>main()</code> would: it initialises Flutter’s binding, loads and validates <code>app.json</code> from the asset bundle, opens the <code>AppContext</code>, mounts an <code>AppContextScope</code> above your widget, and makes window close, Quit, SIGINT and SIGTERM all close the context exactly once before the process ends. If it cannot start, it shows an error screen instead of crashing.</p>
+<h2 id="5-read-the-context-save-a-setting-write-a-file"><a class="header" href="#5-read-the-context-save-a-setting-write-a-file">5. Read the context, save a setting, write a file</a></h2>
+<p>Create <code>lib/hello_app.dart</code>. This is <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/flutter_hello/lib/hello_app.dart"><code>docs/examples/flutter_hello/lib/hello_app.dart</code></a>:</p>
+<pre><code class="language-dart">import 'package:app_context_kit/app_context_kit.dart';
+import 'package:app_context_kit_flutter/app_context_kit_flutter.dart';
+import 'package:flutter/material.dart';
+
+class HelloApp extends StatefulWidget {
+  const HelloApp({super.key});
+
+  @override
+  State&lt;HelloApp&gt; createState() =&gt; _HelloAppState();
+}
+
+class _HelloAppState extends State&lt;HelloApp&gt; {
+  late final AppContext ctx;
+  late final SessionSettings settings;
+  late int taps;
+  var _started = false;
+
+  // An InheritedWidget cannot be read in initState, so read the context on the first didChangeDependencies.
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_started) return;
+    _started = true;
+    ctx = AppContextScope.of(context);
+    settings = SessionSettings(ctx.config);
+    taps = settings.get&lt;int&gt;('taps', 0);
+  }
+
+  void _tap() {
+    setState(() =&gt; taps++);
+    settings.set('taps', taps); // a setting, in &lt;config&gt;/config.json
+    ctx.dataFile('taps.log').writeAsStringSync('$taps\n'); // a file, under &lt;data&gt;
+  }
+
+  @override
+  Widget build(BuildContext context) =&gt; MaterialApp(
+        title: ctx.manifest.name,
+        home: Scaffold(
+          appBar: AppBar(title: Text(ctx.manifest.name), actions: [ModeBadge.forContext(ctx)]),
+          body: Column(children: [
+            NotesBanner.forContext(ctx),
+            Text('Taps: $taps'),
+            FilledButton(onPressed: _tap, child: const Text('Tap')),
+          ]),
+        ),
+      );
+}
+</code></pre>
+<p>What this uses:</p>
+<ul>
+<li><strong><code>AppContextScope.of(context)</code></strong> returns the <code>AppContext</code> that <code>AppContextKit.run</code> mounted. It throws a <code>FlutterError</code> that says how to fix it if there is no scope above the widget. There is also <code>maybeOf</code>, which returns <code>null</code>.</li>
+<li><strong><code>ctx.manifest</code></strong> is the parsed <code>app.json</code>.</li>
+<li><strong>A setting.</strong> <code>ctx.config</code> is a <code>ConfigStore</code> over <code>&lt;config&gt;/config.json</code>. <code>ctx.config.set('taps', 3)</code> saves at once, atomically. If <code>config.json</code> is damaged, <code>set</code> throws <code>DamagedConfigError</code> rather than overwrite a file it could not read. This example wraps the store in <code>SessionSettings</code>, whose <code>set</code> never throws: while the file is damaged it keeps the change in memory for the session, and <code>settings.readOnly</code> tells you so. See <a href="context-guide.html#the-config-store">settings</a>.</li>
+<li><strong>A file under data.</strong> <code>ctx.dataFile('taps.log')</code> is a <code>File</code> under <code>ctx.dirs.data</code>. The directory already exists. For a JSON file with an atomic write and a read that tells “missing” from “damaged”, use <code>ctx.dataJson('name.json')</code>.</li>
+<li><strong><code>ModeBadge.forContext(ctx)</code></strong> shows nothing in a normal run and a chip reading <code>mock</code>, <code>scratch</code> or <code>mock + scratch</code> otherwise.</li>
+<li><strong><code>NotesBanner.forContext(ctx)</code></strong> shows warnings and errors the Kit recorded in <code>ctx.notes</code>, such as a damaged settings file. It hides information-level notes.</li>
+</ul>
+<p><code>ctx.notes</code> is a plain list that notifies nobody. If your app adds a note, rebuild the banner yourself.</p>
+<h2 id="6-run-it"><a class="header" href="#6-run-it">6. Run it</a></h2>
+<pre><code class="language-sh">flutter run -d macos     # or -d linux, -d windows
+</code></pre>
+<p>On macOS the app wrote its folders here (checked by running a fresh project built as above):</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Kind</th><th>Where on macOS</th></tr>
+</thead>
+<tbody>
+<tr><td>data</td><td><code>~/Library/Application Support/dev.example.hello/data</code></td></tr>
+<tr><td>config</td><td><code>~/Library/Preferences/dev.example.hello</code></td></tr>
+<tr><td>state</td><td><code>~/Library/Application Support/dev.example.hello/state</code></td></tr>
+<tr><td>cache</td><td><code>~/Library/Caches/dev.example.hello</code></td></tr>
+</tbody>
+</table>
+</div>
+<p><code>flutter create</code> turns the macOS App Sandbox on, so the <code>~</code> above is the app’s container, <code>~/Library/Containers/dev.example.hello/Data</code>. See <a href="#macos-sandbox">the macOS sandbox</a>. The <a href="context-guide.html#directories">context guide</a> has the table for Linux and Windows.</p>
+<h3 id="scratch-and-mock"><a class="header" href="#scratch-and-mock">Scratch and mock</a></h3>
+<p>Two environment variables let you run the app without touching real data:</p>
+<ul>
+<li><code>APP_CONTEXT_SCRATCH=&lt;folder&gt;</code> puts every directory, and the roster, under that folder.</li>
+<li><code>APP_CONTEXT_MODE=mock</code> swaps Venue for an in-memory fake. <code>HELLO_MODE=mock</code> does the same for this app only.</li>
+</ul>
+<p><code>flutter run</code> passes your shell’s environment to the app (checked with <code>APP_CONTEXT_SCRATCH</code> on macOS). On Linux:</p>
+<pre><code class="language-sh">APP_CONTEXT_SCRATCH="$(mktemp -d)" APP_CONTEXT_MODE=mock flutter run -d linux
+</code></pre>
+<p>That exact command was not run on Linux (the demo apps were built there with <code>flutter build linux --release</code> and launched headless in a container; see <a href="platforms.html#linux">Platforms</a>). With both variables set, the app bar shows the chip <code>mock + scratch</code>. On macOS the scratch folder has to be inside the sandbox container, so the command is different there; see <a href="#macos-sandbox">the macOS sandbox</a>.</p>
+<h2 id="7-venue-and-the-default"><a class="header" href="#7-venue-and-the-default">7. Venue, and the default</a></h2>
+<p>Venue is a resource broker. <code>ctx.venue</code> is the one object an app uses to ask it for something. The manifest’s <code>venue.mode</code> decides how the Kit opens it:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th><code>venue.mode</code></th><th>Behaviour</th></tr>
+</thead>
+<tbody>
+<tr><td><code>off</code></td><td>Never looks for a token or a daemon. The session is local, with the description <code>Venue: local (Venue is off for this app)</code>.</td></tr>
+<tr><td><code>auto</code> (the default)</td><td>Looks for a token. With none, the session is local: <code>Venue: local (Venue not configured)</code>. With a token, it connects if the daemon answers; if not, it degrades to local and records a warning.</td></tr>
+<tr><td><code>on</code></td><td>The app needs Venue. With no token, or no answer, opening the context fails, and the Flutter companion shows the error screen with the code <code>venue-required</code>.</td></tr>
+</tbody>
+</table>
+</div>
+<p>So an app does not need a Venue to run, and does not need <code>"mode": "off"</code> for that: <code>auto</code> already degrades to a local session when nothing is configured. This example sets <code>off</code> to say plainly that it does not use Venue. In a normal run the Kit records one information-level note carrying the Venue description. <code>NotesBanner</code> hides it unless you pass <code>showInfo: true</code>.</p>
+<p>In <code>mock</code> mode the session is always the in-memory <code>FakeVenue</code>, whatever <code>venue.mode</code> says. The environment variables that configure a real Venue are in the <a href="context-guide.html#environment-variables">context guide</a>.</p>
+<h2 id="8-write-the-first-widget-test"><a class="header" href="#8-write-the-first-widget-test">8. Write the first widget test</a></h2>
+<p>Create <code>test/hello_test.dart</code>. This is <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/flutter_hello/test/hello_test.dart"><code>docs/examples/flutter_hello/test/hello_test.dart</code></a>:</p>
+<pre><code class="language-dart">import 'dart:io';
+
+import 'package:app_context_kit_flutter/testing.dart';
+import 'package:hello/hello_app.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+void main() {
+  testWidgets('taps are saved and survive a quit and relaunch', (tester) async {
+    final kit = await pumpKitApp(
+      tester,
+      manifest: File('app.json').readAsStringSync(),
+      app: (ctx) =&gt; const HelloApp(),
+    );
+    expect(find.text('Taps: 0'), findsOneWidget);
+    expect(find.text('mock + scratch'), findsOneWidget);
+
+    await tester.tap(find.text('Tap'));
+    await tester.pump();
+    expect(find.text('Taps: 1'), findsOneWidget);
+    expect(kit.ctx.dataFile('taps.log').readAsStringSync(), '1\n');
+
+    await kit.relaunch(); // close, open again on the same scratch directory, mount again
+    expect(find.text('Taps: 1'), findsOneWidget);
+  });
+}
+</code></pre>
+<pre><code class="language-sh">flutter test
+</code></pre>
+<p>Expected: <code>All tests passed!</code>.</p>
+<p><code>pumpKitApp</code> makes a temporary scratch folder, sets <code>APP_CONTEXT_MODE=mock</code>, opens the context without a roster entry, mounts your widget under an <code>AppContextScope</code>, and deletes the folder when the test ends. It never reads the environment of the machine running the tests. <code>kit.relaunch()</code> closes the context, so your <code>onClose</code> hooks run, opens a new one on the same files and mounts the app again. <a href="testing.html">Testing</a> has the rest.</p>
+<h2 id="9-check-that-the-identity-agrees"><a class="header" href="#9-check-that-the-identity-agrees">9. Check that the identity agrees</a></h2>
+<p>An app’s identity lives in <code>app.json</code>, in <code>pubspec.yaml</code>, in the macOS runner and in the Linux runner. The Kit cannot change native build files, so a script compares them. From a checkout of the App Context Kit repository:</p>
+<pre><code class="language-sh">cd dart/app_context_kit_flutter
+dart tool/check_identity.dart /path/to/hello
+</code></pre>
+<p>For the project above it printed:</p>
+<pre><code>== /path/to/hello
+  note      name: app.json says "Hello" but the macOS PRODUCT_NAME is "hello" (same name, different letter case)
+  note      name: app.json says "Hello" but the Linux window title is "hello" (same name, different letter case)
+  ok: id, name and version agree everywhere they were checked
+</code></pre>
+<p>With the template’s <code>version: 1.0.0+1</code> it reported <code>MISMATCH version</code> and exited 1. It does not check Windows, Android or iOS, and it never edits a file.</p>
+<h2 id="macos-sandbox"><a class="header" href="#macos-sandbox">macOS sandbox</a></h2>
+<p>The macOS runner that <code>flutter create</code> generates has the App Sandbox on. Three things follow, each checked on macOS with a project built as above.</p>
+<p><strong>Files go in the app’s container.</strong> Inside the sandbox, <code>HOME</code> and <code>TMPDIR</code> point into <code>~/Library/Containers/&lt;bundle id&gt;/Data</code>, so the default directories and the roster all land there. You do not need to do anything.</p>
+<p><strong>A scratch folder must be inside the container too.</strong> The sandbox refuses writes elsewhere. With <code>APP_CONTEXT_SCRATCH=/tmp/somewhere</code>, the app created nothing and showed its start-up error screen: “This app could not start. The app’s folders could not be created or read: Creation failed (/tmp/somewhere)”, with <code>Error code: open-failed</code>. A path under the container works:</p>
+<pre><code class="language-sh">APP_CONTEXT_SCRATCH="$HOME/Library/Containers/dev.example.hello/Data/tmp/scratch" flutter run -d macos
+</code></pre>
+<p>The container folder only exists after the app has run once.</p>
+<p><strong>Network access needs an entitlement.</strong> <code>flutter create</code> writes these files in <code>macos/Runner/</code>: <code>DebugProfile.entitlements</code> (sandbox, JIT and <code>network.server</code>) and <code>Release.entitlements</code> (sandbox only). A Venue daemon is reached over HTTP, and peers connect to each other, so an app that does either is likely to need outgoing connections allowed. Add this to both files:</p>
+<pre><code class="language-xml">&lt;key&gt;com.apple.security.network.client&lt;/key&gt;
+&lt;true/&gt;
+</code></pre>
+<p>For reference, in release builds the calculator demo app (Venue off, no peers) declares the sandbox and nothing else, and the notepad demo app (peers on) declares <code>network.server</code> and <code>network.client</code>. What happens to an app that uses peers or Venue without these entitlements was not tested. Two of the demo apps, <code>launcher</code> and <code>render-queue</code>, turn the sandbox off.</p>
+<h2 id="plain-dart"><a class="header" href="#plain-dart">Plain Dart</a></h2>
+<p>The core package has no Flutter dependency, so a command-line tool or server can use it. The program is <a href="examples/dart_cli.html"><code>docs/examples/dart_cli/</code></a>. It reads the same kind of <code>app.json</code>:</p>
+<pre><code class="language-json">{
+  "id": "dev.example.hello",
+  "name": "Hello",
+  "version": "0.1.0",
+  "envPrefix": "HELLO",
+  "venue": { "mode": "off" }
+}
+</code></pre>
+<p><code>pubspec.yaml</code> depends on the core only:</p>
+<pre><code class="language-yaml">name: dart_cli
+description: A command-line program built on the App Context Kit core. Example from docs/GETTING-STARTED.md.
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  app_context_kit:
+    path: ../../../dart/app_context_kit
+
+dev_dependencies:
+  test: ^1.24.0
+</code></pre>
+<p><code>bin/main.dart</code>:</p>
+<pre><code class="language-dart">import 'dart:io';
+
+import 'package:app_context_kit/app_context_kit.dart';
+
+Future&lt;void&gt; main() async {
+  final manifest = AppManifest.parse(File('app.json').readAsStringSync());
+
+  await AppContext.run(manifest, (ctx) async {
+    // A setting: kept in &lt;config&gt;/config.json, written atomically.
+    final launches = ctx.config.get&lt;int&gt;('launches', 0) + 1;
+    ctx.config.set('launches', launches);
+
+    // A file of the app's own: under &lt;data&gt;.
+    ctx.dataFile('hello.txt').writeAsStringSync('launch $launches\n');
+
+    print('app      ${ctx.manifest.id} ${ctx.manifest.version}');
+    print('mode     ${ctx.mode.name}${ctx.scratch ? ' (scratch)' : ''}');
+    print('data     ${ctx.dirs.data}');
+    print('config   ${ctx.dirs.config}');
+    print('launches $launches');
+    print('venue    ${ctx.venue.description}');
+  });
+}
+</code></pre>
+<pre><code class="language-sh">cd docs/examples/dart_cli
+dart pub get
+APP_CONTEXT_SCRATCH=/tmp/app-context-demo dart run bin/main.dart
+</code></pre>
+<pre><code>app      dev.example.hello 0.1.0
+mode     real (scratch)
+data     /tmp/app-context-demo/dev.example.hello/data
+config   /tmp/app-context-demo/dev.example.hello/config
+launches 1
+venue    Venue: local (Venue is off for this app)
+</code></pre>
+<p>Run it again and <code>launches</code> is 2. <code>AppContext.run</code> opens the context, runs your function and closes the context afterwards, also when your function throws. A bad manifest throws <code>ManifestError</code> with the code; a bad <code>HELLO_MODE</code> throws <code>ResolveError(bad-mode)</code>.</p>
+<p><code>AppContext.run</code> closes as soon as your function returns. That is right for a command-line tool. It is wrong for a Flutter app, where <code>runApp</code> returns at once, which is why Flutter apps use <code>AppContextKit.run</code>.</p>
+<h2 id="rust"><a class="header" href="#rust">Rust</a></h2>
+<p>The crate in <code>rust/</code> implements the same manifest, the same directory rules and the same settings file. It does not have peers, <code>SessionSettings</code>, <code>AppJsonFile</code> or a remote Venue session. The program is <a href="examples/rust_cli.html"><code>docs/examples/rust_cli/</code></a>, with the same <code>app.json</code>.</p>
+<p><code>Cargo.toml</code>:</p>
+<pre><code class="language-toml">[package]
+name = "rust_cli"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+app-context-kit = { package = "slashbuilder-app-context-kit", path = "../../../rust" }
+serde_json = "1"
+
+[workspace]
+</code></pre>
+<p><code>src/main.rs</code>:</p>
+<pre class="playground"><code class="language-rust">use app_context_kit::{AppContext, Manifest, OpenOptions};
+use serde_json::json;
+
+fn main() -&gt; Result&lt;(), Box&lt;dyn std::error::Error&gt;&gt; {
+    let manifest = Manifest::parse(&amp;std::fs::read_to_string("app.json")?)?;
+
+    AppContext::run(manifest, OpenOptions::default(), |ctx| {
+        // A setting: kept in &lt;config&gt;/config.json, written atomically.
+        let launches = ctx.config.get_or::&lt;i64&gt;("launches", 0) + 1;
+        ctx.config.set("launches", json!(launches)).expect("settings are writable");
+
+        // A file of the app's own: under &lt;data&gt;.
+        std::fs::write(ctx.data_file("hello.txt"), format!("launch {launches}\n")).expect("data dir is writable");
+
+        println!("app      {} {}", ctx.manifest.id, ctx.manifest.version);
+        println!("mode     {}{}", ctx.mode().as_str(), if ctx.is_scratch() { " (scratch)" } else { "" });
+        println!("data     {}", ctx.resolved.dirs.data);
+        println!("config   {}", ctx.resolved.dirs.config);
+        println!("launches {launches}");
+        println!("venue    {}", ctx.venue.description());
+    })?;
+    Ok(())
+}</code></pre>
+<pre><code class="language-sh">cd docs/examples/rust_cli
+APP_CONTEXT_SCRATCH=/tmp/app-context-demo-rs cargo run
+</code></pre>
+<p>It prints the same six lines as the Dart program, with <code>/tmp/app-context-demo-rs</code> in the paths.</p>
+<p><strong>The Kit’s Rust crate has no remote Venue session.</strong> Its Venue sessions are <code>local</code> and <code>fake</code> only, so the last line above always reports a <code>local</code> session. A token that is found cannot connect to a daemon: with <code>venue.mode</code> <code>auto</code> the session is <code>local</code> and says so, and with <code>on</code> the context fails to open. The crate builds from the App Context Kit repository alone; its dependencies (<code>serde</code>, <code>serde_json</code> and <code>chrono</code>) come from crates.io.</p>
+<h2 id="next"><a class="header" href="#next">Next</a></h2>
+<ul>
+<li><a href="context-guide.html">Context guide</a>: every manifest code, directory rule, environment variable and lifecycle detail</li>
+<li><a href="testing.html">Testing</a>: scratch and mock modes, the fakes, the conformance fixtures and every test suite in the App Context Kit repository</li>
+<li>The demo apps in The Kit Book run from a calculator (the smallest app) to a notepad (the largest: settings, files, peers and tests).</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../30-kits/app-context-kit/overview.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../30-kits/app-context-kit/context-guide.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../30-kits/app-context-kit/overview.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../30-kits/app-context-kit/context-guide.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-09f2665d.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../mermaid-init-5853b93b.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

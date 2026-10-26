@@ -1,0 +1,389 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Platforms - The Kit Book</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="../../favicon-8114d1fc.png">
+        <link rel="stylesheet" href="../../css/variables-8adf115d.css">
+        <link rel="stylesheet" href="../../css/general-e96d0476.css">
+        <link rel="stylesheet" href="../../css/chrome-d279d366.css">
+        <link rel="stylesheet" href="../../css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="../../highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="../../tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="../../ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../searchindex-e0dd22bc.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../toc-ce6d682b.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">The Kit Book</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/slash-builder/kit-book/edit/main/book/30-kits/app-context-kit/platforms.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <!-- Generated by tools/pull-docs.py from app-context-kit at 4797e81 (docs/PLATFORMS.md). Do not edit by hand: edit it in the Kit, then run make docs-pull. -->
+<h1 id="platforms"><a class="header" href="#platforms">Platforms</a></h1>
+<blockquote>
+<p>Reference page pulled from app-context-kit at commit 4797e81. Edit it in the Kit, not here.</p>
+</blockquote>
+<p>What runs where, how it was checked, and what was not. If a row says “not verified”, nobody has run it.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Platform</th><th>Core packages (Dart, Rust)</th><th>Flutter apps</th><th>Peers over loopback</th><th>Venue</th></tr>
+</thead>
+<tbody>
+<tr><td>macOS (Apple silicon)</td><td>Tests pass</td><td>Debug builds run; a release build was made for one demo app (notes_rust) only</td><td>Real processes tested</td><td>Real daemon tested</td></tr>
+<tr><td>Linux</td><td>Tests pass in containers (aarch64)</td><td>Built (release) and launched headless in a container (aarch64, virtual display); not tried on a real desktop</td><td>Tested in a container</td><td>Tests against stubs only; no real daemon</td></tr>
+<tr><td>Windows</td><td>Path-resolution fixtures only</td><td><strong>Not verified</strong></td><td><strong>Not verified</strong></td><td><strong>Not verified</strong></td></tr>
+<tr><td>iOS, Android</td><td><strong>Not attempted</strong></td><td><strong>Not attempted</strong></td><td><strong>Not attempted</strong></td><td><strong>Not attempted</strong></td></tr>
+</tbody>
+</table>
+</div>
+<p>The two cores are <code>dart/app_context_kit</code> (pure Dart) and <code>rust/</code>. Both read the same 61 conformance fixtures in <code>spec/conformance/</code> (25 for path resolution, 36 for the manifest). The rules they implement are in <a href="spec/app-context.html"><code>spec/APP-CONTEXT.md</code></a>. The Rust crate has no remote Venue session, so the Venue column describes the Dart core.</p>
+<h2 id="where-things-go"><a class="header" href="#where-things-go">Where things go</a></h2>
+<p>For an app whose manifest id is <code>ID</code>, the Kit resolves five directories and a roster directory. <code>home</code> is the user’s home directory.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th></th><th>Linux</th><th>macOS</th><th>Windows</th></tr>
+</thead>
+<tbody>
+<tr><td>data</td><td><code>$XDG_DATA_HOME/ID</code>, else <code>home/.local/share/ID</code></td><td><code>home/Library/Application Support/ID/data</code></td><td><code>%LOCALAPPDATA%\ID\data</code></td></tr>
+<tr><td>config</td><td><code>$XDG_CONFIG_HOME/ID</code>, else <code>home/.config/ID</code></td><td><code>home/Library/Preferences/ID</code></td><td><code>%APPDATA%\ID</code></td></tr>
+<tr><td>state</td><td><code>$XDG_STATE_HOME/ID</code>, else <code>home/.local/state/ID</code></td><td><code>home/Library/Application Support/ID/state</code></td><td><code>%LOCALAPPDATA%\ID\state</code></td></tr>
+<tr><td>cache</td><td><code>$XDG_CACHE_HOME/ID</code>, else <code>home/.cache/ID</code></td><td><code>home/Library/Caches/ID</code></td><td><code>%LOCALAPPDATA%\ID\cache</code></td></tr>
+<tr><td>runtime</td><td><code>$XDG_RUNTIME_DIR/ID</code>, else the default state directory plus <code>/run</code></td><td><code>$TMPDIR/ID</code>, else <code>/tmp/ID</code></td><td><code>%TEMP%\ID</code></td></tr>
+<tr><td>roster (shared by all apps)</td><td><code>$XDG_RUNTIME_DIR/app-context-roster</code>, else <code>/tmp/app-context-roster</code></td><td><code>$TMPDIR/app-context-roster</code>, else <code>/tmp/app-context-roster</code></td><td><code>%TEMP%\app-context-roster</code></td></tr>
+</tbody>
+</table>
+</div>
+<p>Overrides, from highest priority: <code>&lt;PREFIX&gt;_&lt;KIND&gt;_DIR</code> (used exactly as given), then <code>APP_CONTEXT_SCRATCH</code> (puts everything under one directory, for tests), then the table. On Windows a missing <code>LOCALAPPDATA</code>, <code>APPDATA</code> or <code>TEMP</code> is the error <code>missing-env</code>, but only if a default that needs it is actually used.</p>
+<p><code>~/Library/Preferences/ID/config.json</code> is an unusual place for a JSON file on macOS, where that folder is meant for property-list files. No problem was seen. It is an open spec question.</p>
+<h2 id="macos"><a class="header" href="#macos">macOS</a></h2>
+<p><strong>What was checked.</strong></p>
+<ul>
+<li>Both cores’ tests pass natively. Run for this page: Dart 365 passed, 7 skipped by default (the pinned-TLS group and 5 real-daemon tests, which need a daemon, and 1 Linux-only test). Rust: 83 unit, 2 conformance, 5 host-OS and 4 snapshot-conformance tests. The Dart real-daemon tests (5) and TLS tests (14) passed against throwaway daemons when this page was first written; they skip without one, so the run for this page did not exercise them.</li>
+<li>All six demo apps were built with <code>flutter build macos --debug</code> and launched during development. Cmd-Q and SIGTERM close the app cleanly (the roster entry is removed and Venue holds are released). Recorded in notes taken at the time; not re-run for this page.</li>
+<li>Two real processes find each other over loopback, exchange messages, and see each other disappear after <code>kill -9</code> (the link drop is seen in milliseconds; the peer is withdrawn in about 3.5 seconds). Tested in <code>dart/app_context_kit/test/peers/two_process_test.dart</code>; it passed in the full run for this page.</li>
+<li><strong>A copy killed with <code>kill -9</code>.</strong> The surviving copy sees the link drop at once (about 3 ms) and withdraws the dead copy’s announcement 3.5 to 3.8 s later (3.5 s on macOS, 3.8 s on Linux). Before the announcement carried a heartbeat the picture was worse: the survivor that had dialled gave up after 10 failed dials (about 31 s) but left the dead copy listed as <code>found</code> for ever (watched for 45 s); a survivor that never dials never learned the announcement was dead at all; and a restarted copy with the same device id appeared beside the ghost. The fix is in <code>dart/app_context_kit/lib/src/peers/loopback_provider.dart</code>: each provider rewrites its announcement file every second with a wall-clock <code>beat</code>; a file whose last beat is older than 4 s is not offered, and a peer already known from it is withdrawn (the hub then reports the final <code>lost</code> and stops dialling); a file older than 60 s is deleted by whoever notices. Checking the announcing process id was rejected: it means nothing across process-id namespaces (containers), ids are reused, and Dart has no portable way to ask whether a pid is alive without starting a process. The cost is one small write per second per process. Not fixed: a brief <code>found</code> right after the first <code>lost</code>, which for a crash lasts up to the 4 s limit (a graceful quit has none), because the hub deliberately re-announces a copy that is still advertised.</li>
+</ul>
+<p><strong>What was not checked.</strong> Release builds of the demo apps on macOS (only one, notes_rust, was built in release mode). Signed or notarized builds. The red window-close button on a real window (Cmd-Q and SIGTERM were). Launching from Finder or the Dock (see below). The text on screen in a real window: the display was off for most of the runs, so UI behaviour was read from the widget tree and from the apps’ own code, not seen.</p>
+<p><strong>Environment variables do not reach an app launched from Finder or the Dock.</strong> <code>APP_CONTEXT_MODE</code>, <code>APP_CONTEXT_SCRATCH</code>, <code>VENUE_TOKEN_FILE</code> and the rest are read from the process environment. To use them, start the app’s binary from a terminal. For a normal launch, put the Venue token at <code>&lt;config&gt;/venue-token</code> and use <code>config.json</code> for settings.</p>
+<h3 id="the-app-sandbox"><a class="header" href="#the-app-sandbox">The App Sandbox</a></h3>
+<p>Flutter’s macOS template turns the App Sandbox on. A sandboxed app sees a private <code>HOME</code> and <code>TMPDIR</code> inside <code>~/Library/Containers/&lt;bundle id&gt;/Data</code>. Apple requires the sandbox for Mac App Store apps (that is Apple’s rule, not something verified here).</p>
+<p>The sandbox changes what the Kit means:</p>
+<ul>
+<li>Every directory in the table above moves into the container. Data lands under <code>Data/Library/Application Support/ID/</code>, and the default roster is <code>Data/tmp/app-context-roster</code>. <strong>Each app has its own, so the default roster is no longer shared between apps.</strong></li>
+<li><code>APP_CONTEXT_SCRATCH</code> and other overrides that point outside the container fail.</li>
+</ul>
+<p>Today the demo apps (in The Kit Book) are mixed: the calculator, minesweeper and notepad have the sandbox on; the launcher, render-queue and stopwatch have it off (their entitlement files say <code>app-sandbox</code> is <code>false</code>). The reason is that no sandbox-on setup was found that works for all of them; see the roster row below.</p>
+<p>How these results were obtained: copies of the built debug apps were re-signed ad hoc (no team ID) with the entitlement variants below, launched by running the binary directly, and observed through the container directory, the system log, and the widget tree. No entitlement file in the demo apps was changed by that work. These results come from notes taken at the time and were not re-run for this page.</p>
+<h3 id="entitlements-by-capability"><a class="header" href="#entitlements-by-capability">Entitlements by capability</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Capability</th><th>Sandbox off</th><th>Sandbox on: what it needs</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>Talk to a local Venue daemon</strong> (including the health check)</td><td>Nothing</td><td><code>com.apple.security.network.client</code>. Without it the session is <code>local</code> with “Venue did not answer at …”. Only the health check and <code>GET</code> calls were exercised in a sandbox; holds that <code>POST</code> were not, and are expected (reasoned) to need the same entitlement.</td></tr>
+<tr><td><strong>Read a Venue token file</strong></td><td>Any readable path</td><td>A path outside the container is not readable (“the file cannot be read”). Use <code>VENUE_TOKEN</code>, or <code>&lt;config&gt;/venue-token</code> inside the container.</td></tr>
+<tr><td><strong>Loopback peers: dial another copy</strong></td><td>Nothing</td><td><code>network.client</code>.</td></tr>
+<tr><td><strong>Loopback peers: listen for another copy</strong></td><td>Nothing</td><td><code>network.server</code>. In the Flutter template, <strong>Debug has <code>network.server</code> only</strong>, and then two copies both listen and <strong>never connect, silently</strong> (6 seconds observed; nothing in the log; the UI would read as a peer that is not up yet). Adding <code>network.client</code> fixed it: the link came up 35 ms after the announcement. The template’s <strong>Release</strong> file has neither, so a Release build needs both added (reasoned; Release was not built).</td></tr>
+<tr><td><strong>Peers directory</strong></td><td>Any path</td><td>The default (the roster directory plus <code>-peers</code>) is inside the container, and two copies of one app linked through it in the notepad run. A directory outside the container leaves the app running alone, with nothing written outside.</td></tr>
+<tr><td><strong>Roster shared between different apps</strong></td><td>Works if the apps share a <code>TMPDIR</code></td><td><strong>Not possible with plain entitlements.</strong> Each app writes to its own container. It works with the temporary-exception entitlement <code>com.apple.security.temporary-exception.files.absolute-path.read-write</code> for one shared directory (measured: two sandboxed stopwatches and a sandboxed launcher shared it). That entitlement is a review problem for the Mac App Store. A shared <strong>team app group</strong> is the other route; it was <strong>not achieved</strong>, because ad-hoc signing could not create the group container. It needs a team ID and signing that were not available. Not tested with one.</td></tr>
+<tr><td><strong>Scratch directory outside the container</strong> (<code>APP_CONTEXT_SCRATCH=/tmp/...</code>)</td><td>Works</td><td>Fails: the companion shows a start-error screen (“The app’s folders could not be created or read”). Earlier builds showed an unhandled exception instead. Works with the same temporary exception.</td></tr>
+<tr><td><strong>Check another app’s process</strong> (<code>kill -0</code>)</td><td>Works</td><td>Reports a running sandboxed app as not existing. The launcher demo showed its rows as stale for live apps. With the sandbox on, the heartbeat is the only liveness signal.</td></tr>
+<tr><td><strong>Desktop notification via <code>osascript</code></strong> (stopwatch demo)</td><td>Fired when the app was in front; the banner was attributed to “Script Editor”</td><td>The child process starts and no sandbox denial was logged; whether the banner appears was <strong>not verified</strong>.</td></tr>
+<tr><td><strong>JIT / Dart VM service</strong> (Debug builds only)</td><td><code>cs.allow-jit</code>, <code>network.server</code></td><td>The template adds these to the Debug file only.</td></tr>
+</tbody>
+</table>
+</div>
+<p>Entitlements the demo apps carry today, from the files in each demo app’s <code>macos/Runner/</code> (the demo apps are in The Kit Book):</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>App</th><th>Sandbox</th><th><code>network.client</code> (Debug / Release)</th><th><code>network.server</code> (Debug / Release)</th></tr>
+</thead>
+<tbody>
+<tr><td>calculator</td><td>on</td><td>no / no</td><td>yes / no</td></tr>
+<tr><td>minesweeper</td><td>on</td><td>yes / yes</td><td>yes / yes</td></tr>
+<tr><td>notepad</td><td>on</td><td>yes / yes</td><td>yes / yes</td></tr>
+<tr><td>launcher</td><td>off</td><td>no / no</td><td>yes / no</td></tr>
+<tr><td>render-queue</td><td>off</td><td>no / no</td><td>yes / no</td></tr>
+<tr><td>stopwatch</td><td>off</td><td>no / no</td><td>yes / no</td></tr>
+</tbody>
+</table>
+</div>
+<p>A sandboxed render-queue (talking to Venue) would need <code>app-sandbox</code> plus <code>network.client</code>. A sandboxed stopwatch alone runs with <code>app-sandbox</code> and keeps its data in its container. The files above are what the apps carry now; they are not those minimal sets.</p>
+<h3 id="identity-is-declared-four-times"><a class="header" href="#identity-is-declared-four-times">Identity is declared four times</a></h3>
+<p>An app’s id appears in <code>app.json</code>, the macOS bundle id, the Linux application id, and (name and version) <code>pubspec.yaml</code>. Nothing makes them agree. The companion package ships a check:</p>
+<pre><code class="language-sh">cd dart/app_context_kit_flutter
+dart tool/check_identity.dart &lt;path to render-queue&gt; &lt;path to calculator&gt;
+</code></pre>
+<p>Output for two of the demo apps (exit code 1, because of the first app; the headers repeat the paths that were given):</p>
+<pre><code class="language-text">== render-queue
+  MISMATCH  id: app.json says com.slashbuilder.demo.render-queue but the macOS bundle id (PRODUCT_BUNDLE_IDENTIFIER) is com.slashbuilder.demo.renderQueue
+  note      name: app.json says "Render Queue" but the macOS PRODUCT_NAME is "render_queue" (same name, different letter case)
+  MISMATCH  id: app.json says com.slashbuilder.demo.render-queue but the Linux application id (APPLICATION_ID) is com.slashbuilder.demo.render_queue
+  note      name: app.json says "Render Queue" but the Linux window title is "render_queue" (same name, different letter case)
+== calculator
+  note      name: app.json says "Calculator" but the macOS PRODUCT_NAME is "calculator" (same name, different letter case)
+  note      name: app.json says "Calculator" but the Linux window title is "calculator" (same name, different letter case)
+  ok: id, name and version agree everywhere they were checked
+</code></pre>
+<p>The manifest id grammar allows hyphens, but macOS bundle ids and Linux application ids are written differently on each platform, so a hyphenated id cannot match all three. Whether the manifest may contain hyphens is an open spec decision. The check reports; it never edits. It does not look at Windows, Android or iOS.</p>
+<h2 id="linux"><a class="header" href="#linux">Linux</a></h2>
+<p><strong>What was checked.</strong> Both cores’ tests ran in Docker containers, as a non-root user, on a 6.12 <code>linuxkit</code> kernel, <strong>aarch64</strong> (so not x86_64), with the images <code>dart:stable</code> and <code>rust:1.94</code> (override with <code>DART_IMAGE</code> and <code>RUST_IMAGE</code>). The App Context Kit repository is mounted read-only; each container copies <code>spec/</code>, <code>rust/</code> and <code>dart/app_context_kit</code> into a tmpfs and builds there, so nothing is written back and nothing persists. The command is <a href="https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/tools/linux-test.sh"><code>tools/linux-test.sh</code></a>:</p>
+<pre><code class="language-sh">tools/linux-test.sh            # both cores
+tools/linux-test.sh dart       # one
+LINUX_AS_ROOT=1 tools/linux-test.sh
+</code></pre>
+<p>Re-run for this page: Dart (SDK 3.13.6) conformance 61 passed and the whole package passed (366 passed, 6 skipped; the Linux-only test runs here, and the real-daemon tests skip); Rust 1.94.1: 2 conformance, 83 unit, 6 host-OS and 4 snapshot-conformance tests passed. No other checkout is needed, because the Rust crate no longer has an optional dependency on a Venue client.</p>
+<p>When the suites were first run on Linux, the outcomes of the 306 tests that existed then were compared by name against the macOS run: no test differed. That proves less than it sounds, because almost none of them touch the real operating system (they pass <code>platform:</code> in). So <code>test/host_os_test.dart</code> and <code>rust/tests/host_os.rs</code> were added with no platform override; they check the directory conventions of the host, the rename-based config write, and the default five-second roster heartbeat (a wait of about 5.6 s: the entry is rewritten and stays live).</p>
+<p>Directories follow the XDG variables when set and the home-relative defaults when not. This is tested without a platform override in <code>test/host_os_test.dart</code> and <code>rust/tests/host_os.rs</code>. The roster is in <code>/tmp/app-context-roster</code> when <code>XDG_RUNTIME_DIR</code> is unset. Config writes are renames, and a reader polling during a rewrite never saw a partial file (tested on Linux and macOS, both languages).</p>
+<p>Two real processes found each other over loopback in a container too, including after a <code>kill -9</code>.</p>
+<p>Things that differ from macOS and are worth knowing:</p>
+<ul>
+<li>Run as <strong>root</strong>, a token file with permissions 000 is read anyway. A container that runs your app as root will use a token file the mode was meant to hide.</li>
+<li>Dart returns file modification times to the microsecond on Linux and truncated to whole seconds on macOS. Nothing in the Kit relies on file times.</li>
+<li><strong>Reasoned, not tested:</strong> <code>/tmp/app-context-roster</code> is created with the first user’s umask, so a second user on the same machine probably cannot announce into it.</li>
+</ul>
+<p><strong>What was not checked.</strong> <strong>A real Linux desktop session.</strong> The demo apps (in The Kit Book) were built with <code>flutter build linux --release</code> and launched headless under a virtual display (Xvfb) in an aarch64 Ubuntu 24.04 container with Flutter 3.41.9; the test is <code>make linux-smoke</code> in The Kit Book. All seven launched, exited with status 143 on SIGTERM, wrote a roster file and withdrew it, and kept their state across a relaunch (minesweeper, notepad, stopwatch and notes_rust). Two copies of the stopwatch and two of the notepad found each other, and the notepad synced a seeded note. There were no uncaught exceptions; the only warnings were the container’s missing accessibility bus and missing GPU. Still unchecked: window close by click, a compositor or window manager, a real GPU, <code>notify-send</code> (used by the stopwatch demo), other distributions, Wayland, and x86_64. The Linux application id in each runner has to match the manifest; see the identity check above.</p>
+<h2 id="windows"><a class="header" href="#windows">Windows</a></h2>
+<p>Verified: the path-resolution rules, as pure functions. Five of the 25 resolution fixtures use <code>platform: "windows"</code>; they cover the default locations, the missing-variable error, scratch needing no variable, trimming either kind of trailing separator, and a bad mode being reported before a missing variable. Both cores pass them. The fixtures never touch a filesystem.</p>
+<p><strong>Nothing else is verified.</strong> Neither core was built or tested on Windows. Not run: file I/O, the atomic config write, the roster and its heartbeat, loopback peers, the Flutter companion, any Venue session, the demo apps. Same-machine peers there would use the loopback provider, which has not been run on Windows. There are no Windows runner folders in the demo apps.</p>
+<h2 id="ios-and-android"><a class="header" href="#ios-and-android">iOS and Android</a></h2>
+<p>Not attempted. The Flutter companion’s notes say there is no mobile exit story: window close, Quit and signals are desktop events, and the one mobile hook (<code>onDetach</code>) closes on a best-effort basis with no guarantee the OS gives it time. Nothing about directories, the roster, peers or Venue was checked on a phone.</p>
+<h2 id="packaging-checklist"><a class="header" href="#packaging-checklist">Packaging checklist</a></h2>
+<p>For shipping an app that is built on the Kit. Each line says what to do and where it was observed to matter.</p>
+<ol>
+<li><strong>Make the ids agree.</strong> Run <code>dart tool/check_identity.dart &lt;app dir&gt;</code> (from <code>dart/app_context_kit_flutter</code>). It must exit 0. Decide what a hyphenated manifest id does on each platform.</li>
+<li><strong>Declare what you use.</strong> <code>"kits": ["venue"]</code> for Venue, <code>"peers"</code> for the peer layer. <code>ctx.peerHub</code> throws <code>KitNotDeclared</code> if <code>peers</code> is missing.</li>
+<li><strong>Choose sandbox on or off per channel</strong>, and add entitlements for every capability you use (table above). Debug and Release are separate files. For peers, <code>network.client</code> and <code>network.server</code> in both.</li>
+<li><strong>Put the Venue token where the app can read it.</strong> Under the sandbox that is <code>&lt;config&gt;/venue-token</code> inside the container, or <code>VENUE_TOKEN</code>. Not a path outside it.</li>
+<li><strong>Provision the app with Venue before it ships.</strong> An app cannot register itself; see the <a href="venue-guide.html">Venue guide</a>. Without that, the app runs on the <code>local</code> session and says so.</li>
+<li><strong>Use short Venue leases.</strong> A killed app keeps its quota until the lease lapses.</li>
+<li><strong>Start through <code>AppContextKit.run</code></strong> (the companion package), so window close, Quit, SIGINT and SIGTERM all end in one <code>ctx.close()</code>. Test Cmd-Q and SIGTERM on the built app. <code>kill -9</code> leaves a stale roster entry (hidden after 15 seconds) and any Venue holds until the lease lapses.</li>
+<li><strong>Test in mock and scratch modes</strong> (<code>APP_CONTEXT_MODE=mock</code>, <code>APP_CONTEXT_SCRATCH=&lt;dir&gt;</code>) from a terminal; they do not reach a Finder or Dock launch.</li>
+<li><strong>Do not use the loopback peer provider across a trust boundary.</strong> It has no encryption or authentication. It is for copies of an app on one machine, run by one user.</li>
+<li><strong>Run on the real target.</strong> On Linux the Kit has headless container evidence only (see “What was not checked” under Linux above); on Windows and mobile it has none.</li>
+</ol>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../30-kits/app-context-kit/architecture.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="../../30-kits/app-context-kit/design-decisions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../30-kits/app-context-kit/architecture.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="../../30-kits/app-context-kit/design-decisions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../elasticlunr-ef4e11c1.min.js"></script>
+        <script src="../../mark-09e88c2c.min.js"></script>
+        <script src="../../searcher-09f2665d.js"></script>
+
+        <script src="../../clipboard-1626706a.min.js"></script>
+        <script src="../../highlight-abc7f01d.js"></script>
+        <script src="../../book-609e4cb8.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../mermaid-init-5853b93b.js"></script>
+
+
+
+    </div>
+    </body>
+</html>
