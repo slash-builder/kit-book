@@ -7,8 +7,6 @@ sha256 of that file as fetched: 977d781349351fd7c1f076e4c7dc7de2a05b40e12c773542
 The Contributor Covenant is licensed under CC BY 4.0; the attribution paragraph at the end is required by that licence and stays.
 -->
 
-> **Draft: a contact address is not set yet** ([CONTACT NOT SET] below). Reports cannot be made by email until it is. This notice is removed when `tools/contacts.conf` is filled in.
-
 # Contributor Covenant Code of Conduct
 
 ## Our Pledge
@@ -47,7 +45,7 @@ This Code of Conduct applies within all community spaces, and also applies when 
 
 ## Enforcement
 
-Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at [CONTACT NOT SET]. All complaints will be reviewed and investigated promptly and fairly.
+Instances of abusive, harassing, or otherwise unacceptable behavior may be reported to the community leaders responsible for enforcement at conduct@slashbuilder.com. All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the reporter of any incident.
 
