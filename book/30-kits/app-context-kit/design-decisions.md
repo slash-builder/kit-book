@@ -9,7 +9,7 @@ Why the App Context Kit is shaped the way it is, what we tried instead, and what
 ## Decisions that held
 
 ### 1. One written contract, two implementations, shared fixtures
-The behaviour lives in [`spec/APP-CONTEXT.md`](spec/app-context.md). Dart and Rust both implement it, and both must pass the same fixtures in `spec/conformance/`.
+The behaviour lives in [`spec/APP-CONTEXT.md`](spec/app-context.md). Dart and Rust both implement it, and both must pass the same fixtures in [`spec/conformance/`](https://github.com/slash-builder/app-context-kit/tree/4797e81d83b0c1ef6cd297c947751680f302c7bd/spec/conformance).
 **Why.** The first implementation passed its own 41 fixtures on the first run, which proved almost nothing because the same author wrote the spec, the fixtures and the code. The Rust implementation, written from the spec text, passed the same 41 and *still disagreed with Dart on about a dozen behaviours no fixture covered* (what happens to `/` as a base path, which separator gets trimmed, what a name made only of a byte-order mark is, what happens when a named token file is missing...). Closing them took 20 more fixtures. The suite is the product; the prose is commentary.
 **Cost.** About twice the code in Rust as in Dart for the same behaviour, and a spec that must be kept honest.
 

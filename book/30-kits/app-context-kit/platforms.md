@@ -113,7 +113,7 @@ The manifest id grammar allows hyphens, but macOS bundle ids and Linux applicati
 
 ## Linux
 
-**What was checked.** Both cores' tests ran in Docker containers, as a non-root user, on a 6.12 `linuxkit` kernel, **aarch64** (so not x86_64), with the images `dart:stable` and `rust:1.94` (override with `DART_IMAGE` and `RUST_IMAGE`). The App Context Kit repository is mounted read-only; each container copies `spec/`, `rust/` and `dart/app_context_kit` into a tmpfs and builds there, so nothing is written back and nothing persists. The command is `tools/linux-test.sh`:
+**What was checked.** Both cores' tests ran in Docker containers, as a non-root user, on a 6.12 `linuxkit` kernel, **aarch64** (so not x86_64), with the images `dart:stable` and `rust:1.94` (override with `DART_IMAGE` and `RUST_IMAGE`). The App Context Kit repository is mounted read-only; each container copies `spec/`, `rust/` and `dart/app_context_kit` into a tmpfs and builds there, so nothing is written back and nothing persists. The command is [`tools/linux-test.sh`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/tools/linux-test.sh):
 
 ```sh
 tools/linux-test.sh            # both cores

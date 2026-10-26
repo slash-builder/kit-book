@@ -4,7 +4,7 @@
 
 > Reference page pulled from app-context-kit at commit 4797e81. Edit it in the Kit, not here.
 
-**[Overview](overview.md)** · **[Getting started](getting-started.md)** · **[Context guide](context-guide.md)** · **[Venue guide](venue-guide.md)** · **[Coordination](coordination-guide.md)** · **[Architecture](architecture.md)** · **[Platforms](platforms.md)** · **[Testing](testing.md)** · **[Design decisions](design-decisions.md)** · **[Spec](spec/app-context.md)** · **[Contributing](../not-in-the-registry.md#app-context-kit)** · **[Repository home](../not-in-the-registry.md#app-context-kit)**
+**[Overview](overview.md)** · **[Getting started](getting-started.md)** · **[Context guide](context-guide.md)** · **[Venue guide](venue-guide.md)** · **[Coordination](coordination-guide.md)** · **[Architecture](architecture.md)** · **[Platforms](platforms.md)** · **[Testing](testing.md)** · **[Design decisions](design-decisions.md)** · **[Spec](spec/app-context.md)** · **[Contributing](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/CONTRIBUTING.md)** · **[Repository home](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/README.md)**
 
 ---
 
@@ -25,7 +25,7 @@ It is a piece of a larger platform, it is not published to a package registry ye
 | ship on macOS, Linux or Windows | [Platforms](platforms.md) |
 | judge whether the idea holds | [Design decisions](design-decisions.md), then the results at the foot of this page |
 | see how the pieces fit | [Architecture](architecture.md) |
-| read the contract itself | [Spec](spec/app-context.md) and its fixtures |
+| read the contract itself | [Spec](spec/app-context.md) and its [fixtures](https://github.com/slash-builder/app-context-kit/tree/4797e81d83b0c1ef6cd297c947751680f302c7bd/spec/conformance) |
 
 ## Every page
 
@@ -59,7 +59,7 @@ Every code sample in these pages is copied from one of these, or from a passing 
 | [`examples/dart_cli`](examples/dart_cli.md) | The Kit from plain Dart: open a context, a setting, a counter, the Venue-off session | `dart test` / `dart run bin/main.dart` |
 | [`examples/rust_cli`](examples/rust_cli.md) | The same app in Rust; prints the same lines | `cargo run` |
 | [`examples/flutter_hello`](examples/flutter_hello.md) | A five-line `main.dart`, `app.json` and a widget test | `flutter test` |
-| `examples/coordination` | A two-copy "ping" app on the fake network, plus behaviour tests (scope, ordering, limits) | `dart test` |
+| [`examples/coordination`](https://github.com/slash-builder/app-context-kit/tree/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination) | A two-copy "ping" app on the fake network, plus behaviour tests (scope, ordering, limits) | `dart test` |
 
 ## The short version of the results
 
@@ -85,7 +85,7 @@ Several pages quote six small demo apps (a calculator, minesweeper, a notepad, a
 
 ---
 
-[Repository home](../not-in-the-registry.md#app-context-kit) · [Spec](spec/app-context.md) · [Contributing](../not-in-the-registry.md#app-context-kit) · Licence (Apache-2.0)
+[Repository home](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/README.md) · [Spec](spec/app-context.md) · [Contributing](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/CONTRIBUTING.md) · [Licence (Apache-2.0)](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/LICENSE)
 
 ## Pages in this book
 

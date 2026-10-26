@@ -17,7 +17,7 @@ Part 1 is for app authors. Part 2 is for working on the Kit itself.
 
 ### Pass the environment in; do not read the machine's
 
-`AppContext.open` takes `env:`, `platform:` and `home:`. When you pass `env`, nothing from the real process environment is read, so a developer's own `APP_CONTEXT_*` variables cannot change a test. The Dart test in `docs/examples/dart_cli/test/kit_test.dart` opens every context like this:
+`AppContext.open` takes `env:`, `platform:` and `home:`. When you pass `env`, nothing from the real process environment is read, so a developer's own `APP_CONTEXT_*` variables cannot change a test. The Dart test in [`docs/examples/dart_cli/test/kit_test.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/dart_cli/test/kit_test.dart) opens every context like this:
 
 ```dart
 final env = {'APP_CONTEXT_MODE': 'mock'}; // the scratch directory is added per test
@@ -77,7 +77,7 @@ The `KitTestContext` it returns:
 | `quit()` | Closes the context while the widgets are still mounted, then unmounts the tree |
 | `relaunch()` | `quit()`, then a new context on the same scratch directory, then the same app mounted again. Returns the new context |
 
-This is the test from `docs/examples/flutter_hello/test/hello_test.dart`:
+This is the test from [`docs/examples/flutter_hello/test/hello_test.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/flutter_hello/test/hello_test.dart):
 
 ```dart
 testWidgets('taps are saved and survive a quit and relaunch', (tester) async {

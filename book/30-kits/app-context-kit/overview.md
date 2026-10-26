@@ -61,7 +61,7 @@ A Flutter companion package, `app_context_kit_flutter`, adds what the pure-Dart 
 
 ## Design rules
 
-1. **The spec is the contract.** [`spec/APP-CONTEXT.md`](spec/app-context.md) and the fixtures in `spec/conformance/` define behaviour. Both implementations must pass every fixture. If the prose and a fixture disagree, the fixture wins and the prose is corrected.
+1. **The spec is the contract.** [`spec/APP-CONTEXT.md`](spec/app-context.md) and the fixtures in [`spec/conformance/`](https://github.com/slash-builder/app-context-kit/tree/4797e81d83b0c1ef6cd297c947751680f302c7bd/spec/conformance) define behaviour. Both implementations must pass every fixture. If the prose and a fixture disagree, the fixture wins and the prose is corrected.
 2. **Apps compose the Kit and never fork it.** An app that needs something the Kit lacks writes it in the app (the demo apps keep these under `lib/kit_gaps/`) and marks it `// KIT GAP:`. That code is the record of what is missing.
 3. **The Kit never interprets an app's payload.** It finds peers, connects to them and carries bytes. What a message means is the app's decision.
 4. **The core stays pure Dart.** `app_context_kit` has no Flutter import. Anything that needs Flutter goes in `app_context_kit_flutter`.
@@ -92,7 +92,7 @@ Documentation:
 - [Getting started](getting-started.md): a running app, step by step
 - [Context guide](context-guide.md): reference for fields, directories, environment variables and lifecycle
 - [Testing](testing.md): testing an app built on the Kit, and running the App Context Kit repository's suites
-- [Contributing](../not-in-the-registry.md#app-context-kit): building and changing the Kit itself
+- [Contributing](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/CONTRIBUTING.md): building and changing the Kit itself
 
 ## Status
 

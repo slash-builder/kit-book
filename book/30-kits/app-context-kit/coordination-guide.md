@@ -6,7 +6,7 @@
 
 This guide is for a developer who wants two running copies of the same app to find each other, agree on who is there, and exchange messages. It covers the peer layer of the App Context Kit: what the Kit does, what you write, how to start it, and what it does not do.
 
-**Status, so you know what you are reading.** The peer layer is implemented in the Dart core (`dart/app_context_kit/lib/src/peers/`). Two providers are built: an in-memory fake network (tests and mock mode) and a loopback provider (copies on one machine). No provider for a real network exists yet, and the Rust implementation has no peer code. Every example in this guide that has a file under `examples/coordination/` runs as a test; the commands are in [Run the examples](#run-the-examples).
+**Status, so you know what you are reading.** The peer layer is implemented in the Dart core (`dart/app_context_kit/lib/src/peers/`). Two providers are built: an in-memory fake network (tests and mock mode) and a loopback provider (copies on one machine). No provider for a real network exists yet, and the Rust implementation has no peer code. Every example in this guide that has a file under [`examples/coordination/`](https://github.com/slash-builder/app-context-kit/tree/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination) runs as a test; the commands are in [Run the examples](#run-the-examples).
 
 Contents: [the model](#1-the-model) · [the scope key](#2-the-scope-key) · [the hook](#3-the-hook-five-jobs) · [starting a hub](#4-starting-a-hub) · [the hub API](#5-the-hub-api) · [providers](#6-providers) · [the envelope](#7-the-envelope) · [ordering and loss](#8-ordering-and-loss) · [delivery](#9-delivery) · [backpressure](#10-backpressure) · [PeerJson and size limits](#11-peerjson-and-size-limits) · [testing](#12-testing-coordination) · [three worked patterns](#13-three-worked-patterns) · [what the hook does not give you](#14-what-the-hook-does-not-give-you) · [real transports](#15-real-transports)
 
@@ -26,7 +26,7 @@ The Kit finds, authenticates, connects and routes. Your app supplies a hook and 
 
 "Never reads the payload" is literal. A message carries a `kind` string and a `schema` integer that you choose, and an opaque byte payload. The Kit routes on its own header (see [the envelope](#7-the-envelope)) and hands you the bytes.
 
-You get one hub per channel. A hub is one `PeerHub` object that owns the links to every other copy of your app. An app with several unrelated conversations either starts one hub per conversation or writes one hook that routes by `kind` prefix (a sample is `MuxHook` in `sample_hooks.dart`).
+You get one hub per channel. A hub is one `PeerHub` object that owns the links to every other copy of your app. An app with several unrelated conversations either starts one hub per conversation or writes one hook that routes by `kind` prefix (a sample is `MuxHook` in [`sample_hooks.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/test/peers/sample_hooks.dart)).
 
 ## 2. The scope key
 
@@ -47,7 +47,7 @@ Scope is checked in three places, so a bug in one does not open the others:
 - The hub drops a candidate or an incoming link whose claimed scope differs from its own, and counts it in `hub.stats.scopeViolations`.
 - Every frame carries `account` and `app` in its header. A frame with a different scope cuts the link.
 
-`ping_test.dart` checks this: a copy of the app, a copy with another app id and a copy with another account share one network, and none of the three sees any peer.
+[`ping_test.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/ping_test.dart) checks this: a copy of the app, a copy with another app id and a copy with another account share one network, and none of the three sees any peer.
 
 **Scope is a name, not a credential.** The default authenticator (`OpenAuthenticator`) accepts every peer in scope, and no per-app credential exists yet. Treat the scope key as a way to keep copies of different apps and accounts apart, not as access control. The authenticator is the seam where a real check goes; see [per-app credentials](#14-what-the-hook-does-not-give-you). A security review is pending; details withheld.
 
@@ -55,7 +55,7 @@ Identifier rules for the loopback provider: account, app, device and instance be
 
 ## 3. The hook: five jobs
 
-A hook is a subclass of `AppCoordination` (`coordination.dart`). It has five jobs and one convenience:
+A hook is a subclass of `AppCoordination` ([`coordination.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/coordination.dart)). It has five jobs and one convenience:
 
 | # | Member | When the Kit calls it | What you return or do |
 |---|---|---|---|
@@ -72,7 +72,7 @@ A hook must not throw. If it does, the hub catches the error, counts it in `hub.
 
 ### A complete hook: "ping"
 
-This is the whole of a working app's coordination code. Any copy can ping another, and the other answers with its device name. It is `examples/coordination/lib/ping_hook.dart`, unchanged.
+This is the whole of a working app's coordination code. Any copy can ping another, and the other answers with its device name. It is [`examples/coordination/lib/ping_hook.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/lib/ping_hook.dart), unchanged.
 
 ```dart
 import 'dart:async';
@@ -135,7 +135,7 @@ class PingHook extends AppCoordination {
 }
 ```
 
-And this is how two copies of it run in one test process. Each copy is an `AppContext` in mock mode; they share one `FakePeerNetwork`. The manifest must list `"peers"` in `kits`, or `ctx.startPeers` throws `KitNotDeclared`. From `ping_test.dart`:
+And this is how two copies of it run in one test process. Each copy is an `AppContext` in mock mode; they share one `FakePeerNetwork`. The manifest must list `"peers"` in `kits`, or `ctx.startPeers` throws `KitNotDeclared`. From [`ping_test.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/ping_test.dart):
 
 ```dart
 /// The manifest must list "peers", or ctx.startPeers throws KitNotDeclared.
@@ -252,7 +252,7 @@ In a Flutter app, `PeersIndicator.forHandle(handle)` from `package:app_context_k
 
 ## 5. The hub API
 
-`PeerHub` (`hub.dart`) is the management interface.
+`PeerHub` ([`hub.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/hub.dart)) is the management interface.
 
 | Member | What it does |
 |---|---|
@@ -275,7 +275,7 @@ A `Peer` is read-only to you. Its `state` is one of `found`, `connecting`, `read
 
 **A `Peer` object is never reused.** A copy that goes away and comes back is a new `Peer` with the same `PeerId`. Keep the `PeerId` if you need to find the peer again; calling `send` with a `Peer` that has been replaced throws `PeerNotAvailable`. A rejected peer is not redialed until the provider withdraws it and announces it again.
 
-A rejection shows up as a `lost` event on both sides, with `peer.state == rejected`. `hub_behaviour_test.dart` checks it: one side's `admit` rejects with `"proto 2 only"`, and the other side's peer ends with `rejectReason == 'rejected by peer: proto 2 only'`.
+A rejection shows up as a `lost` event on both sides, with `peer.state == rejected`. [`hub_behaviour_test.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/hub_behaviour_test.dart) checks it: one side's `admit` rejects with `"proto 2 only"`, and the other side's peer ends with `rejectReason == 'rejected by peer: proto 2 only'`.
 
 ### Errors
 
@@ -296,11 +296,11 @@ If you call `send` without awaiting it, attach a handler or use `PeerJson.quiet(
 
 ## 6. Providers
 
-The hub talks to two small interfaces, `PeerProvider` and `PeerLink` (`provider.dart`), so the same hook runs over any provider. A provider announces this copy, reports other copies in the same scope (`discover()`), dials one (`connect`), and hands over links that others dialed (`incoming`). A link is one ordered, message-framed connection: one `send` arrives as one inbound event.
+The hub talks to two small interfaces, `PeerProvider` and `PeerLink` ([`provider.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/provider.dart)), so the same hook runs over any provider. A provider announces this copy, reports other copies in the same scope (`discover()`), dials one (`connect`), and hands over links that others dialed (`incoming`). A link is one ordered, message-framed connection: one `send` arrives as one inbound event.
 
 ### Fake network: tests and mock mode
 
-`FakePeerNetwork` (`fake_network.dart`) is an in-memory network. Several hubs join one network, each through its own provider. It enforces the scope key itself and lets a test change the world while it runs:
+`FakePeerNetwork` ([`fake_network.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/fake_network.dart)) is an in-memory network. Several hubs join one network, each through its own provider. It enforces the scope key itself and lets a test change the world while it runs:
 
 | Control | Effect |
 |---|---|
@@ -311,11 +311,11 @@ The hub talks to two small interfaces, `PeerProvider` and `PeerLink` (`provider.
 | `dropLinks(a, b)` | Break the links but keep discovery: a flaky connection rather than a partition |
 | `deliveries` | A record of every frame that reached a link end, so a test can prove what did not arrive |
 
-For deterministic time, build a `PeerHub` directly with a `ManualPeerClock` (see `World` in `support.dart`). `ctx.startPeers` and `ctx.peerHub` do not take a clock, so hubs they build run on real time.
+For deterministic time, build a `PeerHub` directly with a `ManualPeerClock` (see `World` in [`support.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/test/peers/support.dart)). `ctx.startPeers` and `ctx.peerHub` do not take a clock, so hubs they build run on real time.
 
 ### Loopback: copies on one machine
 
-`LoopbackProvider` (`loopback_provider.dart`) connects copies that run on one machine, as processes. It needs nothing but a shared directory.
+`LoopbackProvider` ([`loopback_provider.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/loopback_provider.dart)) connects copies that run on one machine, as processes. It needs nothing but a shared directory.
 
 **Announcement files.** Each copy listens on a TCP port on `127.0.0.1` (never a routable address; the operating system picks the port) and writes one file:
 
@@ -323,7 +323,7 @@ For deterministic time, build a `PeerHub` directly with a `ManualPeerClock` (see
 <peers dir>/<account>/<app id>/<device>@<instance>.json
 ```
 
-with these fields. This file was written by a run of the stopwatch probe; `loopback_test.dart` asserts the key set and the path.
+with these fields. This file was written by a run of the stopwatch probe; [`loopback_test.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/loopback_test.dart) asserts the key set and the path.
 
 ```json
 {"account":"local","app":"com.slashbuilder.demo.stopwatch","device":"desktop","instance":"48e784da","port":52367,"pid":63779,"beat":1792850562108}
@@ -372,7 +372,7 @@ Run as two macOS debug builds of the stopwatch, notepad and minesweeper apps, th
 
 ## 7. The envelope
 
-Every frame between two copies is one envelope: a header the Kit reads and a payload it does not (`envelope.dart`). The wire form is UTF-8 JSON with the keys in a fixed order:
+Every frame between two copies is one envelope: a header the Kit reads and a payload it does not ([`envelope.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/envelope.dart)). The wire form is UTF-8 JSON with the keys in a fixed order:
 
 ```json
 {"v":1,"account":"a","app":"dev.x","channel":"default","from":{"device":"d","instance":"i"},
@@ -421,7 +421,7 @@ The hub delivers each peer's frames to you in `seq` order, once:
 - A frame at or below the last delivered `seq` is a duplicate or a late arrival after a skip, and is dropped (`duplicatesDropped`).
 - A peer that floods more than 256 undelivered frames on one link has the link dropped.
 
-**You see loss as a jump in `AppMessage.seq`.** `hub_behaviour_test.dart` drops the second of three messages on the fake network. The receiver gets two:
+**You see loss as a jump in `AppMessage.seq`.** [`hub_behaviour_test.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/hub_behaviour_test.dart) drops the second of three messages on the fake network. The receiver gets two:
 
 ```dart
 expect(seqs, [4, 6]);
@@ -435,7 +435,7 @@ Ordering is per sender. The Kit gives you no order between messages from two dif
 
 Delivery is best effort.
 
-- `send` completes when the **transport took the frame**, not when the peer received or applied it. `hub_behaviour_test.dart` sets the fake network to drop every frame and shows that `send` still completes without error.
+- `send` completes when the **transport took the frame**, not when the peer received or applied it. [`hub_behaviour_test.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/hub_behaviour_test.dart) sets the fake network to drop every frame and shows that `send` still completes without error.
 - If the link ends before a queued frame is written, the `send` future fails with `PeerLost`. Queued messages are dropped when the peer is lost.
 - There is no retry and no replay. A message sent before a peer exists is not kept for it: a `broadcast` with nobody ready returns an empty `sent` list, and a copy that arrives later never sees it.
 - `send` to a peer that is found or connecting is queued and written once the peer is ready. App frames from a peer are not delivered to you before it is ready.
@@ -447,11 +447,11 @@ If you need "it was applied", build it from a reply. The minesweeper and notepad
 
 Each peer has an outgoing queue of messages not yet handed to the transport. It holds at most 256 messages or 8 MiB of payload (`PeerHubOptions.outboxMessages`, `outboxBytes`). When it is full, `send`, `request` and `reply` fail with `PeerOutboxFull` on the returned future, and `broadcast` reports that peer in `failed`. The Kit does not drop an older message to make room, because only your app knows what is safe to drop.
 
-What to do depends on the message. For state ("the current note", "the timer"), send the newest value and let `PeerOutboxFull` mean "skip this one; the next change carries the state anyway". For events that all matter, await each send before the next. `hub_behaviour_test.dart` sets `outboxMessages: 2`, sends ten messages without awaiting, and counts the `PeerOutboxFull` failures.
+What to do depends on the message. For state ("the current note", "the timer"), send the newest value and let `PeerOutboxFull` mean "skip this one; the next change carries the state anyway". For events that all matter, await each send before the next. [`hub_behaviour_test.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/coordination/test/hub_behaviour_test.dart) sets `outboxMessages: 2`, sends ten messages without awaiting, and counts the `PeerOutboxFull` failures.
 
 ## 11. PeerJson and size limits
 
-Apps that speak JSON need the same few helpers, so they are in the Kit (`PeerJson`, `peer_json.dart`):
+Apps that speak JSON need the same few helpers, so they are in the Kit (`PeerJson`, [`peer_json.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/peer_json.dart)):
 
 | Helper | What it does |
 |---|---|
@@ -645,7 +645,7 @@ Only the fake network and the loopback provider are built. **There is no provide
 
 ### What every provider must do
 
-The contract is in `provider.dart`. In short:
+The contract is in [`provider.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/provider.dart). In short:
 
 - `open(self)` announces this copy and starts accepting. `discover()` replays what is known, then follows changes, and re-emits a candidate with `available: false` when it goes away. `connect(candidate)` throws `PeerScopeError` outside the scope and `PeerConnectError` when it cannot reach the candidate. `incoming` buffers until listened to. `close()` is idempotent.
 - **Never offer, dial or accept another account or app id.** The hub checks too, but a provider that leaks scope is a bug.

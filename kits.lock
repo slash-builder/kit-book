@@ -13,10 +13,10 @@
 #               reference  a Kit documented in the book but not needed to build the apps
 #
 # To move a pin: `make lock` (see book/90-reference/make-targets.md).
-# app-context-kit is private for now; it must be public (or this repository must stop needing it) before this repository is.
+# app-context-kit is public. storage-kit is still private: apps/notes_rust needs it and is skipped for anyone without access.
 # The pin is the scrubbed single-commit release candidate (branch public/release-prep), the exact tree that will become public. The earlier
 # private venue-kit pin is gone: the scrubbed Rust crate no longer depends on it.
 # The pin is the commit the public repository starts from (its first and only commit on main).
-app-context-kit https://github.com/slash-builder/app-context-kit 4797e81d83b0c1ef6cd297c947751680f302c7bd private core
+app-context-kit https://github.com/slash-builder/app-context-kit 4797e81d83b0c1ef6cd297c947751680f302c7bd public core
 # storage-kit is private for now, like app-context-kit; apps/notes_rust builds its Rust core against it (path dependency, so it is fetched, not tested here).
 storage-kit https://github.com/slash-builder/storage-kit 369ba2211ff37df083b3689db7d2d0c141dd7ab1 private app-dep

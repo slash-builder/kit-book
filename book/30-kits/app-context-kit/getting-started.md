@@ -70,7 +70,7 @@ The template's version is `1.0.0+1`. The Kit does not read the `pubspec.yaml`, b
 
 ## 3. Write `app.json`
 
-Create `app.json` next to `pubspec.yaml`. This is `docs/examples/flutter_hello/app.json`:
+Create `app.json` next to `pubspec.yaml`. This is [`docs/examples/flutter_hello/app.json`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/flutter_hello/app.json):
 
 ```json
 {
@@ -97,7 +97,7 @@ If the manifest is wrong, the app shows an error screen with a code such as `bad
 
 ## 4. Write `main.dart`
 
-Replace `lib/main.dart` with this. It is `docs/examples/flutter_hello/lib/main.dart`, and apart from the import it is the same line as the calculator demo app's `lib/main.dart` (the demo apps are in The Kit Book):
+Replace `lib/main.dart` with this. It is [`docs/examples/flutter_hello/lib/main.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/flutter_hello/lib/main.dart), and apart from the import it is the same line as the calculator demo app's `lib/main.dart` (the demo apps are in The Kit Book):
 
 ```dart
 import 'package:app_context_kit_flutter/app_context_kit_flutter.dart';
@@ -111,7 +111,7 @@ Future<void> main() => AppContextKit.run(manifestAsset: 'app.json', app: (_) => 
 
 ## 5. Read the context, save a setting, write a file
 
-Create `lib/hello_app.dart`. This is `docs/examples/flutter_hello/lib/hello_app.dart`:
+Create `lib/hello_app.dart`. This is [`docs/examples/flutter_hello/lib/hello_app.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/flutter_hello/lib/hello_app.dart):
 
 ```dart
 import 'package:app_context_kit/app_context_kit.dart';
@@ -222,7 +222,7 @@ In `mock` mode the session is always the in-memory `FakeVenue`, whatever `venue.
 
 ## 8. Write the first widget test
 
-Create `test/hello_test.dart`. This is `docs/examples/flutter_hello/test/hello_test.dart`:
+Create `test/hello_test.dart`. This is [`docs/examples/flutter_hello/test/hello_test.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/docs/examples/flutter_hello/test/hello_test.dart):
 
 ```dart
 import 'dart:io';

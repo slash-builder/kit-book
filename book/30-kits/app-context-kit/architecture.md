@@ -74,7 +74,7 @@ sequenceDiagram
   M->>M: install exit paths (window close, SIGINT, SIGTERM), runApp
 ```
 
-Source: `AppContextKit.run` in `app_context_kit.dart` and `AppContext.open` in `app_context.dart`.
+Source: `AppContextKit.run` in [`app_context_kit.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit_flutter/lib/src/app_context_kit.dart) and `AppContext.open` in [`app_context.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/app_context.dart).
 
 **What to notice.** The order is chosen so a failure leaves nothing behind. The resource-broker session opens before the roster entry is written, so a session that refuses to open (mode `on`) fails before anything is announced. If announcing fails, the session is closed again. If the manifest cannot be read or the context cannot open, `AppContextKit.run` shows an error screen with the error code instead of crashing. Your app's builder runs before the exit paths are installed, so any hook it registers with `ctx.onClose` is in place before the window can be closed. If the builder throws, the context is closed again and the error screen shows `app-build-failed`.
 
@@ -98,7 +98,7 @@ sequenceDiagram
   X->>E: allow exit, or end the process (130 SIGINT, 143 SIGTERM, 0 quit, 1 if close failed)
 ```
 
-Source: `ExitCoordinator` in `exit_coordinator.dart` and `AppContext._closeOnce` in `app_context.dart`.
+Source: `ExitCoordinator` in [`exit_coordinator.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit_flutter/lib/src/exit_coordinator.dart) and `AppContext._closeOnce` in [`app_context.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/app_context.dart).
 
 **What to notice.** Every exit path funnels into one shutdown that closes the context at most once; a second signal gets the same future instead of a second close. Every step runs even if an earlier one throws, and the errors are raised together afterwards. A failing close is written to stderr and does not block the exit, and there is no timeout, so a hung hook is a bug in the hook. `SIGKILL` skips all of this, which is why the roster and the peers announcement both carry a timestamp that goes stale.
 
@@ -126,7 +126,7 @@ sequenceDiagram
   Note over B: lost with reason goodbye, not redialed
 ```
 
-Source: the protocol comment at the top of `hub.dart`, checked against `_onHello`, `_onAuth` and `_checkReady`.
+Source: the protocol comment at the top of [`hub.dart`](https://github.com/slash-builder/app-context-kit/blob/4797e81d83b0c1ef6cd297c947751680f302c7bd/dart/app_context_kit/lib/src/peers/hub.dart), checked against `_onHello`, `_onAuth` and `_checkReady`.
 
 **What to notice.** Only the copy with the lower `PeerId` dials, so two copies never open two links; the other side waits for the incoming link. That works only if discovery is symmetric, which it is for both built providers. "Ready" needs two things on each side: your `admit` said yes, and the other side's `kit.ready` arrived. A link that is not ready after 5 seconds is dropped. A `kit.reject` marks the peer rejected on both sides, and it is not redialed until the provider withdraws and announces it again.
 
